@@ -150,6 +150,10 @@
           <a aria-current="page" class="py-base transition-colors text-primary border-b-2 border-primary" href="index.html">Dashboard</a>
         </nav>
       </div>
+      <div class="flex items-center gap-2">
+        <span class="text-xs text-text-secondary hidden sm:inline">Student ID:</span>
+        <span class="px-2.5 py-1 rounded bg-surface-container font-mono text-xs font-semibold text-primary" id="topNavRegSpan">202400712</span>
+      </div>
     </div>
   </header>
 
@@ -160,71 +164,32 @@
       <!-- Background Dashboard Overview (Blurred) -->
       <div class="w-full px-margin-desktop py-lg max-w-container-max mx-auto filter blur-[3px] opacity-40 pointer-events-none select-none">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-gutter mb-xl">
-          
-          <!-- Current CGPA -->
           <div class="bg-surface-card rounded-xl p-lg flex flex-col justify-between shadow-md">
-            <div class="flex items-center justify-between">
-              <span class="font-label-md text-label-md uppercase tracking-wider text-text-secondary">Current CGPA</span>
-              <span class="material-symbols-outlined text-primary text-[20px]">insights</span>
-            </div>
+            <span class="font-label-md text-label-md uppercase tracking-wider text-text-secondary">Current CGPA</span>
             <div class="mt-md flex items-baseline gap-sm">
               <span class="font-display-lg text-display-lg text-text-primary">8.50</span>
               <span class="font-label-md text-label-md text-secondary">/ 10.00</span>
             </div>
-            <div class="mt-sm flex items-center gap-xs font-label-md text-label-md text-secondary">
-              <span class="material-symbols-outlined text-[16px]">trending_up</span>
-              <span>+0.12 from last semester</span>
-            </div>
           </div>
-
-          <!-- Total Credits Earned -->
           <div class="bg-surface-card rounded-xl p-lg flex flex-col justify-between shadow-md">
-            <div class="flex items-center justify-between">
-              <span class="font-label-md text-label-md uppercase tracking-wider text-text-secondary">Total Credits Earned</span>
-              <span class="material-symbols-outlined text-tertiary text-[20px]">school</span>
-            </div>
+            <span class="font-label-md text-label-md uppercase tracking-wider text-text-secondary">Total Credits Earned</span>
             <div class="mt-md flex items-baseline gap-sm">
               <span class="font-display-lg text-display-lg text-text-primary">84</span>
               <span class="font-label-md text-label-md text-text-secondary">/ 120 required</span>
             </div>
-            <div class="mt-sm w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
-              <div class="bg-primary h-full w-[70%] rounded-full"></div>
-            </div>
           </div>
-
-          <!-- Semester Progress -->
           <div class="bg-surface-card rounded-xl p-lg flex flex-col justify-between shadow-md">
-            <div class="flex items-center justify-between">
-              <span class="font-label-md text-label-md uppercase tracking-wider text-text-secondary">Semester Progress</span>
-              <span class="material-symbols-outlined text-primary-container text-[20px]">calendar_month</span>
-            </div>
+            <span class="font-label-md text-label-md uppercase tracking-wider text-text-secondary">Semester Progress</span>
             <div class="mt-md flex items-baseline gap-sm">
               <span class="font-display-lg text-display-lg text-text-primary">Fall '24</span>
               <span class="font-label-md text-label-md text-text-secondary">Term 5</span>
             </div>
-            <span class="font-label-md text-label-md text-on-surface-variant mt-sm">5 active enrollments detected</span>
           </div>
-
-          <!-- Academic Standing -->
           <div class="bg-surface-card rounded-xl p-lg flex flex-col justify-between shadow-md">
-            <div class="flex items-center justify-between">
-              <span class="font-label-md text-label-md uppercase tracking-wider text-text-secondary">Academic Standing</span>
-              <span class="material-symbols-outlined text-secondary text-[20px]">verified</span>
-            </div>
+            <span class="font-label-md text-label-md uppercase tracking-wider text-text-secondary">Academic Standing</span>
             <div class="mt-md">
               <span class="font-headline-md text-headline-md text-text-primary">Dean's Honor List</span>
             </div>
-            <span class="font-label-md text-label-md text-secondary mt-sm">Top 5% in cohort</span>
-          </div>
-        </div>
-
-        <div class="bg-surface-card rounded-xl p-lg shadow-md mb-xl">
-          <div class="flex items-center justify-between mb-lg">
-            <h3 class="font-headline-md text-headline-md text-text-primary">Transcript Ingestion Pipeline</h3>
-            <span class="bg-surface-container text-text-secondary px-md py-xs rounded-full font-label-md text-label-md">Status: Processing Optical Scan</span>
-          </div>
-          <div class="h-64 rounded-lg bg-surface-container-low flex items-center justify-center">
-            <span class="text-text-secondary font-body-md text-body-md">Ingestion view background preview</span>
           </div>
         </div>
       </div>
@@ -235,7 +200,7 @@
           <div class="absolute -top-px left-8 right-8 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent"></div>
 
           <!-- Modal Header -->
-          <div class="flex flex-col md:flex-row md:items-start justify-between gap-md mb-lg">
+          <div class="flex flex-col md:flex-row md:items-start justify-between gap-md mb-md">
             <div class="flex-1">
               <div class="flex items-center gap-sm flex-wrap">
                 <h2 class="font-headline-lg text-headline-lg text-text-primary">Verify &amp; Adjust Course Data</h2>
@@ -243,25 +208,38 @@
                   <span class="material-symbols-outlined text-[14px]">edit_note</span>
                   Manual Review
                 </span>
+                <span class="bg-surface-container px-2.5 py-0.5 rounded font-mono text-xs font-semibold text-secondary" id="modalRegBadge">202400712</span>
               </div>
               <p class="font-body-md text-body-md text-text-secondary mt-xs max-w-2xl">
-                Confirm detected courses, credits, and grades. You can edit any value before calculating final SGPA/CGPA.
+                Confirm detected courses, credits, and grades. You can adjust values, add missing courses manually, or upload additional class result files (.pdf / .txt).
               </p>
               <div id="sourceDocsContainer" class="flex items-center gap-2 flex-wrap mt-2"></div>
             </div>
-            <div class="flex flex-col gap-xs min-w-[240px]">
-              <label class="font-label-md text-label-md uppercase tracking-wider text-text-secondary flex items-center gap-xs" for="gradingSystem">
-                <span class="material-symbols-outlined text-[16px] text-primary">tune</span> Grading System
-              </label>
-              <div class="relative">
-                <span class="w-full block bg-surface-container-lowest text-text-primary font-body-md text-body-md px-md py-sm rounded-lg border border-border-subtle text-center font-semibold">10.0 Point Scale (SMU)</span>
+
+            <!-- Header Action Controls -->
+            <div class="flex flex-col sm:flex-row md:flex-col gap-2 items-stretch md:items-end min-w-[240px]">
+              <!-- Upload Transcript (.pdf/.txt) Button -->
+              <button id="verifyUploadBtn" class="flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg bg-surface-container hover:bg-surface-overlay text-primary text-xs font-semibold border border-primary/40 hover:border-primary transition-all shadow-sm" type="button">
+                <span class="material-symbols-outlined text-[18px] text-secondary">cloud_upload</span>
+                <span id="verifyUploadBtnLabel">Upload Transcript (.pdf / .txt)</span>
+              </button>
+              <input type="file" id="verifyFileInput" accept=".pdf,.txt,.csv" multiple class="hidden" />
+
+              <div class="flex items-center justify-between bg-surface-container-lowest px-3 py-1.5 rounded-lg border border-border-subtle text-xs">
+                <span class="text-text-secondary font-medium mr-2">Grading System:</span>
+                <span class="text-text-primary font-semibold">10.0 Scale (SMU)</span>
               </div>
             </div>
           </div>
 
-          <!-- Editable Courses Table -->
-          <div class="bg-surface-container-low rounded-lg p-sm md:p-md mb-lg overflow-x-auto">
-            <table class="w-full text-left border-collapse">
+          <!-- Live Status / Notification Alert Banner -->
+          <div id="uploadStatusBanner" class="hidden mb-md p-3 rounded-lg text-xs font-medium flex items-center justify-between transition-all"></div>
+
+          <!-- Courses Table & Drop Zone Container -->
+          <div class="bg-surface-container-low rounded-lg p-sm md:p-md mb-lg overflow-x-auto relative min-h-[160px]" id="tableWrapper">
+            
+            <!-- Table element -->
+            <table class="w-full text-left border-collapse" id="mainCoursesTable">
               <thead>
                 <tr class="text-text-secondary font-label-md text-label-md uppercase tracking-wider">
                   <th class="py-sm px-md font-semibold">Course Code</th>
@@ -272,112 +250,41 @@
                 </tr>
               </thead>
               <tbody class="space-y-sm" id="courseTableBody">
-                <tr class="bg-surface-card/60 hover:bg-surface-overlay/40 rounded-lg transition-colors group" data-course-row="">
-                  <td class="py-md px-md">
-                    <input class="w-full bg-surface-container-lowest font-body-md text-body-md font-medium text-text-primary px-sm py-xs rounded focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Code" type="text" value="MA206B1" />
-                  </td>
-                  <td class="py-md px-md">
-                    <input class="w-full bg-surface-container-lowest font-body-md text-body-md text-text-primary px-sm py-xs rounded focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Course Title" type="text" value="Probability &amp; Statistics" />
-                  </td>
-                  <td class="py-md px-md">
-                    <div class="relative flex items-center">
-                      <input class="credit-input w-full bg-surface-container-lowest font-body-md text-body-md text-text-primary px-sm py-xs rounded focus:outline-none focus:ring-1 focus:ring-primary" max="12" min="0" step="0.5" type="number" value="4" />
-                      <span class="text-text-secondary font-label-md text-label-md ml-xs select-none">CR</span>
-                    </div>
-                  </td>
-                  <td class="py-md px-md">
-                    <div class="relative">
-                      <select class="grade-select w-full bg-surface-container-lowest font-body-md text-body-md text-text-primary px-sm py-xs rounded appearance-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-primary pr-8">
-                        <option selected="" value="10.0">S (10)</option>
-                        <option value="9.0">A (9)</option>
-                        <option value="8.0">B (8)</option>
-                        <option value="7.0">C (7)</option>
-                        <option value="6.0">D (6)</option>
-                        <option value="5.0">E (5)</option>
-                        <option value="0.0">F (0)</option>
-                      </select>
-                      <span class="material-symbols-outlined text-text-secondary pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[18px]">arrow_drop_down</span>
-                    </div>
-                  </td>
-                  <td class="py-md px-md text-center">
-                    <button class="delete-row-btn w-8 h-8 rounded-lg flex items-center justify-center text-text-secondary hover:text-error hover:bg-error-container/20 transition-colors" title="Delete Course" type="button">
-                      <span class="material-symbols-outlined text-[20px]">delete</span>
-                    </button>
-                  </td>
-                </tr>
-                <tr class="bg-surface-card/60 hover:bg-surface-overlay/40 rounded-lg transition-colors group" data-course-row="">
-                  <td class="py-md px-md">
-                    <input class="w-full bg-surface-container-lowest font-body-md text-body-md font-medium text-text-primary px-sm py-xs rounded focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Code" type="text" value="CS302" />
-                  </td>
-                  <td class="py-md px-md">
-                    <input class="w-full bg-surface-container-lowest font-body-md text-body-md text-text-primary px-sm py-xs rounded focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Course Title" type="text" value="Computer Architecture" />
-                  </td>
-                  <td class="py-md px-md">
-                    <div class="relative flex items-center">
-                      <input class="credit-input w-full bg-surface-container-lowest font-body-md text-body-md text-text-primary px-sm py-xs rounded focus:outline-none focus:ring-1 focus:ring-primary" max="12" min="0" step="0.5" type="number" value="4" />
-                      <span class="text-text-secondary font-label-md text-label-md ml-xs select-none">CR</span>
-                    </div>
-                  </td>
-                  <td class="py-md px-md">
-                    <div class="relative">
-                      <select class="grade-select w-full bg-surface-container-lowest font-body-md text-body-md text-text-primary px-sm py-xs rounded appearance-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-primary pr-8">
-                        <option value="10.0">S (10)</option>
-                        <option selected="" value="9.0">A (9)</option>
-                        <option value="8.0">B (8)</option>
-                        <option value="7.0">C (7)</option>
-                        <option value="6.0">D (6)</option>
-                        <option value="5.0">E (5)</option>
-                        <option value="0.0">F (0)</option>
-                      </select>
-                      <span class="material-symbols-outlined text-text-secondary pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[18px]">arrow_drop_down</span>
-                    </div>
-                  </td>
-                  <td class="py-md px-md text-center">
-                    <button class="delete-row-btn w-8 h-8 rounded-lg flex items-center justify-center text-text-secondary hover:text-error hover:bg-error-container/20 transition-colors" title="Delete Course" type="button">
-                      <span class="material-symbols-outlined text-[20px]">delete</span>
-                    </button>
-                  </td>
-                </tr>
-                <tr class="bg-surface-card/60 hover:bg-surface-overlay/40 rounded-lg transition-colors group" data-course-row="">
-                  <td class="py-md px-md">
-                    <input class="w-full bg-surface-container-lowest font-body-md text-body-md font-medium text-text-primary px-sm py-xs rounded focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Code" type="text" value="CS410" />
-                  </td>
-                  <td class="py-md px-md">
-                    <input class="w-full bg-surface-container-lowest font-body-md text-body-md text-text-primary px-sm py-xs rounded focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Course Title" type="text" value="Web Development" />
-                  </td>
-                  <td class="py-md px-md">
-                    <div class="relative flex items-center">
-                      <input class="credit-input w-full bg-surface-container-lowest font-body-md text-body-md text-text-primary px-sm py-xs rounded focus:outline-none focus:ring-1 focus:ring-primary" max="12" min="0" step="0.5" type="number" value="3" />
-                      <span class="text-text-secondary font-label-md text-label-md ml-xs select-none">CR</span>
-                    </div>
-                  </td>
-                  <td class="py-md px-md">
-                    <div class="relative">
-                      <select class="grade-select w-full bg-surface-container-lowest font-body-md text-body-md text-text-primary px-sm py-xs rounded appearance-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-primary pr-8">
-                        <option value="10.0" selected>S (10)</option>
-                        <option value="9.0">A (9)</option>
-                        <option selected="" value="8.0">B (8)</option>
-                        <option value="7.0">C (7)</option>
-                        <option value="6.0">D (6)</option>
-                        <option value="5.0">E (5)</option>
-                        <option value="0.0">F (0)</option>
-                      </select>
-                      <span class="material-symbols-outlined text-text-secondary pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[18px]">arrow_drop_down</span>
-                    </div>
-                  </td>
-                  <td class="py-md px-md text-center">
-                    <button class="delete-row-btn w-8 h-8 rounded-lg flex items-center justify-center text-text-secondary hover:text-error hover:bg-error-container/20 transition-colors" title="Delete Course" type="button">
-                      <span class="material-symbols-outlined text-[20px]">delete</span>
-                    </button>
-                  </td>
-                </tr>
+                <!-- Dynamically populated rows -->
               </tbody>
             </table>
 
-            <div class="mt-md flex justify-start">
+            <!-- Empty State & Upload Drop Zone (Shown when 0 courses are loaded) -->
+            <div id="emptyDropZone" class="hidden my-4 border-2 border-dashed border-border-subtle hover:border-primary rounded-xl p-8 text-center flex flex-col items-center justify-center gap-3 bg-surface-container-lowest/60 cursor-pointer transition-all duration-200">
+              <div class="w-14 h-14 rounded-full bg-surface-container flex items-center justify-center text-primary-container shadow-sm">
+                <span class="material-symbols-outlined text-[32px]">upload_file</span>
+              </div>
+              <div class="flex flex-col gap-1">
+                <h4 class="font-headline-md text-headline-md text-text-primary text-[18px]">
+                  No records found in server database for <span class="text-primary font-mono" id="emptyRegSpan">202400712</span>
+                </h4>
+                <p class="font-body-md text-body-md text-text-secondary max-w-lg">
+                  Drag &amp; drop an official class grade sheet or transcript (<strong class="text-text-primary">.pdf</strong> or <strong class="text-text-primary">.txt</strong>) here, or <span class="text-primary underline font-medium">browse files</span>.
+                </p>
+              </div>
+              <div class="flex items-center gap-2 mt-1">
+                <span class="text-xs text-text-secondary bg-surface-container px-3 py-1 rounded-full border border-border-subtle flex items-center gap-1">
+                  <span class="material-symbols-outlined text-[15px] text-secondary">group</span>
+                  <span>Uploading records automatically saves all classmates so others can view results instantly</span>
+                </span>
+              </div>
+            </div>
+
+            <!-- Table Bottom Action Controls -->
+            <div class="mt-md flex flex-wrap items-center justify-between gap-2" id="tableToolbar">
               <button class="flex items-center gap-xs px-md py-sm bg-surface-card hover:bg-surface-overlay text-primary font-body-md text-body-md rounded-lg transition-colors group" id="addCourseBtn" type="button">
                 <span class="material-symbols-outlined text-[20px] transition-transform group-hover:rotate-90">add_circle</span>
                 <span>+ Add Missing Course</span>
+              </button>
+
+              <button class="flex items-center gap-1.5 px-3 py-1.5 text-xs text-text-secondary hover:text-text-primary bg-surface-card hover:bg-surface-overlay rounded-lg border border-border-subtle transition-all" id="addMoreFilesTableBtn" type="button">
+                <span class="material-symbols-outlined text-[16px] text-secondary">note_add</span>
+                <span>Add Another Document (.pdf / .txt)</span>
               </button>
             </div>
           </div>
@@ -387,29 +294,29 @@
             <div class="flex items-center gap-lg">
               <div class="flex items-center gap-sm">
                 <span class="text-text-secondary font-label-md text-label-md uppercase tracking-wider">Total Credits:</span>
-                <span class="font-headline-md text-headline-md text-primary" id="totalCreditsBadge">11</span>
+                <span class="font-headline-md text-headline-md text-primary" id="totalCreditsBadge">0</span>
               </div>
               <div class="w-1.5 h-1.5 rounded-full bg-outline-variant"></div>
               <div class="flex items-center gap-sm">
                 <span class="text-text-secondary font-label-md text-label-md uppercase tracking-wider">Courses:</span>
-                <span class="font-headline-md text-headline-md text-text-primary" id="totalCoursesBadge">3</span>
+                <span class="font-headline-md text-headline-md text-text-primary" id="totalCoursesBadge">0</span>
               </div>
             </div>
             <div class="flex items-center gap-sm bg-surface-container px-md py-xs rounded-full">
               <span class="material-symbols-outlined text-secondary text-[18px]">bolt</span>
               <span class="text-text-secondary font-label-md text-label-md">Estimated Term SGPA:</span>
-              <span class="text-secondary font-bold font-body-md text-body-md" id="liveGpaPreview">9.09</span>
+              <span class="text-secondary font-bold font-body-md text-body-md" id="liveGpaPreview">0.00</span>
             </div>
           </div>
 
           <!-- Action Buttons -->
           <div class="flex flex-col sm:flex-row items-center justify-end gap-md pt-xs">
-            <a href="upload.html" class="w-full sm:w-auto">
+            <a href="index.html" class="w-full sm:w-auto">
               <button class="w-full sm:w-auto px-lg py-sm bg-surface-container hover:bg-surface-overlay text-on-surface font-body-md text-body-md rounded-lg transition-colors text-center" type="button">
-                Back
+                Back to Search
               </button>
             </a>
-            <button class="w-full sm:w-auto flex items-center justify-center gap-sm px-xl py-sm bg-primary-container text-on-surface-container hover:brightness-110 font-headline-md text-body-md rounded-lg shadow-md transition-all" id="calculateSgpaBtn" type="button">
+            <button class="w-full sm:w-auto flex items-center justify-center gap-sm px-xl py-sm bg-primary-container text-on-surface-container hover:brightness-110 font-headline-md text-body-md rounded-lg shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed" id="calculateSgpaBtn" type="button">
               <span>Confirm &amp; Calculate SGPA</span>
               <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
             </button>
@@ -434,66 +341,78 @@
   <!-- Verification Logic & Dynamic Table Script -->
   <script>
     (function initVerificationModal() {
+      // 1. API Base URL configuration
+      const RENDER_BACKEND_URL = 'https://smitgrader.onrender.com';
+      const isLocal = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost';
+      const cachedUrl = localStorage.getItem('gradeflow_api_url');
+      if (cachedUrl && (cachedUrl.includes('gradeflow-backend') || (cachedUrl.includes('127.0.0.1') && !isLocal))) {
+        localStorage.removeItem('gradeflow_api_url');
+      }
+      const API_BASE_URL = isLocal ? 'http://127.0.0.1:8000' : (localStorage.getItem('gradeflow_api_url') || RENDER_BACKEND_URL);
+      localStorage.setItem('gradeflow_api_url', API_BASE_URL);
+
+      // DOM Elements
       const tableBody = document.getElementById('courseTableBody');
       const addBtn = document.getElementById('addCourseBtn');
       const totalCreditsDisplay = document.getElementById('totalCreditsBadge');
       const totalCoursesDisplay = document.getElementById('totalCoursesBadge');
       const liveGpaDisplay = document.getElementById('liveGpaPreview');
+      const calculateBtn = document.getElementById('calculateSgpaBtn');
 
-      // 1. Fetch the parsed data from the previous screen
-      const savedData = sessionStorage.getItem("parsed_transcript");
-      if (savedData) {
-        const transcript = JSON.parse(savedData);
-        tableBody.innerHTML = ''; // Clear placeholder rows
-        
-        // Render stored source document links if available from Supabase Storage
-        const docsContainer = document.getElementById('sourceDocsContainer');
-        const uploadedFiles = transcript.uploaded_files || transcript.upload_history || [];
-        if (docsContainer && uploadedFiles.length > 0) {
-          docsContainer.innerHTML = uploadedFiles.map(f => `
-            <a href="${f.file_url}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high hover:bg-surface-overlay text-primary text-xs font-medium border border-border-subtle transition-colors shadow-sm">
-              <span class="material-symbols-outlined text-[15px] text-secondary">cloud_done</span>
-              <span>Stored: ${f.file_name}</span>
-              <span class="material-symbols-outlined text-[13px] opacity-70">open_in_new</span>
-            </a>
-          `).join('');
+      const topNavRegSpan = document.getElementById('topNavRegSpan');
+      const modalRegBadge = document.getElementById('modalRegBadge');
+      const emptyRegSpan = document.getElementById('emptyRegSpan');
+      const emptyDropZone = document.getElementById('emptyDropZone');
+      const mainCoursesTable = document.getElementById('mainCoursesTable');
+      const uploadStatusBanner = document.getElementById('uploadStatusBanner');
+
+      const verifyUploadBtn = document.getElementById('verifyUploadBtn');
+      const verifyUploadBtnLabel = document.getElementById('verifyUploadBtnLabel');
+      const verifyFileInput = document.getElementById('verifyFileInput');
+      const addMoreFilesTableBtn = document.getElementById('addMoreFilesTableBtn');
+      const sourceDocsContainer = document.getElementById('sourceDocsContainer');
+
+      // Current Student Identifier
+      const targetRegNum = (sessionStorage.getItem("target_reg_num") || "202400712").trim();
+      if (topNavRegSpan) topNavRegSpan.textContent = targetRegNum;
+      if (modalRegBadge) modalRegBadge.textContent = targetRegNum;
+      if (emptyRegSpan) emptyRegSpan.textContent = targetRegNum;
+
+      // Grade to SMU 10.0 scale points map
+      const gradePoints = { 'S': 10.0, 'A': 9.0, 'B': 8.0, 'C': 7.0, 'D': 6.0, 'E': 5.0, 'F': 0.0 };
+
+      function showBanner(message, type = 'info') {
+        if (!uploadStatusBanner) return;
+        uploadStatusBanner.classList.remove('hidden', 'bg-secondary/15', 'text-secondary', 'bg-error/15', 'text-error', 'bg-primary-container/20', 'text-primary');
+        if (type === 'success') {
+          uploadStatusBanner.classList.add('bg-secondary/15', 'text-secondary');
+        } else if (type === 'error') {
+          uploadStatusBanner.classList.add('bg-error/15', 'text-error');
+        } else {
+          uploadStatusBanner.classList.add('bg-primary-container/20', 'text-primary');
         }
+        uploadStatusBanner.innerHTML = `
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">${type === 'success' ? 'check_circle' : (type === 'error' ? 'error' : 'info')}</span>
+            <span>${message}</span>
+          </div>
+          <button type="button" class="text-text-secondary hover:text-text-primary p-0.5" onclick="this.parentElement.classList.add('hidden')">
+            <span class="material-symbols-outlined text-[16px]">close</span>
+          </button>
+        `;
+      }
 
-        // Isolate only specific grades matching target student
-        const targetRegNum = sessionStorage.getItem("target_reg_num") || "202400712";
-        const myGrades = transcript.data.filter(row => row.registration_number === targetRegNum);
-        if (myGrades.length === 0) {
-          tableBody.innerHTML = `<tr><td colspan="5" class="py-md text-center text-error">No records found for ${targetRegNum} in this document.</td></tr>`;
+      function updateEmptyState() {
+        const rows = tableBody.querySelectorAll('tr[data-course-row]');
+        if (rows.length === 0) {
+          mainCoursesTable.classList.add('hidden');
+          emptyDropZone.classList.remove('hidden');
+          calculateBtn.disabled = true;
+        } else {
+          mainCoursesTable.classList.remove('hidden');
+          emptyDropZone.classList.add('hidden');
+          calculateBtn.disabled = false;
         }
-
-        // 2. Generate a new row for every parsed course that belongs to you
-        myGrades.forEach(course => {
-          const newRow = document.createElement('tr');
-          newRow.setAttribute('data-course-row', '');
-          newRow.className = 'bg-surface-card/60 hover:bg-surface-overlay/40 rounded-lg transition-colors group';
-          
-          // Map SMU grades to the 10-point scale
-          const gradePoints = { 'S': '10.0', 'A': '9.0', 'B': '8.0', 'C': '7.0', 'D': '6.0', 'E': '5.0', 'F': '0.0' };
-          const defaultPoint = gradePoints[course.grade] || '0.0';
-
-          newRow.innerHTML = `
-            <td class="py-md px-md"><input type="text" value="${course.course_code}" class="w-full bg-surface-container-lowest font-body-md text-body-md font-medium text-text-primary px-sm py-xs rounded focus:outline-none focus:ring-1 focus:ring-primary"></td>
-            <td class="py-md px-md"><input type="text" value="${course.course_name}" class="w-full bg-surface-container-lowest font-body-md text-body-md text-text-primary px-sm py-xs rounded focus:outline-none focus:ring-1 focus:ring-primary"></td>
-            <td class="py-md px-md"><div class="relative flex items-center"><input type="number" min="0" max="12" step="0.5" value="${course.credits}" class="credit-input w-full bg-surface-container-lowest font-body-md text-body-md text-text-primary px-sm py-xs rounded focus:outline-none focus:ring-1 focus:ring-primary"><span class="text-text-secondary font-label-md text-label-md ml-xs select-none">CR</span></div></td>
-            <td class="py-md px-md"><div class="relative"><select class="grade-select w-full bg-surface-container-lowest font-body-md text-body-md text-text-primary px-sm py-xs rounded appearance-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-primary pr-8">
-              <option value="10.0" ${defaultPoint === '10.0' ? 'selected' : ''}>S (10)</option>
-              <option value="9.0" ${defaultPoint === '9.0' ? 'selected' : ''}>A (9)</option>
-              <option value="8.0" ${defaultPoint === '8.0' ? 'selected' : ''}>B (8)</option>
-              <option value="7.0" ${defaultPoint === '7.0' ? 'selected' : ''}>C (7)</option>
-              <option value="6.0" ${defaultPoint === '6.0' ? 'selected' : ''}>D (6)</option>
-              <option value="5.0" ${defaultPoint === '5.0' ? 'selected' : ''}>E (5)</option>
-              <option value="0.0" ${defaultPoint === '0.0' ? 'selected' : ''}>F (0)</option>
-            </select><span class="material-symbols-outlined text-text-secondary pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[18px]">arrow_drop_down</span></div></td>
-            <td class="py-md px-md text-center"><button type="button" class="delete-row-btn w-8 h-8 rounded-lg flex items-center justify-center text-text-secondary hover:text-error hover:bg-error-container/20 transition-colors" title="Delete Course"><span class="material-symbols-outlined text-[20px]">delete</span></button></td>
-          `;
-          tableBody.appendChild(newRow);
-          attachRowListeners(newRow); 
-        });
       }
 
       function calculateTotals() {
@@ -521,6 +440,56 @@
         } else {
           liveGpaDisplay.textContent = '0.00';
         }
+        updateEmptyState();
+      }
+
+      function createCourseRow(course) {
+        const tr = document.createElement('tr');
+        tr.setAttribute('data-course-row', '');
+        tr.className = 'bg-surface-card/60 hover:bg-surface-overlay/40 rounded-lg transition-colors group';
+
+        const cCode = course.course_code || 'COURSE';
+        const cName = course.course_name || 'Subject Module';
+        const cCred = course.credits !== undefined ? course.credits : 4;
+        const cGrade = (course.grade || 'S').trim().toUpperCase();
+        const pt = gradePoints[cGrade] !== undefined ? gradePoints[cGrade] : 10.0;
+
+        tr.innerHTML = `
+          <td class="py-md px-md">
+            <input type="text" value="${cCode}" class="w-full bg-surface-container-lowest font-body-md text-body-md font-medium text-text-primary px-sm py-xs rounded focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Code">
+          </td>
+          <td class="py-md px-md">
+            <input type="text" value="${cName}" class="w-full bg-surface-container-lowest font-body-md text-body-md text-text-primary px-sm py-xs rounded focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Course Title">
+          </td>
+          <td class="py-md px-md">
+            <div class="relative flex items-center">
+              <input type="number" min="0" max="12" step="0.5" value="${cCred}" class="credit-input w-full bg-surface-container-lowest font-body-md text-body-md text-text-primary px-sm py-xs rounded focus:outline-none focus:ring-1 focus:ring-primary">
+              <span class="text-text-secondary font-label-md text-label-md ml-xs select-none">CR</span>
+            </div>
+          </td>
+          <td class="py-md px-md">
+            <div class="relative">
+              <select class="grade-select w-full bg-surface-container-lowest font-body-md text-body-md text-text-primary px-sm py-xs rounded appearance-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-primary pr-8">
+                <option value="10.0" ${pt === 10.0 ? 'selected' : ''}>S (10)</option>
+                <option value="9.0" ${pt === 9.0 ? 'selected' : ''}>A (9)</option>
+                <option value="8.0" ${pt === 8.0 ? 'selected' : ''}>B (8)</option>
+                <option value="7.0" ${pt === 7.0 ? 'selected' : ''}>C (7)</option>
+                <option value="6.0" ${pt === 6.0 ? 'selected' : ''}>D (6)</option>
+                <option value="5.0" ${pt === 5.0 ? 'selected' : ''}>E (5)</option>
+                <option value="0.0" ${pt === 0.0 ? 'selected' : ''}>F (0)</option>
+              </select>
+              <span class="material-symbols-outlined text-text-secondary pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[18px]">arrow_drop_down</span>
+            </div>
+          </td>
+          <td class="py-md px-md text-center">
+            <button type="button" class="delete-row-btn w-8 h-8 rounded-lg flex items-center justify-center text-text-secondary hover:text-error hover:bg-error-container/20 transition-colors" title="Delete Course">
+              <span class="material-symbols-outlined text-[20px]">delete</span>
+            </button>
+          </td>
+        `;
+
+        attachRowListeners(tr);
+        return tr;
       }
 
       function attachRowListeners(row) {
@@ -530,47 +499,212 @@
 
         if (deleteBtn) {
           deleteBtn.addEventListener('click', () => {
-            const rows = tableBody.querySelectorAll('tr[data-course-row]');
-            if (rows.length > 1) {
-              row.remove();
-              calculateTotals();
-            } else {
-              alert('At least one course is required for SGPA calculation.');
-            }
+            row.remove();
+            calculateTotals();
           });
         }
         if (creditInput) creditInput.addEventListener('input', calculateTotals);
         if (gradeSelect) gradeSelect.addEventListener('change', calculateTotals);
       }
 
-      tableBody.querySelectorAll('tr[data-course-row]').forEach(attachRowListeners);
-      calculateTotals();
-
-      addBtn.addEventListener('click', () => {
-        const newRow = document.createElement('tr');
-        newRow.setAttribute('data-course-row', '');
-        newRow.className = 'bg-surface-card/60 hover:bg-surface-overlay/40 rounded-lg transition-colors group';
-        newRow.innerHTML = `
-          <td class="py-md px-md"><input type="text" value="" class="w-full bg-surface-container-lowest font-body-md text-body-md font-medium text-text-primary px-sm py-xs rounded focus:outline-none focus:ring-1 focus:ring-primary" placeholder="e.g. CS490"></td>
-          <td class="py-md px-md"><input type="text" value="" class="w-full bg-surface-container-lowest font-body-md text-body-md text-text-primary px-sm py-xs rounded focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Course Name"></td>
-          <td class="py-md px-md"><div class="relative flex items-center"><input type="number" min="0" max="12" step="0.5" value="4" class="credit-input w-full bg-surface-container-lowest font-body-md text-body-md text-text-primary px-sm py-xs rounded focus:outline-none focus:ring-1 focus:ring-primary"><span class="text-text-secondary font-label-md text-label-md ml-xs select-none">CR</span></div></td>
-          <td class="py-md px-md"><div class="relative"><select class="grade-select w-full bg-surface-container-lowest font-body-md text-body-md text-text-primary px-sm py-xs rounded appearance-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-primary pr-8"><option value="10.0" selected>S (10)</option><option value="9.0">A (9)</option><option value="8.0">B (8)</option><option value="7.0">C (7)</option><option value="6.0">D (6)</option><option value="5.0">E (5)</option><option value="0.0">F (0)</option></select><span class="material-symbols-outlined text-text-secondary pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[18px]">arrow_drop_down</span></div></td>
-          <td class="py-md px-md text-center"><button type="button" class="delete-row-btn w-8 h-8 rounded-lg flex items-center justify-center text-text-secondary hover:text-error hover:bg-error-container/20 transition-colors" title="Delete Course"><span class="material-symbols-outlined text-[20px]">delete</span></button></td>
-        `;
-        tableBody.appendChild(newRow);
-        attachRowListeners(newRow);
+      function renderLoadedGrades(gradeList) {
+        tableBody.innerHTML = '';
+        gradeList.forEach(c => {
+          tableBody.appendChild(createCourseRow(c));
+        });
         calculateTotals();
+      }
+
+      // 2. Load existing transcript data from sessionStorage
+      const savedData = sessionStorage.getItem("parsed_transcript");
+      let initialGrades = [];
+
+      if (savedData) {
+        try {
+          const parsed = JSON.parse(savedData);
+          const rawList = parsed.data || [];
+          
+          // Display source documents if present
+          const uploadedFiles = parsed.uploaded_files || parsed.upload_history || [];
+          if (sourceDocsContainer && uploadedFiles.length > 0) {
+            sourceDocsContainer.innerHTML = uploadedFiles.map(f => `
+              <a href="${f.file_url || '#'}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high hover:bg-surface-overlay text-primary text-xs font-medium border border-border-subtle transition-colors shadow-sm">
+                <span class="material-symbols-outlined text-[15px] text-secondary">cloud_done</span>
+                <span>Stored: ${f.file_name}</span>
+                <span class="material-symbols-outlined text-[13px] opacity-70">open_in_new</span>
+              </a>
+            `).join('');
+          }
+
+          // Robust filter: match target student reg number
+          initialGrades = rawList.filter(row => {
+            const rowReg = String(row.registration_number || '').trim();
+            if (!rowReg || rowReg === 'general' || rowReg === 'UNKNOWN') {
+              return true; // Include individual transcript entries
+            }
+            return rowReg === targetRegNum;
+          });
+        } catch (e) {
+          console.warn('Error reading saved transcript JSON:', e);
+        }
+      }
+
+      if (initialGrades.length > 0) {
+        renderLoadedGrades(initialGrades);
+      } else {
+        updateEmptyState();
+      }
+
+      // 3. Add Missing Course Manually
+      addBtn.addEventListener('click', () => {
+        const dummyRow = createCourseRow({
+          course_code: '',
+          course_name: '',
+          credits: 4,
+          grade: 'S'
+        });
+        tableBody.appendChild(dummyRow);
+        calculateTotals();
+        const firstInput = dummyRow.querySelector('input');
+        if (firstInput) firstInput.focus();
       });
 
-      const calculateBtn = document.getElementById('calculateSgpaBtn');
+      // 4. File Upload Logic directly inside verify.html
+      async function uploadAndProcessFiles(files) {
+        if (!files || !files.length) return;
+
+        verifyUploadBtn.disabled = true;
+        if (verifyUploadBtnLabel) verifyUploadBtnLabel.textContent = `Uploading & Parsing ${files.length} File(s)...`;
+        showBanner(`Processing ${files.length} document(s)... Extracting grades for class and referencing student #${targetRegNum}`, 'info');
+
+        const formData = new FormData();
+        for (let i = 0; i < files.length; i++) {
+          formData.append('files', files[i]);
+        }
+        formData.append('registration_number', targetRegNum);
+
+        try {
+          const res = await fetch(`${API_BASE_URL}/api/upload`, {
+            method: 'POST',
+            body: formData
+          });
+
+          if (!res.ok) {
+            throw new Error(`Server returned HTTP ${res.status}`);
+          }
+
+          const result = await res.json();
+          console.log('[Verify Upload] Response:', result);
+
+          const allParsed = result.data || [];
+          // Filter matching courses for target student
+          const matchingForStudent = allParsed.filter(row => {
+            const r = String(row.registration_number || '').trim();
+            return !r || r === 'general' || r === 'UNKNOWN' || r === targetRegNum;
+          });
+
+          if (matchingForStudent.length > 0) {
+            // Merge with existing table rows (avoid duplicating course codes)
+            const existingCodes = new Set();
+            tableBody.querySelectorAll('tr[data-course-row]').forEach(row => {
+              const codeVal = row.querySelectorAll('input')[0]?.value.trim().toUpperCase();
+              if (codeVal) existingCodes.add(codeVal);
+            });
+
+            let addedCount = 0;
+            matchingForStudent.forEach(c => {
+              const cUpper = (c.course_code || '').trim().toUpperCase();
+              if (!existingCodes.has(cUpper) || cUpper === 'UNKNOWN' || !cUpper) {
+                tableBody.appendChild(createCourseRow(c));
+                existingCodes.add(cUpper);
+                addedCount++;
+              }
+            });
+
+            calculateTotals();
+            sessionStorage.setItem('parsed_transcript', JSON.stringify(result));
+            showBanner(`Successfully extracted ${addedCount > 0 ? addedCount : matchingForStudent.length} course grade(s) for #${targetRegNum} from uploaded files!`, 'success');
+          } else {
+            showBanner(`Uploaded file parsed (${allParsed.length} student records saved to database for class), but registration number #${targetRegNum} was not found in this specific file. You can upload another sheet or add courses manually.`, 'error');
+            updateEmptyState();
+          }
+
+          // Add file pill to source docs
+          if (result.uploaded_files && result.uploaded_files.length > 0 && sourceDocsContainer) {
+            sourceDocsContainer.innerHTML = result.uploaded_files.map(f => `
+              <a href="${f.file_url || '#'}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high hover:bg-surface-overlay text-primary text-xs font-medium border border-border-subtle transition-colors shadow-sm">
+                <span class="material-symbols-outlined text-[15px] text-secondary">cloud_done</span>
+                <span>Stored: ${f.file_name}</span>
+                <span class="material-symbols-outlined text-[13px] opacity-70">open_in_new</span>
+              </a>
+            `).join('');
+          }
+
+        } catch (err) {
+          console.error('[Verify Upload Error]:', err);
+          showBanner(`Failed to process document: ${err.message}. Please check that the server is online.`, 'error');
+        } finally {
+          verifyUploadBtn.disabled = false;
+          if (verifyUploadBtnLabel) verifyUploadBtnLabel.textContent = 'Upload Transcript (.pdf / .txt)';
+          verifyFileInput.value = '';
+        }
+      }
+
+      // Triggers
+      if (verifyUploadBtn) {
+        verifyUploadBtn.addEventListener('click', () => verifyFileInput.click());
+      }
+      if (addMoreFilesTableBtn) {
+        addMoreFilesTableBtn.addEventListener('click', () => verifyFileInput.click());
+      }
+      if (emptyDropZone) {
+        emptyDropZone.addEventListener('click', () => verifyFileInput.click());
+      }
+      if (verifyFileInput) {
+        verifyFileInput.addEventListener('change', function() {
+          if (this.files && this.files.length) {
+            uploadAndProcessFiles(this.files);
+          }
+        });
+      }
+
+      // Drag and drop onto empty dropzone or tableWrapper
+      const dropTargets = [emptyDropZone, document.getElementById('tableWrapper')];
+      dropTargets.forEach(target => {
+        if (!target) return;
+        ['dragenter', 'dragover'].forEach(eventName => {
+          target.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            target.classList.add('border-primary', 'bg-surface-container-high/50');
+          }, false);
+        });
+        ['dragleave', 'drop'].forEach(eventName => {
+          target.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            target.classList.remove('border-primary', 'bg-surface-container-high/50');
+          }, false);
+        });
+        target.addEventListener('drop', (e) => {
+          const dt = e.dataTransfer;
+          if (dt && dt.files && dt.files.length) {
+            uploadAndProcessFiles(dt.files);
+          }
+        }, false);
+      });
+
+      // 5. Calculate and Proceed to results.html
       calculateBtn.addEventListener('click', () => {
+        const rows = tableBody.querySelectorAll('tr[data-course-row]');
+        if (rows.length === 0) {
+          alert('Please add or upload at least one course before confirming.');
+          return;
+        }
+
         calculateBtn.innerHTML = `
           <span class="material-symbols-outlined animate-spin text-[20px]">progress_activity</span>
           <span>Computing Metrics...</span>
         `;
 
-        // Harvest all current table rows for results.html
-        const rows = tableBody.querySelectorAll('tr[data-course-row]');
         const finalCourses = [];
         let totalCredits = 0;
         let weightedPoints = 0;
@@ -627,8 +761,8 @@
           calculateBtn.classList.add('bg-secondary-container', 'text-text-primary');
           setTimeout(() => {
             window.location.href = './results.html';
-          }, 600);
-        }, 500);
+          }, 500);
+        }, 400);
       });
     })();
   </script>

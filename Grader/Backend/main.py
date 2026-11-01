@@ -6,7 +6,7 @@ import pdfplumber
 import io
 import re
 import os
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 from supabase import create_client, Client
 from dotenv import load_dotenv
 
@@ -50,8 +50,6 @@ app.add_middleware(
 
 # ---------------------------------------------------------------------
 # Fix for Swagger UI file picker bug in newer FastAPI versions (0.129.1+)
-# Forces OpenAPI schema to output format="binary" so Swagger renders 
-# the interactive "Choose Files" button instead of a plain text box.
 # ---------------------------------------------------------------------
 def custom_openapi():
     if app.openapi_schema:
@@ -64,7 +62,6 @@ def custom_openapi():
         routes=app.routes,
     )
 
-    # 1. Fix schema components
     schemas = openapi_schema.get("components", {}).get("schemas", {})
     for model_def in schemas.values():
         properties = model_def.get("properties", {})
@@ -79,7 +76,6 @@ def custom_openapi():
                     prop["items"]["format"] = "binary"
                     prop["items"]["type"] = "string"
 
-    # 2. Fix inline path request bodies
     for path_item in openapi_schema.get("paths", {}).values():
         for operation in path_item.values():
             if isinstance(operation, dict):
@@ -105,9 +101,7 @@ app.openapi = custom_openapi
 
 
 def ensure_storage_bucket(bucket_name: str = "transcripts"):
-    """
-    Guarantees the storage bucket exists in Supabase.
-    """
+    """Guarantees the storage bucket exists in Supabase."""
     if not supabase:
         return
     try:
@@ -120,12 +114,183 @@ def ensure_storage_bucket(bucket_name: str = "transcripts"):
             pass
 
 
+def parse_page_text_for_metadata(page_text: str):
+    """
+    Extracts Subject Code, Subject Title, and Credits from page header text.
+    Handles flexible spacing, casing, and separators.
+    """
+    meta_pattern = r"Subject Code\s*[:\-]?\s*([A-Z0-9]+).*?(?:Subject Title\s*[:\-]?\s*(.*?))?(?:Subject Credit\s*[:\-]?\s*([\d\.]+)|Credit\s*[:\-]?\s*([\d\.]+))"
+    match = re.search(meta_pattern, page_text, re.IGNORECASE | re.DOTALL)
+    if not match:
+        # Fallback simpler regex
+        code_m = re.search(r"Subject Code\s*[:\-]?\s*([A-Z0-9]+)", page_text, re.IGNORECASE)
+        title_m = re.search(r"Subject Title\s*[:\-]?\s*([^\n\r]+)", page_text, re.IGNORECASE)
+        cred_m = re.search(r"(?:Subject Credit|Credit)\s*[:\-]?\s*([\d\.]+)", page_text, re.IGNORECASE)
+        c_code = code_m.group(1).strip() if code_m else None
+        c_name = title_m.group(1).strip() if title_m else None
+        c_cred = float(cred_m.group(1)) if cred_m else None
+        return c_code, c_name, c_cred
+
+    c_code = match.group(1).strip() if match.group(1) else None
+    c_name = None
+    if match.group(2):
+        raw_name = match.group(2).strip()
+        c_name = re.split(r'Subject Credit|Credit|\n', raw_name)[0].strip() or None
+    c_cred = None
+    cred_val = match.group(3) or match.group(4)
+    if cred_val:
+        try:
+            c_cred = float(cred_val)
+        except ValueError:
+            pass
+    return c_code, c_name, c_cred
+
+
+def parse_document_bytes(file_bytes: bytes, filename: str, default_reg: Optional[str] = None) -> List[dict]:
+    """
+    Comprehensive document parser:
+    1. Per-page / per-section Subject Code tracking (supports multi-subject/multi-page files)
+    2. Class grade sheet student row parsing (RegNo, Internal, External, Total, Grade)
+    3. Individual student transcript parsing fallback
+    """
+    lower_name = filename.lower()
+    pages_text = []
+
+    if lower_name.endswith('.pdf'):
+        try:
+            with pdfplumber.open(io.BytesIO(file_bytes)) as pdf:
+                for page in pdf.pages:
+                    text = page.extract_text()
+                    if text and text.strip():
+                        pages_text.append(text)
+        except Exception as e:
+            print(f"[Parser Warning] Error reading PDF {filename}: {e}")
+            return []
+    elif lower_name.endswith('.txt') or lower_name.endswith('.csv'):
+        try:
+            raw_text = file_bytes.decode('utf-8', errors='ignore')
+            # Split sections if multiple subjects exist in text
+            sections = re.split(r'(?=Subject Code\s*[:\-])', raw_text, flags=re.IGNORECASE)
+            for s in sections:
+                if s.strip():
+                    pages_text.append(s)
+        except Exception as e:
+            print(f"[Parser Warning] Error reading text {filename}: {e}")
+            return []
+
+    parsed_courses = []
+    current_code = "UNKNOWN"
+    current_name = "UNKNOWN"
+    current_credits = 4.0
+
+    # Flexible row pattern for class grade sheet rows:
+    # Match: RegNo (8-11 digits), Int marks/status, Ext marks/status, Total marks, Grade (S, A, B, C, D, E, F, etc.)
+    row_pattern = r"(\d{8,11})\s+([\d\.]+|AB|DT|MP|NE|NA)\s+([\d\.]+|AB|DT|MP|NE|NA)\s+([\d\.]+)\s+([A-Z\+]{1,3})"
+
+    for p_idx, text in enumerate(pages_text):
+        c_code, c_name, c_cred = parse_page_text_for_metadata(text)
+        if c_code:
+            current_code = c_code
+        if c_name:
+            current_name = c_name
+        if c_cred is not None:
+            current_credits = c_cred
+
+        # 1. Check for class grade sheet rows
+        page_matches = list(re.finditer(row_pattern, text))
+        if page_matches:
+            for m in page_matches:
+                reg = m.group(1).strip()
+                try:
+                    tot_m = float(m.group(4))
+                except ValueError:
+                    tot_m = 0.0
+                grade_val = m.group(5).strip().upper()
+
+                parsed_courses.append({
+                    "registration_number": reg,
+                    "course_code": current_code,
+                    "course_name": current_name,
+                    "credits": current_credits,
+                    "total_marks": tot_m,
+                    "grade": grade_val
+                })
+        else:
+            # 2. Check for individual student transcript format
+            # e.g.: CS302 Computer Architecture 4.0 A
+            indiv_reg_match = re.search(r"(?:Registration|Reg|Roll)\s*(?:No|Number)?\s*[:\-]?\s*(\d{8,11})", text, re.IGNORECASE)
+            effective_reg = indiv_reg_match.group(1).strip() if indiv_reg_match else (default_reg or "general")
+
+            indiv_pattern = r"([A-Z]{2,4}\d{2,4}[A-Z0-9]*)\s+([A-Za-z0-9\s&,\-\(\)]+?)\s+([\d\.]+)\s+([SABCDEF][\+]*)"
+            for m in re.finditer(indiv_pattern, text):
+                code = m.group(1).strip()
+                name = m.group(2).strip()
+                try:
+                    cr = float(m.group(3))
+                except ValueError:
+                    cr = 4.0
+                gr = m.group(4).strip().upper()
+
+                parsed_courses.append({
+                    "registration_number": effective_reg,
+                    "course_code": code,
+                    "course_name": name,
+                    "credits": cr,
+                    "total_marks": 0.0,
+                    "grade": gr
+                })
+
+    return parsed_courses
+
+
+def save_courses_to_db(courses: List[dict]):
+    """
+    Deduplicates courses by (registration_number, course_code) and
+    safely upserts/inserts them into the Supabase 'student_grades' table.
+    """
+    if not courses or not supabase:
+        return
+
+    # In-memory deduplication: keep cleanest/latest record
+    deduped: Dict[tuple, dict] = {}
+    for c in courses:
+        r = str(c.get("registration_number", "")).strip()
+        code = str(c.get("course_code", "")).strip()
+        if r and code:
+            deduped[(r, code)] = c
+    clean_list = list(deduped.values())
+
+    # Chunked upsert/insert
+    chunk_size = 50
+    for i in range(0, len(clean_list), chunk_size):
+        chunk = clean_list[i:i + chunk_size]
+        try:
+            supabase.table("student_grades").upsert(
+                chunk,
+                on_conflict="registration_number,course_code"
+            ).execute()
+        except Exception as upsert_err:
+            # If unique constraint or on_conflict isn't defined, insert row-by-row gracefully
+            for row in chunk:
+                try:
+                    supabase.table("student_grades").upsert(
+                        row,
+                        on_conflict="registration_number,course_code"
+                    ).execute()
+                except Exception:
+                    try:
+                        supabase.table("student_grades").insert(row).execute()
+                    except Exception:
+                        pass
+
+
 @app.get("/wakeup")
 def wake_up():
     return {
         "status": "Server is awake and ready.",
         "supabase_connected": supabase is not None
     }
+
 
 @app.get("/")
 def read_root():
@@ -136,11 +301,13 @@ def read_root():
         "supabase_connected": supabase is not None
     }
 
+
 @app.get("/api/student/{registration_number}")
 def get_student_records(registration_number: str):
     """
-    Checks Supabase database for existing academic records and upload history
-    for this student using B-Tree index on registration_number for O(log N) retrieval.
+    1. Queries Supabase 'student_grades' for this student.
+    2. If not found, references previously uploaded class files to find and recover grades.
+    3. Calculates real-time GPA and performance metrics.
     """
     clean_reg = registration_number.strip()
     if not supabase:
@@ -153,27 +320,76 @@ def get_student_records(registration_number: str):
             "notice": "Database connection pending environment variable configuration on Render."
         }
     try:
-        # 1. Layer C: Query academic grades via indexed registration_number
+        # 1. Query student_grades table via indexed registration_number
         grades_response = supabase.table("student_grades") \
             .select("*") \
             .eq("registration_number", clean_reg) \
             .execute()
         records = grades_response.data if grades_response and hasattr(grades_response, 'data') else []
 
-        # 2. Layer B: Query upload history via indexed registration_number
+        # 2. If student is not yet in student_grades, reference already uploaded documents
+        if len(records) == 0:
+            try:
+                files_resp = supabase.table("uploaded_files") \
+                    .select("*") \
+                    .order("uploaded_at", desc=True) \
+                    .limit(20) \
+                    .execute()
+                uploaded_docs = files_resp.data if files_resp and hasattr(files_resp, 'data') else []
+
+                newly_recovered = []
+                for doc in uploaded_docs:
+                    file_name = doc.get("file_name", "")
+                    uploader_reg = doc.get("registration_number", "general")
+                    safe_name = re.sub(r'[^a-zA-Z0-9_.-]', '_', file_name)
+
+                    candidate_paths = [
+                        f"{uploader_reg}/{safe_name}",
+                        f"shared/{safe_name}",
+                        safe_name
+                    ]
+
+                    file_bytes = None
+                    for p in candidate_paths:
+                        try:
+                            file_bytes = supabase.storage.from_("transcripts").download(p)
+                            if file_bytes:
+                                break
+                        except Exception:
+                            continue
+
+                    if file_bytes:
+                        doc_courses = parse_document_bytes(file_bytes, file_name, clean_reg)
+                        # Save entire class from this doc so all classmates get updated too
+                        save_courses_to_db(doc_courses)
+                        # Filter for target student
+                        for dc in doc_courses:
+                            if str(dc.get("registration_number", "")).strip() == clean_reg:
+                                newly_recovered.append(dc)
+
+                if newly_recovered:
+                    # Deduplicate
+                    d_map = {}
+                    for nr in newly_recovered:
+                        d_map[(nr["registration_number"], nr["course_code"])] = nr
+                    records = list(d_map.values())
+            except Exception as ref_err:
+                print(f"[Reference Upload Notice]: {ref_err}")
+
+        # 3. Query upload history
         upload_history = []
         try:
-            files_response = supabase.table("uploaded_files") \
+            hist_resp = supabase.table("uploaded_files") \
                 .select("*") \
-                .eq("registration_number", clean_reg) \
                 .order("uploaded_at", desc=True) \
+                .limit(10) \
                 .execute()
-            if files_response and hasattr(files_response, 'data'):
-                upload_history = files_response.data
-        except Exception as file_err:
-            print(f"[Notice] Failed to fetch upload history: {file_err}")
+            if hist_resp and hasattr(hist_resp, 'data'):
+                upload_history = hist_resp.data
+        except Exception:
+            pass
 
-        # 3. Calculate instant performance metrics on the fly
+        # 4. Calculate instant performance metrics on the fly
         grade_points_map = {
             "S": 10.0, "A": 9.0, "B": 8.0, "C": 7.0, "D": 6.0, "E": 5.0, "F": 0.0
         }
@@ -220,81 +436,42 @@ def get_student_records(registration_number: str):
             "error": str(e)
         }
 
+
 @app.post("/api/upload")
 async def parse_transcript(
     files: List[UploadFile] = File(..., description="Select transcript files (.txt or .pdf)"),
     registration_number: Optional[str] = Form(None, description="Optional student registration number override")
 ):
     """
-    Industry-Standard 3-Layer Document Pipeline:
-    - Layer A: Raw file upload to Supabase Storage bucket ('transcripts/{registration_number}/{filename}')
-    - Layer B: File metadata tracking in PostgreSQL table ('uploaded_files')
-    - Layer C: Structured grade parsing and idempotent upsert into ('student_grades')
+    Class-Wide Document Pipeline:
+    - Parses all subjects and all student records from uploaded files
+    - Saves the raw file to Supabase Storage ('transcripts/shared/{filename}')
+    - Records file metadata in 'uploaded_files'
+    - Upserts ALL extracted student grades into 'student_grades' so any student in the class can look up their grade immediately!
     """
-    parsed_courses = []
+    all_parsed_courses = []
     uploaded_files_summary = []
-    
-    # Pre-check storage bucket
+
+    # Ensure storage bucket exists
     ensure_storage_bucket("transcripts")
 
     for file in files:
         filename = file.filename
         lower_name = filename.lower()
-        if not (lower_name.endswith('.pdf') or lower_name.endswith('.txt')):
-            continue 
+        if not (lower_name.endswith('.pdf') or lower_name.endswith('.txt') or lower_name.endswith('.csv')):
+            continue
 
         file_bytes = await file.read()
-        extracted_text = ""
-        
-        # Parse content
-        if lower_name.endswith('.pdf'):
-            try:
-                with pdfplumber.open(io.BytesIO(file_bytes)) as pdf:
-                    for page in pdf.pages:
-                        text = page.extract_text()
-                        if text:
-                            extracted_text += text + "\n"
-            except Exception as e:
-                print(f"Skipping corrupted PDF {filename}: {e}")
-                continue
-        elif lower_name.endswith('.txt'):
-            try:
-                extracted_text = file_bytes.decode('utf-8', errors='ignore')
-            except Exception:
-                continue
+        file_courses = parse_document_bytes(file_bytes, filename, registration_number)
+        all_parsed_courses.extend(file_courses)
 
-        # Extract course metadata
-        meta_pattern = r"Subject Code\s*:\s*([A-Z0-9]+).*?\nSubject Title\s*:\s*(.*?)\s*\nSubject Credit\s*:\s*([\d\.]+)"
-        meta_match = re.search(meta_pattern, extracted_text)
-        course_code = meta_match.group(1) if meta_match else "UNKNOWN"
-        course_name = meta_match.group(2) if meta_match else "UNKNOWN"
-        course_credits = float(meta_match.group(3)) if meta_match else 0.0
-
-        # Extract student rows
-        row_pattern = r"(\d{9})\s+(\d{1,2}\.\d{2})\s+([\d\.]+|AB|DT|MP)\s+(\d{1,3}\.\d{2})\s+([A-Z]{1,2})"
-        file_student_reg = None
-
-        for match in re.finditer(row_pattern, extracted_text):
-            reg = match.group(1)
-            if not file_student_reg:
-                file_student_reg = reg
-            course = {
-                "registration_number": reg,
-                "course_code": course_code,
-                "course_name": course_name,
-                "credits": course_credits,
-                "total_marks": float(match.group(4)),
-                "grade": match.group(5)
-            }
-            parsed_courses.append(course)
-
-        # Determine effective registration number for Layer A & B storage
-        target_reg = registration_number.strip() if registration_number else (file_student_reg or "general")
+        # Storage paths
         safe_filename = re.sub(r'[^a-zA-Z0-9_.-]', '_', filename)
-        storage_path = f"{target_reg}/{safe_filename}"
+        target_reg = registration_number.strip() if registration_number else "shared"
+        storage_path = f"shared/{safe_filename}"
         mime_type = file.content_type or ("application/pdf" if lower_name.endswith('.pdf') else "text/plain")
 
-        # Layer A: Store original raw document in Supabase Storage (if connected)
+        # Layer A: Store original file in Supabase Storage
         file_url = f"{SUPABASE_URL}/storage/v1/object/public/transcripts/{storage_path}" if SUPABASE_URL else ""
         if supabase:
             try:
@@ -329,23 +506,14 @@ async def parse_transcript(
                 print(f"[Uploaded Files Notice]: {meta_err}")
 
         uploaded_files_summary.append(file_record)
-    
-    # Layer C: Idempotent Upsert into student_grades table (prevents duplicate course spam)
-    if parsed_courses and supabase:
-        try:
-            supabase.table("student_grades").upsert(
-                parsed_courses,
-                on_conflict="registration_number,course_code"
-            ).execute()
-        except Exception as upsert_err:
-            print(f"[Upsert Notice, attempting standard insert]: {upsert_err}")
-            try:
-                supabase.table("student_grades").insert(parsed_courses).execute()
-            except Exception as insert_err:
-                print(f"[Database Insertion Error]: {insert_err}")
+
+    # Layer C: Idempotently upsert ALL parsed student records to student_grades
+    # This allows every person in the class to access their grades without re-uploading
+    if all_parsed_courses and supabase:
+        save_courses_to_db(all_parsed_courses)
 
     return {
-        "total_records_found": len(parsed_courses),
-        "data": parsed_courses,
+        "total_records_found": len(all_parsed_courses),
+        "data": all_parsed_courses,
         "uploaded_files": uploaded_files_summary
     }

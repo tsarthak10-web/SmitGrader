@@ -538,16 +538,17 @@
         } catch (err) {
           clearTimeout(coldStartTimer1);
           clearTimeout(coldStartTimer2);
-          console.warn('Server lookup notice or timeout, proceeding to upload step:', err);
+          console.warn('Server lookup notice or timeout, proceeding to verify step:', err);
         }
 
-        // If no records found on server or new student, prompt for transcript upload
+        // If no records found on server or new student, clear any previous parsed transcript and route to verify.html with the upload drop zone
+        sessionStorage.removeItem('parsed_transcript');
         analyzeBtn.innerHTML = `
           <span class="material-symbols-outlined text-[20px]">upload_file</span>
-          <span>New Record. Opening Upload...</span>
+          <span>No Records Found. Opening Verify &amp; Upload...</span>
         `;
         setTimeout(() => {
-          window.location.href = './upload.html';
+          window.location.href = './verify.html';
         }, 500);
       });
 
