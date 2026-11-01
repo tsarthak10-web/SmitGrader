@@ -437,7 +437,7 @@
       const API_BASE_URL = localStorage.getItem('gradeflow_api_url') || (
         window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost'
           ? 'http://127.0.0.1:8000'
-          : 'https://gradeflow-backend.onrender.com'
+          : 'https://smitgrader.onrender.com'
       );
 
       // 1. Pre-warm Backend Server (prevents cold-start delays on Render)
@@ -501,7 +501,7 @@
         try {
           // Allow up to 10 seconds for cloud database lookup (handles Render free-tier cold starts)
           const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 10000);
+          const timeoutId = setTimeout(() => controller.abort(), 60000); // Increased to 60 seconds
 
           const res = await fetch(`${API_BASE_URL}/api/student/${encodeURIComponent(regNum)}`, {
             signal: controller.signal
