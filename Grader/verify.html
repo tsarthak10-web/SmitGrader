@@ -8,7 +8,7 @@
 
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
 
@@ -142,12 +142,12 @@
   <header class="fixed top-0 left-0 right-0 z-50 bg-surface/80 backdrop-blur-xl border-b border-border-subtle shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
     <div class="h-16 w-full px-margin-desktop flex items-center justify-between">
       <div class="flex items-center gap-xl">
-        <a class="flex items-center gap-sm text-primary" href="./index.html">
+        <a class="flex items-center gap-sm text-primary" href="index.html">
           <span class="material-symbols-outlined text-[26px]">school</span>
           <span class="font-headline-md text-headline-md tracking-tight text-text-primary">GradeFlow</span>
         </a>
         <nav class="flex items-center">
-          <a aria-current="page" class="py-base transition-colors text-primary border-b-2 border-primary" href="./index.html">Dashboard</a>
+          <a aria-current="page" class="py-base transition-colors text-primary border-b-2 border-primary" href="index.html">Dashboard</a>
         </nav>
       </div>
     </div>
@@ -354,7 +354,7 @@
                   <td class="py-md px-md">
                     <div class="relative">
                       <select class="grade-select w-full bg-surface-container-lowest font-body-md text-body-md text-text-primary px-sm py-xs rounded appearance-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-primary pr-8">
-                        <option value="10.0">S (10)</option>
+                        <option value="10.0" selected>S (10)</option>
                         <option value="9.0">A (9)</option>
                         <option selected="" value="8.0">B (8)</option>
                         <option value="7.0">C (7)</option>
@@ -404,7 +404,7 @@
 
           <!-- Action Buttons -->
           <div class="flex flex-col sm:flex-row items-center justify-end gap-md pt-xs">
-            <a href="./upload.html" class="w-full sm:w-auto">
+            <a href="upload.html" class="w-full sm:w-auto">
               <button class="w-full sm:w-auto px-lg py-sm bg-surface-container hover:bg-surface-overlay text-on-surface font-body-md text-body-md rounded-lg transition-colors text-center" type="button">
                 Back
               </button>

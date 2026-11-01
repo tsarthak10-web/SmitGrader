@@ -7,7 +7,7 @@
 
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
 
@@ -433,12 +433,15 @@
   <!-- Interactive Logic Script -->
   <script>
     (function initDashboard() {
-      // Configurable API Base URL: checks localStorage, fallback to localhost or deployed Render backend
-      const API_BASE_URL = localStorage.getItem('gradeflow_api_url') || (
-        window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost'
-          ? 'http://127.0.0.1:8000'
-          : 'https://gradeflow-backend.onrender.com'
-      );
+      // Configurable API Base URL: clears stale cache and sets Render backend as primary production endpoint
+      const RENDER_BACKEND_URL = 'https://smitgrader.onrender.com';
+      const isLocal = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost';
+      const cachedUrl = localStorage.getItem('gradeflow_api_url');
+      if (cachedUrl && (cachedUrl.includes('gradeflow-backend') || (cachedUrl.includes('127.0.0.1') && !isLocal))) {
+        localStorage.removeItem('gradeflow_api_url');
+      }
+      const API_BASE_URL = isLocal ? 'http://127.0.0.1:8000' : (localStorage.getItem('gradeflow_api_url') || RENDER_BACKEND_URL);
+      localStorage.setItem('gradeflow_api_url', API_BASE_URL);
 
       // 1. Pre-warm Backend Server (prevents cold-start delays on Render)
       fetch(`${API_BASE_URL}/wakeup`, { method: 'GET', mode: 'cors' }).catch(() => {});
@@ -490,24 +493,32 @@
           <span>Checking Database...</span>
         `;
 
-        // Notify user if waiting for cold-start cloud server
-        const slowNoticeTimer = setTimeout(() => {
+        // Progressive status updates for Render free-tier cold boot (~30-50s)
+        const coldStartTimer1 = setTimeout(() => {
           analyzeBtn.innerHTML = `
             <span class="material-symbols-outlined animate-spin text-[20px]">cloud_sync</span>
             <span>Connecting to Cloud Backend...</span>
           `;
-        }, 2200);
+        }, 2500);
+
+        const coldStartTimer2 = setTimeout(() => {
+          analyzeBtn.innerHTML = `
+            <span class="material-symbols-outlined animate-spin text-[20px]">hourglass_top</span>
+            <span>Waking Cloud Server (~30s)...</span>
+          `;
+        }, 7500);
 
         try {
-          // Allow up to 10 seconds for cloud database lookup (handles Render free-tier cold starts)
+          // Allow up to 50 seconds for cloud database lookup (handles Render free-tier cold starts)
           const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 10000);
+          const timeoutId = setTimeout(() => controller.abort(), 50000);
 
           const res = await fetch(`${API_BASE_URL}/api/student/${encodeURIComponent(regNum)}`, {
             signal: controller.signal
           });
           clearTimeout(timeoutId);
-          clearTimeout(slowNoticeTimer);
+          clearTimeout(coldStartTimer1);
+          clearTimeout(coldStartTimer2);
 
           if (res.ok) {
             const result = await res.json();
@@ -525,7 +536,8 @@
             }
           }
         } catch (err) {
-          clearTimeout(slowNoticeTimer);
+          clearTimeout(coldStartTimer1);
+          clearTimeout(coldStartTimer2);
           console.warn('Server lookup notice or timeout, proceeding to upload step:', err);
         }
 

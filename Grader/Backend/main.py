@@ -17,14 +17,32 @@ load_dotenv(dotenv_path=env_path)
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
-# Initialize Supabase client with administrative service role key
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+# Safe initialization of Supabase client to prevent boot crashes on Render
+supabase: Optional[Client] = None
+if SUPABASE_URL and SUPABASE_KEY:
+    try:
+        supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+        print("[Supabase] Successfully connected to database.")
+    except Exception as e:
+        print(f"[Supabase Warning] Failed to initialize client: {e}")
+else:
+    print("[Supabase Notice] SUPABASE_URL or SUPABASE_KEY environment variable is missing on host environment.")
 
 app = FastAPI(title="GradeFlow API", version="1.0.0")
 
+# Allow all origins, including any Netlify domain and local environments
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], 
+    allow_origins=[
+        "*",
+        "https://gradersmit.netlify.app",
+        "http://localhost:8000",
+        "http://127.0.0.1:8000",
+        "http://localhost:5500",
+        "http://127.0.0.1:5500",
+        "http://localhost:3000",
+    ],
+    allow_origin_regex=r"https://.*\.netlify\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -90,24 +108,33 @@ def ensure_storage_bucket(bucket_name: str = "transcripts"):
     """
     Guarantees the storage bucket exists in Supabase.
     """
+    if not supabase:
+        return
     try:
         supabase.storage.get_bucket(bucket_name)
     except Exception:
         try:
             supabase.storage.create_bucket(bucket_name, options={"public": True})
             print(f"[Supabase Storage] Created bucket '{bucket_name}'.")
-        except Exception as e:
-            # Bucket may already exist or have custom permissions
+        except Exception:
             pass
 
 
 @app.get("/wakeup")
 def wake_up():
-    return {"status": "Server is awake and ready."}
+    return {
+        "status": "Server is awake and ready.",
+        "supabase_connected": supabase is not None
+    }
 
 @app.get("/")
 def read_root():
-    return {"message": "Welcome to the GradeFlow API! Go to /docs for the API documentation."}
+    return {
+        "status": "online",
+        "service": "GradeFlow Academic Processing API",
+        "docs": "/docs",
+        "supabase_connected": supabase is not None
+    }
 
 @app.get("/api/student/{registration_number}")
 def get_student_records(registration_number: str):
@@ -116,6 +143,15 @@ def get_student_records(registration_number: str):
     for this student using B-Tree index on registration_number for O(log N) retrieval.
     """
     clean_reg = registration_number.strip()
+    if not supabase:
+        return {
+            "found": False,
+            "registration_number": clean_reg,
+            "total_records": 0,
+            "data": [],
+            "upload_history": [],
+            "notice": "Database connection pending environment variable configuration on Render."
+        }
     try:
         # 1. Layer C: Query academic grades via indexed registration_number
         grades_response = supabase.table("student_grades") \
@@ -258,24 +294,25 @@ async def parse_transcript(
         storage_path = f"{target_reg}/{safe_filename}"
         mime_type = file.content_type or ("application/pdf" if lower_name.endswith('.pdf') else "text/plain")
 
-        # Layer A: Store original raw document in Supabase Storage
-        file_url = f"{SUPABASE_URL}/storage/v1/object/public/transcripts/{storage_path}"
-        try:
-            supabase.storage.from_("transcripts").upload(
-                path=storage_path,
-                file=file_bytes,
-                file_options={"content-type": mime_type, "upsert": "true"}
-            )
+        # Layer A: Store original raw document in Supabase Storage (if connected)
+        file_url = f"{SUPABASE_URL}/storage/v1/object/public/transcripts/{storage_path}" if SUPABASE_URL else ""
+        if supabase:
             try:
-                url_resp = supabase.storage.from_("transcripts").get_public_url(storage_path)
-                if isinstance(url_resp, str):
-                    file_url = url_resp
-                elif isinstance(url_resp, dict) and "publicUrl" in url_resp:
-                    file_url = url_resp["publicUrl"]
-            except Exception:
-                pass
-        except Exception as storage_err:
-            print(f"[Supabase Storage Notice]: {storage_err}")
+                supabase.storage.from_("transcripts").upload(
+                    path=storage_path,
+                    file=file_bytes,
+                    file_options={"content-type": mime_type, "upsert": "true"}
+                )
+                try:
+                    url_resp = supabase.storage.from_("transcripts").get_public_url(storage_path)
+                    if isinstance(url_resp, str):
+                        file_url = url_resp
+                    elif isinstance(url_resp, dict) and "publicUrl" in url_resp:
+                        file_url = url_resp["publicUrl"]
+                except Exception:
+                    pass
+            except Exception as storage_err:
+                print(f"[Supabase Storage Notice]: {storage_err}")
 
         # Layer B: Record upload metadata in uploaded_files table
         file_record = {
@@ -285,15 +322,16 @@ async def parse_transcript(
             "file_size": len(file_bytes),
             "mime_type": mime_type
         }
-        try:
-            supabase.table("uploaded_files").insert(file_record).execute()
-        except Exception as meta_err:
-            print(f"[Uploaded Files Notice]: {meta_err}")
+        if supabase:
+            try:
+                supabase.table("uploaded_files").insert(file_record).execute()
+            except Exception as meta_err:
+                print(f"[Uploaded Files Notice]: {meta_err}")
 
         uploaded_files_summary.append(file_record)
     
     # Layer C: Idempotent Upsert into student_grades table (prevents duplicate course spam)
-    if parsed_courses:
+    if parsed_courses and supabase:
         try:
             supabase.table("student_grades").upsert(
                 parsed_courses,

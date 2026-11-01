@@ -142,12 +142,12 @@
   <header class="fixed top-0 left-0 right-0 z-50 bg-surface/80 backdrop-blur-xl border-b border-border-subtle shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
     <div class="h-16 w-full px-margin-desktop flex items-center justify-between">
       <div class="flex items-center gap-xl">
-        <a class="flex items-center gap-sm text-primary" href="./index.html">
+        <a class="flex items-center gap-sm text-primary" href="index.html">
           <span class="material-symbols-outlined text-[26px]">school</span>
           <span class="font-headline-md text-headline-md tracking-tight text-text-primary">GradeFlow</span>
         </a>
         <nav class="flex items-center">
-          <a aria-current="page" class="py-base transition-colors text-primary border-b-2 border-primary" href="./index.html">Dashboard</a>
+          <a aria-current="page" class="py-base transition-colors text-primary border-b-2 border-primary" href="index.html">Dashboard</a>
         </nav>
       </div>
     </div>
@@ -309,7 +309,7 @@
 
             <!-- Footer Action Buttons -->
             <div class="flex flex-col-reverse sm:flex-row items-center justify-end gap-md pt-sm">
-              <a href="./index.html" class="w-full sm:w-auto">
+              <a href="index.html" class="w-full sm:w-auto">
                 <button class="w-full px-lg py-md rounded-xl bg-surface-container hover:bg-surface-overlay text-text-primary font-headline-md text-[15px] transition-colors flex items-center justify-center gap-xs" type="button">
                   <span class="material-symbols-outlined text-[18px]">arrow_back</span>
                   <span>Cancel / Try Another ID</span>
@@ -339,12 +339,18 @@
       const submitBtn = document.getElementById('btn-submit');
       const submitBtnLabel = document.getElementById('btn-submit-label');
 
-      // Configurable API Base URL
-      const API_BASE_URL = localStorage.getItem('gradeflow_api_url') || (
-        window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost'
-          ? 'http://127.0.0.1:8000'
-          : 'https://gradeflow-backend.onrender.com'
-      );
+      // Configurable API Base URL: clears stale cache and sets Render backend as primary production endpoint
+      const RENDER_BACKEND_URL = 'https://smitgrader.onrender.com';
+      const isLocal = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost';
+      const cachedUrl = localStorage.getItem('gradeflow_api_url');
+      if (cachedUrl && (cachedUrl.includes('gradeflow-backend') || (cachedUrl.includes('127.0.0.1') && !isLocal))) {
+        localStorage.removeItem('gradeflow_api_url');
+      }
+      const API_BASE_URL = isLocal ? 'http://127.0.0.1:8000' : (localStorage.getItem('gradeflow_api_url') || RENDER_BACKEND_URL);
+      localStorage.setItem('gradeflow_api_url', API_BASE_URL);
+
+      // Pre-warm backend
+      fetch(`${API_BASE_URL}/wakeup`, { method: 'GET', mode: 'cors' }).catch(() => {});
 
       // Sync UI search preview from sessionStorage
       const targetReg = sessionStorage.getItem('target_reg_num') || '202400712';
@@ -488,6 +494,16 @@
             <span>Parsing ${selectedFiles.length} Document${selectedFiles.length > 1 ? 's' : ''}...</span>
           `;
 
+          const slowNotice = setTimeout(() => {
+            submitBtn.innerHTML = `
+              <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-on-primary-container" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              <span>Connecting & Parsing (~30s)...</span>
+            `;
+          }, 3500);
+
           const formData = new FormData();
           selectedFiles.forEach(file => {
             formData.append('files', file);
@@ -502,6 +518,7 @@
               method: 'POST',
               body: formData
             });
+            clearTimeout(slowNotice);
 
             if (!response.ok) {
               throw new Error(`Server returned error status ${response.status}`);
