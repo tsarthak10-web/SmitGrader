@@ -237,12 +237,12 @@
         </div>
       </div>
 
-      <!-- File Upload Modal Overlay -->
-      <div class="fixed inset-0 z-40 bg-surface-container-lowest/80 backdrop-blur-md flex items-center justify-center p-md md:p-xl transition-all duration-300" id="modal-container">
+      <!-- File Upload Modal Overlay (z-[100] places the upload window directly over the top navigation header) -->
+      <div class="fixed inset-0 z-[100] bg-surface-container-lowest/80 backdrop-blur-md flex items-center justify-center p-md md:p-xl transition-all duration-300" id="modal-container">
         <div class="relative w-full max-w-[660px] bg-surface-card rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.6)] overflow-hidden flex flex-col max-h-[92vh] overflow-y-auto">
           <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400/80 via-primary-container to-amber-400/80"></div>
           
-          <a href="index.html">
+          <a href="./index.html">
             <button aria-label="Close dialog" class="absolute top-md right-md w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-surface-overlay transition-colors" type="button">
               <span class="material-symbols-outlined text-[18px]">close</span>
             </button>
@@ -250,17 +250,17 @@
 
           <div class="p-xl flex flex-col gap-lg">
             <div class="flex items-start gap-md">
-              <div class="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center shrink-0">
-                <span class="material-symbols-outlined text-amber-400 text-[28px]" style="font-variation-settings: 'FILL' 1;">warning_amber</span>
+              <div class="w-12 h-12 rounded-xl bg-primary-container/20 flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-primary text-[28px]">upload_file</span>
               </div>
               <div class="flex flex-col pr-xl">
-                <span class="font-label-md text-label-md text-amber-400 uppercase tracking-widest">Query Response • 404 Void</span>
-                <h2 class="font-headline-lg text-headline-lg text-text-primary tracking-tight">No Server Records Found</h2>
+                <span class="font-label-md text-label-md text-primary uppercase tracking-widest">Transcript Ingestion • New Student</span>
+                <h2 class="font-headline-lg text-headline-lg text-text-primary tracking-tight">Upload Your Transcript</h2>
               </div>
             </div>
 
             <p class="font-body-md text-body-md text-text-secondary leading-relaxed" id="not-found-desc">
-              We couldn't retrieve results from the university portal for registration number <span class="inline-flex items-center px-sm py-xs mx-xs rounded bg-surface-container-high text-primary font-mono text-[14px]" id="dynamic-reg-span">202400712</span>. Please upload your official SMU transcript file to continue calculating your grade trajectory.
+              No cached records were found on the server for registration number <span class="inline-flex items-center px-sm py-xs mx-xs rounded bg-surface-container-high text-primary font-mono text-[14px]" id="dynamic-reg-span">202400712</span>. Please upload your official SMU transcript file (.pdf or .txt) to parse grades, archive documents, and calculate your SGPA/CGPA.
             </p>
 
             <!-- Drop Zone -->
@@ -518,7 +518,7 @@
               <span>All Documents Parsed!</span>
             `;
             setTimeout(() => {
-              window.location.href = 'verify.html';
+              window.location.href = './verify.html';
             }, 700);
 
           } catch (error) {

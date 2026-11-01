@@ -487,18 +487,27 @@
         analyzeBtn.disabled = true;
         analyzeBtn.innerHTML = `
           <span class="material-symbols-outlined animate-spin text-[20px]">progress_activity</span>
-          <span>Checking Server Records...</span>
+          <span>Checking Database...</span>
         `;
 
+        // Notify user if waiting for cold-start cloud server
+        const slowNoticeTimer = setTimeout(() => {
+          analyzeBtn.innerHTML = `
+            <span class="material-symbols-outlined animate-spin text-[20px]">cloud_sync</span>
+            <span>Connecting to Cloud Backend...</span>
+          `;
+        }, 2200);
+
         try {
-          // Query backend to check if records already exist
+          // Allow up to 10 seconds for cloud database lookup (handles Render free-tier cold starts)
           const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 3500);
+          const timeoutId = setTimeout(() => controller.abort(), 10000);
 
           const res = await fetch(`${API_BASE_URL}/api/student/${encodeURIComponent(regNum)}`, {
             signal: controller.signal
           });
           clearTimeout(timeoutId);
+          clearTimeout(slowNoticeTimer);
 
           if (res.ok) {
             const result = await res.json();
@@ -510,22 +519,23 @@
               `;
               sessionStorage.setItem('parsed_transcript', JSON.stringify(result));
               setTimeout(() => {
-                window.location.href = 'verify.html';
+                window.location.href = './verify.html';
               }, 500);
               return;
             }
           }
         } catch (err) {
-          console.warn('Server lookup error or timeout, proceeding to upload step:', err);
+          clearTimeout(slowNoticeTimer);
+          console.warn('Server lookup notice or timeout, proceeding to upload step:', err);
         }
 
-        // If no records found on server, prompt user for transcript ingestion
+        // If no records found on server or new student, prompt for transcript upload
         analyzeBtn.innerHTML = `
           <span class="material-symbols-outlined text-[20px]">upload_file</span>
-          <span>No Records. Opening Upload...</span>
+          <span>New Record. Opening Upload...</span>
         `;
         setTimeout(() => {
-          window.location.href = 'upload.html';
+          window.location.href = './upload.html';
         }, 500);
       });
 

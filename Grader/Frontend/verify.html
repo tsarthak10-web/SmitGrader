@@ -229,8 +229,8 @@
         </div>
       </div>
 
-      <!-- Verification Modal Overlay -->
-      <div class="fixed inset-0 z-50 flex items-center justify-center p-md bg-surface-container-lowest/80 backdrop-blur-md overflow-y-auto" id="modalOverlay">
+      <!-- Verification Modal Overlay (z-[100] sits directly over top navigation header) -->
+      <div class="fixed inset-0 z-[100] flex items-center justify-center p-md bg-surface-container-lowest/80 backdrop-blur-md overflow-y-auto" id="modalOverlay">
         <div class="relative w-full max-w-4xl bg-surface-card rounded-xl shadow-[0_20px_50px_rgba(129,140,248,0.12)] p-lg md:p-xl my-auto flex flex-col">
           <div class="absolute -top-px left-8 right-8 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent"></div>
 
@@ -626,7 +626,7 @@
           calculateBtn.classList.remove('bg-primary-container');
           calculateBtn.classList.add('bg-secondary-container', 'text-text-primary');
           setTimeout(() => {
-            window.location.href = 'results.html';
+            window.location.href = './results.html';
           }, 600);
         }, 500);
       });

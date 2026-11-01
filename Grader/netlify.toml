@@ -1,0 +1,20 @@
+# Netlify Configuration for GradeFlow Frontend
+[build]
+  publish = "frontend"
+
+# Clean URLs & Route Handling to prevent 404s
+[[redirects]]
+  from = "/upload"
+  to = "/upload.html"
+  status = 200
+
+[[redirects]]
+  from = "/verify"
+  to = "/verify.html"
+  status = 200
+
+[[redirects]]
+  from = "/results"
+  to = "/results.html"
+  status = 200
+
