@@ -19,7 +19,6 @@
         margin: 0;
         padding: 0;
         overflow-x: hidden;
-        touch-action: pan-y;
         -webkit-font-smoothing: antialiased;
       }
       main > :first-child {
@@ -148,7 +147,7 @@
   </script>
 </head>
 
-<body class="bg-surface font-body-md text-body-md text-on-surface antialiased">
+<body class="bg-surface font-body-md text-body-md text-on-surface antialiased min-h-screen flex flex-col">
   <!-- Top Navigation Header -->
   <header class="fixed top-0 left-0 right-0 z-50 bg-surface/80 backdrop-blur-xl border-b border-border-subtle shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
     <div class="h-16 w-full px-margin-mobile md:px-margin-desktop flex items-center justify-between max-w-container-max mx-auto">
@@ -163,20 +162,21 @@
       </div>
       <div class="flex items-center gap-2">
         <a href="./verify.html" class="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-overlay text-primary text-xs font-semibold border border-border-subtle transition-all">
-          <span class="material-symbols-outlined text-[16px]">edit</span>
-          <span class="hidden sm:inline">Edit Data</span>
+          <span class="material-symbols-outlined text-[16px]">tune</span>
+          <span class="hidden sm:inline">Degree Hub &amp; Upload</span>
+          <span class="sm:hidden">Hub</span>
         </a>
       </div>
     </div>
   </header>
 
-  <!-- Main Content -->
-  <main class="w-full pt-16 bg-surface min-h-[calc(100vh-80px)]">
+  <!-- Main Content with Mobile Viewport Clearance (pb-32) -->
+  <main class="w-full pt-20 pb-32 bg-surface flex-grow">
     <div class="flex flex-col w-full">
-      <div class="w-full max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-md sm:py-lg space-y-md sm:space-y-xl">
+      <div class="w-full max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop space-y-md sm:space-y-xl">
         
         <!-- Hero Banner Card -->
-        <div class="relative overflow-hidden rounded-xl bg-surface-container-low p-md sm:p-lg md:p-xl shadow-xl">
+        <div class="relative overflow-hidden rounded-xl bg-surface-container-low p-md sm:p-lg md:p-xl shadow-xl border border-border-subtle">
           <div class="absolute -right-24 -top-24 w-96 h-96 rounded-full bg-primary/10 blur-3xl pointer-events-none"></div>
           <div class="absolute right-48 -bottom-20 w-80 h-80 rounded-full bg-secondary/10 blur-2xl pointer-events-none"></div>
           
@@ -186,17 +186,17 @@
                 <span class="px-sm py-xs rounded-full bg-primary/15 text-primary font-label-md text-xs uppercase tracking-wider">Academic Audit</span>
                 <span class="flex items-center gap-xs text-secondary font-label-md text-xs">
                   <span class="inline-block w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
-                  Year-Wise Breakdown Verified
+                  Multi-Semester &amp; Year Breakdown Verified
                 </span>
               </div>
-              <h1 class="font-headline-lg text-[24px] sm:text-[30px] md:text-headline-lg text-text-primary tracking-tight">Academic Performance Results</h1>
+              <h1 class="font-headline-lg text-[22px] sm:text-[28px] md:text-headline-lg text-text-primary tracking-tight">Academic Performance Results</h1>
               <p class="font-body-md text-xs sm:text-body-md text-text-secondary" id="studentInfoBanner">
-                Student: <span class="text-text-primary font-medium" id="studentNameReg">Student (202400712)</span> • <span id="bannerSemester">All Years</span> • <span id="bannerCredits">0 Total Credits</span>
+                Student: <span class="text-text-primary font-medium" id="studentNameReg">Student (202400712)</span> • <span id="bannerSemester" class="text-primary font-medium">All Semesters</span> • <span id="bannerCredits">0 Total Credits</span>
               </p>
             </div>
             
             <div class="flex items-center gap-sm self-start md:self-auto flex-wrap">
-              <button class="flex items-center gap-sm px-3.5 py-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface transition-all duration-200 shadow-sm active:scale-95 text-xs sm:text-sm font-semibold" id="printBtn">
+              <button class="flex items-center gap-sm px-3.5 py-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface transition-all duration-200 shadow-sm active:scale-95 text-xs sm:text-sm font-semibold border border-border-subtle" id="printBtn">
                 <span class="material-symbols-outlined text-[18px]">print</span>
                 <span>Export PDF</span>
               </button>
@@ -208,22 +208,33 @@
           </div>
         </div>
 
-        <!-- Academic Year Switcher Navigation Bar (Fully Clickable & Interactive) -->
-        <div class="flex items-center justify-between gap-3 overflow-x-auto pb-2 border-b border-border-subtle" id="resultsSemesterTabsBar" style="-webkit-overflow-scrolling: touch;">
-          <div class="flex items-center gap-2 flex-nowrap" id="resultsSemesterPillsList">
-            <!-- Dynamically populated: [ All Years (CGPA) ] [ 1st Year ] [ 2nd Year ] ... -->
+        <!-- Academic Distinction Navigator: Semesters (SGPA) & Years (GPA) & Cumulative (CGPA) -->
+        <div class="rounded-xl bg-surface-container p-3 sm:p-4 border border-border-subtle space-y-3">
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary text-[20px]">view_timeline</span>
+              <span class="font-headline-md text-xs sm:text-sm text-text-primary font-semibold">Academic View Selector</span>
+              <span class="text-xs text-text-secondary hidden sm:inline">• Click any semester or year to filter</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-text-secondary">Current Active:</span>
+              <span class="px-2.5 py-1 rounded bg-surface-container-high font-semibold text-xs text-primary border border-border-subtle" id="activeSemesterBadgeDisplay">All Semesters (CGPA)</span>
+            </div>
           </div>
-          <div class="flex items-center gap-2 shrink-0">
-            <span class="text-xs text-text-secondary hidden sm:inline">Active View:</span>
-            <span class="px-2.5 py-1 rounded bg-surface-container font-semibold text-xs text-primary" id="activeSemesterBadgeDisplay">All Years</span>
+
+          <!-- Filter Navigation Tabs (Fully Interactive, Touch-Friendly, Horizontally Scrollable) -->
+          <div class="flex items-center gap-2 overflow-x-auto pb-1 pt-1 -mx-1 px-1" id="resultsSemesterTabsBar" style="-webkit-overflow-scrolling: touch;">
+            <div class="flex items-center gap-2 flex-nowrap shrink-0" id="resultsSemesterPillsList">
+              <!-- Dynamically populated: [ All Semesters (CGPA) ] [ Sem 1 (SGPA) ] [ Sem 2 (SGPA) ] [ 1st Year (GPA) ] ... -->
+            </div>
           </div>
         </div>
 
         <!-- Metric Stat Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-md sm:gap-lg">
           
-          <!-- SGPA / CGPA Card (Interactive Click-to-Toggle) -->
-          <div id="interactiveCgpaCard" class="relative overflow-hidden rounded-xl bg-surface-container p-lg shadow-md flex flex-col justify-between group hover:bg-surface-container-high border border-border-subtle hover:border-primary/50 transition-all cursor-pointer" role="button" title="Click to toggle between Cumulative CGPA and Year GPA">
+          <!-- SGPA / CGPA Card (Interactive Click-to-Cycle) -->
+          <div id="interactiveCgpaCard" class="relative overflow-hidden rounded-xl bg-surface-container p-lg shadow-md flex flex-col justify-between group hover:bg-surface-container-high border border-border-subtle hover:border-primary/50 transition-all cursor-pointer" role="button" title="Click to cycle views">
             <div class="flex items-start justify-between">
               <div class="space-y-xs">
                 <div class="flex items-center gap-2">
@@ -241,7 +252,7 @@
             <div class="mt-sm">
               <span class="text-[11px] text-primary/80 group-hover:text-primary flex items-center gap-1 transition-colors">
                 <span class="material-symbols-outlined text-[13px]">touch_app</span>
-                <span>Click card to switch Year / CGPA</span>
+                <span>Click card to cycle Semester / Year / CGPA</span>
               </span>
             </div>
 
@@ -255,7 +266,7 @@
           </div>
 
           <!-- Result Status Card -->
-          <div class="relative overflow-hidden rounded-xl bg-surface-container p-lg shadow-md flex flex-col justify-between group hover:bg-surface-container-high transition-colors">
+          <div class="relative overflow-hidden rounded-xl bg-surface-container p-lg shadow-md flex flex-col justify-between group hover:bg-surface-container-high border border-border-subtle transition-colors">
             <div class="flex items-start justify-between">
               <div class="space-y-xs">
                 <span class="font-label-md text-label-md text-text-secondary uppercase tracking-wider">Result Status</span>
@@ -277,7 +288,7 @@
           </div>
 
           <!-- Course Clearance Card -->
-          <div class="relative overflow-hidden rounded-xl bg-surface-container p-lg shadow-md flex flex-col justify-between group hover:bg-surface-container-high transition-colors">
+          <div class="relative overflow-hidden rounded-xl bg-surface-container p-lg shadow-md flex flex-col justify-between group hover:bg-surface-container-high border border-border-subtle transition-colors">
             <div class="flex items-start justify-between">
               <div class="space-y-xs">
                 <span class="font-label-md text-label-md text-text-secondary uppercase tracking-wider">Course Clearance</span>
@@ -290,7 +301,7 @@
             </div>
             <div class="mt-md pt-sm flex items-center justify-between">
               <div class="w-full bg-surface-container-highest rounded-full h-2 overflow-hidden flex items-center mr-md">
-                <div class="bg-secondary h-full rounded-full" id="clearanceProgressBar" style="width: 100%"></div>
+                <div class="bg-secondary h-full rounded-full transition-all duration-300" id="clearanceProgressBar" style="width: 100%"></div>
               </div>
               <span class="font-label-md text-xs text-secondary whitespace-nowrap font-medium" id="clearancePercent">100% Passed</span>
             </div>
@@ -301,7 +312,7 @@
         <div class="space-y-md sm:space-y-xl">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-md sm:gap-lg">
             
-            <div class="rounded-xl bg-surface-container p-md sm:p-lg shadow-md flex items-center justify-between border-l-4 border-secondary">
+            <div class="rounded-xl bg-surface-container p-md sm:p-lg shadow-md flex items-center justify-between border-l-4 border-secondary border-t border-r border-b border-border-subtle">
               <div class="flex items-center gap-md">
                 <div class="w-12 h-12 rounded-xl bg-secondary/15 flex items-center justify-center text-secondary shrink-0">
                   <span class="material-symbols-outlined text-[26px]">check_circle</span>
@@ -320,7 +331,7 @@
               </div>
             </div>
 
-            <div class="rounded-xl bg-surface-container p-md sm:p-lg shadow-md flex items-center justify-between border-l-4 border-border-subtle" id="backlogCard">
+            <div class="rounded-xl bg-surface-container p-md sm:p-lg shadow-md flex items-center justify-between border-l-4 border-border-subtle border-t border-r border-b border-border-subtle" id="backlogCard">
               <div class="flex items-center gap-md">
                 <div class="w-12 h-12 rounded-xl bg-surface-container-high flex items-center justify-center text-text-secondary shrink-0" id="backlogIconWrap">
                   <span class="material-symbols-outlined text-[26px]">task_alt</span>
@@ -344,9 +355,9 @@
           <!-- Detailed Breakdown Grid -->
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
             
-            <!-- Grade Roster Table with Mobile Horizontal Scroll -->
+            <!-- Grade Roster Table with Mobile Touch Horizontal Scroll -->
             <div class="lg:col-span-8 space-y-lg">
-              <div class="rounded-xl bg-surface-container p-md sm:p-lg shadow-md space-y-md">
+              <div class="rounded-xl bg-surface-container p-md sm:p-lg shadow-md space-y-md border border-border-subtle">
                 <div class="flex items-center justify-between">
                   <div>
                     <h2 class="font-headline-md text-[18px] sm:text-headline-md text-text-primary">Academic Grade Breakdown</h2>
@@ -358,11 +369,11 @@
                 </div>
 
                 <div class="overflow-x-auto -mx-1 sm:mx-0 px-1 sm:px-0" style="-webkit-overflow-scrolling: touch;">
-                  <table class="w-full text-left min-w-[520px]">
+                  <table class="w-full text-left min-w-[560px]">
                     <thead>
                       <tr class="bg-surface-container-low text-text-secondary font-label-md text-xs uppercase tracking-wider">
                         <th class="py-sm px-md rounded-l-lg">Course</th>
-                        <th class="py-sm px-md">Academic Year</th>
+                        <th class="py-sm px-md">Semester / Year</th>
                         <th class="py-sm px-md">Credits</th>
                         <th class="py-sm px-md">Result</th>
                         <th class="py-sm px-md">Grade</th>
@@ -375,7 +386,7 @@
                   </table>
                 </div>
 
-                <div class="p-md rounded-xl bg-surface-container-low flex flex-col md:flex-row gap-md items-center justify-between">
+                <div class="p-md rounded-xl bg-surface-container-low flex flex-col md:flex-row gap-md items-center justify-between border border-border-subtle">
                   <div class="flex items-center gap-md">
                     <div class="w-12 h-12 rounded-full bg-secondary/15 flex items-center justify-center text-secondary shrink-0">
                       <span class="material-symbols-outlined text-[24px]">workspace_premium</span>
@@ -392,7 +403,7 @@
                 </div>
 
                 <div class="pt-sm flex items-center justify-between text-xs sm:text-sm">
-                  <button class="flex items-center gap-xs font-label-md text-primary hover:text-text-primary transition-colors" id="disputeBtn">
+                  <button class="flex items-center gap-xs font-label-md text-primary hover:text-text-primary transition-colors cursor-pointer" id="disputeBtn">
                     <span class="material-symbols-outlined text-[16px]">help_center</span>
                     <span>Dispute Grade Evaluation</span>
                   </button>
@@ -401,28 +412,28 @@
               </div>
             </div>
 
-            <!-- CGPA Progression Trend & Degree Completion -->
+            <!-- SGPA Progression Trend & Degree Completion -->
             <div class="lg:col-span-4 space-y-lg">
-              <div class="rounded-xl bg-surface-container p-md sm:p-lg shadow-md space-y-md">
+              <div class="rounded-xl bg-surface-container p-md sm:p-lg shadow-md space-y-md border border-border-subtle">
                 <div class="flex items-center justify-between">
                   <div class="space-y-xs">
                     <h3 class="font-headline-md text-[18px] sm:text-headline-md text-text-primary">Progression Trend</h3>
-                    <p class="font-body-md text-xs text-text-secondary">Trajectory across academic years</p>
+                    <p class="font-body-md text-xs text-text-secondary">Semester-wise SGPA trajectory</p>
                   </div>
                   <span class="px-sm py-xs rounded-full bg-surface-container-highest text-primary font-label-md text-xs font-semibold" id="currentCgpaBadge">0.00 Cumulative</span>
                 </div>
 
-                <!-- Dynamic SVG Chart -->
+                <!-- Dynamic SVG Polyline Chart -->
                 <div class="w-full h-48 pt-sm flex flex-col justify-between">
                   <div class="w-full h-36" id="svgContainer">
                     <!-- Dynamic Polyline SVG -->
                   </div>
-                  <div class="flex justify-between font-label-md text-xs text-text-secondary px-xs mt-xs overflow-x-auto" id="trendLabelsRow">
+                  <div class="flex justify-between font-label-md text-xs text-text-secondary px-xs mt-xs overflow-x-auto gap-2" id="trendLabelsRow" style="-webkit-overflow-scrolling: touch;">
                     <!-- Dynamic labels -->
                   </div>
                 </div>
 
-                <div class="p-md rounded-xl bg-surface-container-low space-y-sm mt-md">
+                <div class="p-md rounded-xl bg-surface-container-low space-y-sm mt-md border border-border-subtle">
                   <div class="flex items-center justify-between text-xs sm:text-sm">
                     <span class="text-text-secondary">Cumulative Credits:</span>
                     <span class="text-text-primary font-semibold" id="cumCreditsDisplay">0 Credits</span>
@@ -435,6 +446,14 @@
                     <span class="text-text-secondary">Degree Completion:</span>
                     <span class="text-primary font-semibold" id="degreeCompletionDisplay">0% Completed</span>
                   </div>
+                </div>
+
+                <!-- Navigation link back to verify / add more semesters -->
+                <div class="pt-2">
+                  <a href="./verify.html" class="w-full flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-lg bg-surface-container-high hover:bg-surface-overlay text-primary font-semibold text-xs border border-border-subtle transition-all">
+                    <span class="material-symbols-outlined text-[16px]">add_circle</span>
+                    <span>Upload or Edit Other Semesters</span>
+                  </a>
                 </div>
               </div>
             </div>
@@ -478,7 +497,7 @@
         });
       }
 
-      // 4. Data Loading and Academic Year Breakdown
+      // 4. Data Loading and Academic Hierarchy
       const reg = sessionStorage.getItem('target_reg_num') || '202400712';
       const studentNameReg = document.getElementById('studentNameReg');
       if (studentNameReg) studentNameReg.textContent = `Student (${reg})`;
@@ -497,58 +516,151 @@
       // Fallback sample data if none in storage
       if (!payload) {
         payload = {
+          active_view: 'all',
+          active_semester: 'Semester 3',
           active_year: '2nd Year',
-          selected_year: '2nd Year',
+          available_semesters: ['Semester 1', 'Semester 2', 'Semester 3', 'Semester 4'],
           available_years: ['1st Year', '2nd Year'],
+          semesters_breakdown: {
+            'Semester 1': {
+              semester: 'Semester 1',
+              academic_year: '1st Year',
+              courses: [
+                { code: 'CS101', semester: 'Semester 1', academic_year: '1st Year', name: 'Programming Fundamentals', credits: 4, grade: 'S', points: '40.0' },
+                { code: 'MA101', semester: 'Semester 1', academic_year: '1st Year', name: 'Engineering Mathematics I', credits: 4, grade: 'A', points: '36.0' }
+              ],
+              totalCredits: 8,
+              weightedPoints: '76.0',
+              sgpa: '9.50',
+              gpa: '9.50',
+              passedCount: 2,
+              backlogCount: 0
+            },
+            'Semester 2': {
+              semester: 'Semester 2',
+              academic_year: '1st Year',
+              courses: [
+                { code: 'CS102', semester: 'Semester 2', academic_year: '1st Year', name: 'Object Oriented Programming', credits: 4, grade: 'A', points: '36.0' },
+                { code: 'PH102', semester: 'Semester 2', academic_year: '1st Year', name: 'Applied Physics', credits: 4, grade: 'S', points: '40.0' }
+              ],
+              totalCredits: 8,
+              weightedPoints: '76.0',
+              sgpa: '9.50',
+              gpa: '9.50',
+              passedCount: 2,
+              backlogCount: 0
+            },
+            'Semester 3': {
+              semester: 'Semester 3',
+              academic_year: '2nd Year',
+              courses: [
+                { code: 'CS201', semester: 'Semester 3', academic_year: '2nd Year', name: 'Data Structures & Algorithms', credits: 4, grade: 'S', points: '40.0' },
+                { code: 'MA201', semester: 'Semester 3', academic_year: '2nd Year', name: 'Discrete Mathematical Structures', credits: 4, grade: 'A', points: '36.0' }
+              ],
+              totalCredits: 8,
+              weightedPoints: '76.0',
+              sgpa: '9.50',
+              gpa: '9.50',
+              passedCount: 2,
+              backlogCount: 0
+            },
+            'Semester 4': {
+              semester: 'Semester 4',
+              academic_year: '2nd Year',
+              courses: [
+                { code: 'MA206B1', semester: 'Semester 4', academic_year: '2nd Year', name: 'Probability & Statistics', credits: 4, grade: 'S', points: '40.0' },
+                { code: 'CS206', semester: 'Semester 4', academic_year: '2nd Year', name: 'Computer Architecture & Org', credits: 4, grade: 'A', points: '36.0' }
+              ],
+              totalCredits: 8,
+              weightedPoints: '76.0',
+              sgpa: '9.50',
+              gpa: '9.50',
+              passedCount: 2,
+              backlogCount: 0
+            }
+          },
           years_breakdown: {
             '1st Year': {
               year: '1st Year',
               academic_year: '1st Year',
               courses: [
-                { code: 'CS101', year: '1st Year', academic_year: '1st Year', name: 'Programming Fundamentals', credits: 4, grade: 'S', points: '40.0' },
-                { code: 'MA101', year: '1st Year', academic_year: '1st Year', name: 'Engineering Mathematics I', credits: 4, grade: 'A', points: '36.0' }
+                { code: 'CS101', semester: 'Semester 1', academic_year: '1st Year', name: 'Programming Fundamentals', credits: 4, grade: 'S', points: '40.0' },
+                { code: 'MA101', semester: 'Semester 1', academic_year: '1st Year', name: 'Engineering Mathematics I', credits: 4, grade: 'A', points: '36.0' },
+                { code: 'CS102', semester: 'Semester 2', academic_year: '1st Year', name: 'Object Oriented Programming', credits: 4, grade: 'A', points: '36.0' },
+                { code: 'PH102', semester: 'Semester 2', academic_year: '1st Year', name: 'Applied Physics', credits: 4, grade: 'S', points: '40.0' }
               ],
-              totalCredits: 8,
-              weightedPoints: '76.0',
+              totalCredits: 16,
+              weightedPoints: '152.0',
               gpa: '9.50',
               sgpa: '9.50',
-              passedCount: 2,
+              passedCount: 4,
               backlogCount: 0
             },
             '2nd Year': {
               year: '2nd Year',
               academic_year: '2nd Year',
               courses: [
-                { code: 'MA206B1', year: '2nd Year', academic_year: '2nd Year', name: 'Probability & Statistics', credits: 4, grade: 'S', points: '40.0' },
-                { code: 'CS202', year: '2nd Year', academic_year: '2nd Year', name: 'Data Structures & Algorithms', credits: 4, grade: 'A', points: '36.0' }
+                { code: 'CS201', semester: 'Semester 3', academic_year: '2nd Year', name: 'Data Structures & Algorithms', credits: 4, grade: 'S', points: '40.0' },
+                { code: 'MA201', semester: 'Semester 3', academic_year: '2nd Year', name: 'Discrete Mathematical Structures', credits: 4, grade: 'A', points: '36.0' },
+                { code: 'MA206B1', semester: 'Semester 4', academic_year: '2nd Year', name: 'Probability & Statistics', credits: 4, grade: 'S', points: '40.0' },
+                { code: 'CS206', semester: 'Semester 4', academic_year: '2nd Year', name: 'Computer Architecture & Org', credits: 4, grade: 'A', points: '36.0' }
               ],
-              totalCredits: 8,
-              weightedPoints: '76.0',
+              totalCredits: 16,
+              weightedPoints: '152.0',
               gpa: '9.50',
               sgpa: '9.50',
-              passedCount: 2,
+              passedCount: 4,
               backlogCount: 0
             }
           },
           cumulative_metrics: {
             cgpa: '9.50',
             gpa: '9.50',
-            totalCredits: 16,
-            weightedPoints: '152.0',
-            passedCount: 4,
+            totalCredits: 32,
+            weightedPoints: '304.0',
+            passedCount: 8,
             backlogCount: 0
           },
           all_courses: [
-            { code: 'CS101', year: '1st Year', academic_year: '1st Year', name: 'Programming Fundamentals', credits: 4, grade: 'S', points: '40.0' },
-            { code: 'MA101', year: '1st Year', academic_year: '1st Year', name: 'Engineering Mathematics I', credits: 4, grade: 'A', points: '36.0' },
-            { code: 'MA206B1', year: '2nd Year', academic_year: '2nd Year', name: 'Probability & Statistics', credits: 4, grade: 'S', points: '40.0' },
-            { code: 'CS202', year: '2nd Year', academic_year: '2nd Year', name: 'Data Structures & Algorithms', credits: 4, grade: 'A', points: '36.0' }
+            { code: 'CS101', semester: 'Semester 1', academic_year: '1st Year', name: 'Programming Fundamentals', credits: 4, grade: 'S', points: '40.0' },
+            { code: 'MA101', semester: 'Semester 1', academic_year: '1st Year', name: 'Engineering Mathematics I', credits: 4, grade: 'A', points: '36.0' },
+            { code: 'CS102', semester: 'Semester 2', academic_year: '1st Year', name: 'Object Oriented Programming', credits: 4, grade: 'A', points: '36.0' },
+            { code: 'PH102', semester: 'Semester 2', academic_year: '1st Year', name: 'Applied Physics', credits: 4, grade: 'S', points: '40.0' },
+            { code: 'CS201', semester: 'Semester 3', academic_year: '2nd Year', name: 'Data Structures & Algorithms', credits: 4, grade: 'S', points: '40.0' },
+            { code: 'MA201', semester: 'Semester 3', academic_year: '2nd Year', name: 'Discrete Mathematical Structures', credits: 4, grade: 'A', points: '36.0' },
+            { code: 'MA206B1', semester: 'Semester 4', academic_year: '2nd Year', name: 'Probability & Statistics', credits: 4, grade: 'S', points: '40.0' },
+            { code: 'CS206', semester: 'Semester 4', academic_year: '2nd Year', name: 'Computer Architecture & Org', credits: 4, grade: 'A', points: '36.0' }
           ]
         };
       }
 
-      // Year-first data binding
-      const breakdown = payload.years_breakdown || payload.semesters_breakdown || {};
+      const semsBreakdown = payload.semesters_breakdown || {};
+      const yrsBreakdown = payload.years_breakdown || {};
+      const allCourses = payload.all_courses || payload.courses || [];
+
+      // Extract distinct semester and year lists
+      const availableSemesters = (payload.available_semesters && payload.available_semesters.length)
+        ? payload.available_semesters
+        : Object.keys(semsBreakdown);
+
+      const availableYears = (payload.available_years && payload.available_years.length)
+        ? payload.available_years
+        : Object.keys(yrsBreakdown);
+
+      // Sort semesters numerically (Semester 1 -> Semester 8)
+      availableSemesters.sort((a, b) => {
+        const na = parseInt((String(a).match(/\d+/) || ['0'])[0]);
+        const nb = parseInt((String(b).match(/\d+/) || ['0'])[0]);
+        return na - nb;
+      });
+
+      // Sort years numerically (1st Year -> 4th Year)
+      availableYears.sort((a, b) => {
+        const na = parseInt((String(a).match(/\d+/) || ['0'])[0]);
+        const nb = parseInt((String(b).match(/\d+/) || ['0'])[0]);
+        return na - nb;
+      });
+
       const cumMetrics = payload.cumulative_metrics || {
         cgpa: payload.cgpa || payload.gpa || '0.00',
         totalCredits: payload.totalCredits || 0,
@@ -557,28 +669,15 @@
         backlogCount: payload.backlogCount || 0
       };
 
-      const rawAvailable = payload.available_years || payload.available_semesters || Object.keys(breakdown);
-      const availableYears = rawAvailable.map(y => {
-        const s = String(y).trim();
-        const m = s.match(/([1-4])(?:st|nd|rd|th)?(?:\s*year)?/i);
-        if (m) {
-          const num = parseInt(m[1]);
-          const suff = num === 1 ? 'st' : (num === 2 ? 'nd' : (num === 3 ? 'rd' : 'th'));
-          return `${num}${suff} Year`;
-        }
-        return s;
-      });
+      // Determine initial active view
+      let currentView = payload.active_view || payload.active_semester || 'all';
+      if (currentView !== 'all' && !semsBreakdown[currentView] && !yrsBreakdown[currentView]) {
+        // Fallback if view doesn't match keys directly
+        if (availableSemesters.length > 0) currentView = availableSemesters[0];
+        else currentView = 'all';
+      }
 
-      // Distinct and sorted years
-      const uniqueAvailableYears = Array.from(new Set(availableYears)).sort((a, b) => {
-        const na = parseInt((a.match(/\d+/) || ['99'])[0]);
-        const nb = parseInt((b.match(/\d+/) || ['99'])[0]);
-        return na - nb;
-      });
-
-      let currentView = payload.active_year || payload.active_semester || 'all';
-
-      // Elements
+      // DOM Elements
       const pillsContainer = document.getElementById('resultsSemesterPillsList');
       const activeSemesterBadgeDisplay = document.getElementById('activeSemesterBadgeDisplay');
       const bannerSemester = document.getElementById('bannerSemester');
@@ -610,11 +709,17 @@
       const degreeCompletionDisplay = document.getElementById('degreeCompletionDisplay');
       const interactiveCgpaCard = document.getElementById('interactiveCgpaCard');
 
-      // Update Dashboard view
-      function updateDashboard(viewYear) {
-        currentView = viewYear;
-        if (activeSemesterBadgeDisplay) activeSemesterBadgeDisplay.textContent = viewYear === 'all' ? 'All Years (CGPA)' : viewYear;
-        if (bannerSemester) bannerSemester.textContent = viewYear === 'all' ? 'All Years (Cumulative CGPA)' : viewYear;
+      // Helper function to map sem number to year text
+      function semToYear(semNum) {
+        const n = parseInt(semNum) || 1;
+        const yr = Math.max(1, Math.min(4, Math.floor((n + 1) / 2)));
+        const suff = yr === 1 ? 'st' : (yr === 2 ? 'nd' : (yr === 3 ? 'rd' : 'th'));
+        return `${yr}${suff} Year`;
+      }
+
+      // Update Dashboard View
+      function updateDashboard(viewKey) {
+        currentView = viewKey;
 
         let activeCourses = [];
         let activeGpa = '0.00';
@@ -622,38 +727,54 @@
         let activePoints = '0.0';
         let activePassed = 0;
         let activeBacklogs = 0;
+        let viewTitle = '';
 
-        if (viewYear === 'all') {
-          activeCourses = payload.all_courses || payload.courses || [];
+        if (viewKey === 'all') {
+          activeCourses = allCourses;
           activeGpa = cumMetrics.cgpa || cumMetrics.gpa || '0.00';
           activeCredits = cumMetrics.totalCredits || 0;
           activePoints = cumMetrics.weightedPoints || '0.0';
           activePassed = cumMetrics.passedCount || 0;
           activeBacklogs = cumMetrics.backlogCount || 0;
+          viewTitle = 'All Semesters (Cumulative CGPA)';
           if (metricTitleLabel) metricTitleLabel.textContent = 'Cumulative CGPA';
+        } else if (semsBreakdown[viewKey]) {
+          const sData = semsBreakdown[viewKey];
+          activeCourses = sData.courses || [];
+          activeGpa = sData.sgpa || sData.gpa || '0.00';
+          activeCredits = sData.totalCredits || 0;
+          activePoints = sData.weightedPoints || '0.0';
+          activePassed = sData.passedCount || 0;
+          activeBacklogs = sData.backlogCount || 0;
+          const yr = sData.academic_year || semToYear(viewKey.replace(/\D/g, ''));
+          viewTitle = `${viewKey} • ${yr} (SGPA: ${activeGpa})`;
+          if (metricTitleLabel) metricTitleLabel.textContent = `${viewKey} SGPA`;
+        } else if (yrsBreakdown[viewKey]) {
+          const yData = yrsBreakdown[viewKey];
+          activeCourses = yData.courses || [];
+          activeGpa = yData.gpa || yData.sgpa || '0.00';
+          activeCredits = yData.totalCredits || 0;
+          activePoints = yData.weightedPoints || '0.0';
+          activePassed = yData.passedCount || 0;
+          activeBacklogs = yData.backlogCount || 0;
+          viewTitle = `${viewKey} Combined (GPA: ${activeGpa})`;
+          if (metricTitleLabel) metricTitleLabel.textContent = `${viewKey} GPA`;
         } else {
-          // Look up year in breakdown (check both raw key and normalized key)
-          let yrData = breakdown[viewYear];
-          if (!yrData) {
-            for (const k in breakdown) {
-              if (k.toLowerCase().includes(viewYear.toLowerCase().slice(0, 3))) {
-                yrData = breakdown[k];
-                break;
-              }
-            }
-          }
-          yrData = yrData || {};
-          activeCourses = yrData.courses || [];
-          activeGpa = yrData.gpa || yrData.sgpa || '0.00';
-          activeCredits = yrData.totalCredits || 0;
-          activePoints = yrData.weightedPoints || '0.0';
-          activePassed = yrData.passedCount || 0;
-          activeBacklogs = yrData.backlogCount || 0;
-          if (metricTitleLabel) metricTitleLabel.textContent = `${viewYear} GPA`;
+          // Fallback search
+          activeCourses = allCourses;
+          activeGpa = cumMetrics.cgpa || '0.00';
+          activeCredits = cumMetrics.totalCredits || 0;
+          activePoints = cumMetrics.weightedPoints || '0.0';
+          activePassed = cumMetrics.passedCount || 0;
+          activeBacklogs = cumMetrics.backlogCount || 0;
+          viewTitle = viewKey;
+          if (metricTitleLabel) metricTitleLabel.textContent = 'Cumulative CGPA';
         }
 
+        if (activeSemesterBadgeDisplay) activeSemesterBadgeDisplay.textContent = viewTitle;
+        if (bannerSemester) bannerSemester.textContent = viewTitle;
+        if (bannerCredits) bannerCredits.textContent = `${activeCredits} Active Credits`;
         if (metricSgpa) metricSgpa.textContent = activeGpa;
-        if (bannerCredits) bannerCredits.textContent = `${activeCredits} Total Credits`;
 
         // Honors & Ranking
         const numGpa = parseFloat(activeGpa) || 0;
@@ -711,33 +832,45 @@
         // Table Generation
         if (resultsTableBody) {
           resultsTableBody.innerHTML = '';
-          activeCourses.forEach(c => {
-            const isPassed = c.grade !== 'F';
-            const badgeClass = isPassed ? 'bg-secondary/15 text-secondary' : 'bg-error/15 text-error';
-            const badgeText = isPassed ? 'PASS' : 'FAIL';
-            const gradeBoxClass = (c.grade === 'S' || c.grade === 'A')
-              ? 'bg-secondary/15 text-secondary'
-              : (c.grade === 'F' ? 'bg-error/15 text-error' : 'bg-primary/15 text-primary');
-
+          if (activeCourses.length === 0) {
             const tr = document.createElement('tr');
-            tr.className = 'hover:bg-surface-container-high/50 transition-colors border-b border-border-subtle/50';
-            tr.innerHTML = `
-              <td class="py-md px-md">
-                <div class="font-medium text-text-primary">${c.code || 'COURSE'}</div>
-                <div class="text-text-secondary text-xs sm:text-sm">${c.name || 'Module'}</div>
-              </td>
-              <td class="py-md px-md"><span class="px-2 py-0.5 rounded text-[11px] bg-surface-container text-primary font-medium">${c.academic_year || c.year || viewYear}</span></td>
-              <td class="py-md px-md text-text-secondary">${c.credits} cr</td>
-              <td class="py-md px-md"><span class="px-xs py-0.5 rounded text-[10px] ${badgeClass} font-semibold">${badgeText}</span></td>
-              <td class="py-md px-md"><span class="inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-lg ${gradeBoxClass} font-bold font-label-md text-xs sm:text-label-md">${c.grade}</span></td>
-              <td class="py-md px-md text-right font-medium text-text-primary font-mono">${c.points || '0.0'}</td>
-            `;
+            tr.innerHTML = `<td colspan="6" class="py-8 text-center text-text-secondary text-sm">No courses recorded for this view.</td>`;
             resultsTableBody.appendChild(tr);
-          });
+          } else {
+            activeCourses.forEach(c => {
+              const gradeStr = String(c.grade || '').trim().toUpperCase();
+              const isPassed = gradeStr !== 'F';
+              const badgeClass = isPassed ? 'bg-secondary/15 text-secondary' : 'bg-error/15 text-error';
+              const badgeText = isPassed ? 'PASS' : 'FAIL';
+              const gradeBoxClass = (gradeStr === 'S' || gradeStr === 'A')
+                ? 'bg-secondary/15 text-secondary'
+                : (gradeStr === 'F' ? 'bg-error/15 text-error' : 'bg-primary/15 text-primary');
+
+              const semLabel = c.semester || 'Semester 1';
+              const yrLabel = c.academic_year || semToYear(semLabel.replace(/\D/g, ''));
+
+              const tr = document.createElement('tr');
+              tr.className = 'hover:bg-surface-container-high/50 transition-colors border-b border-border-subtle/50';
+              tr.innerHTML = `
+                <td class="py-md px-md">
+                  <div class="font-medium text-text-primary text-xs sm:text-sm">${c.code || c.course_code || 'COURSE'}</div>
+                  <div class="text-text-secondary text-xs">${c.name || c.course_name || 'Module'}</div>
+                </td>
+                <td class="py-md px-md whitespace-nowrap">
+                  <span class="px-2 py-0.5 rounded text-[11px] bg-surface-container text-primary font-medium">${semLabel} • ${yrLabel}</span>
+                </td>
+                <td class="py-md px-md text-text-secondary text-xs sm:text-sm whitespace-nowrap">${c.credits} cr</td>
+                <td class="py-md px-md"><span class="px-xs py-0.5 rounded text-[10px] ${badgeClass} font-semibold">${badgeText}</span></td>
+                <td class="py-md px-md"><span class="inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-lg ${gradeBoxClass} font-bold font-label-md text-xs sm:text-label-md">${gradeStr}</span></td>
+                <td class="py-md px-md text-right font-medium text-text-primary font-mono text-xs sm:text-sm">${c.points || '0.0'}</td>
+              `;
+              resultsTableBody.appendChild(tr);
+            });
+          }
         }
 
         // Quality Points
-        if (breakdownTermText) breakdownTermText.textContent = `${viewYear === 'all' ? 'Cumulative' : viewYear} Grade Roster & Points`;
+        if (breakdownTermText) breakdownTermText.textContent = `${viewKey === 'all' ? 'Cumulative' : viewKey} Grade Roster & Points`;
         const maxPts = (activeCredits * 10).toFixed(1);
         if (qualityPointsLabel) qualityPointsLabel.textContent = `Quality Points Earned: ${activePoints}`;
         if (maxPointsLabel) maxPointsLabel.textContent = `Total Weighted Score / ${maxPts} Max`;
@@ -756,102 +889,125 @@
       function switchView(viewName) {
         currentView = viewName;
         updateDashboard(viewName);
-        renderYearTabs();
+        renderNavTabs();
         renderProgressionSvg();
       }
 
-      // Render Academic Year Switcher Tabs
-      function renderYearTabs() {
+      // Render Academic Distinction Navigation Tabs
+      function renderNavTabs() {
         if (!pillsContainer) return;
         pillsContainer.innerHTML = '';
 
-        // All Years (CGPA) Tab
+        // 1. All Semesters (Cumulative CGPA) Button
         const allTab = document.createElement('button');
         allTab.type = 'button';
         const isAll = currentView === 'all';
-        allTab.className = `px-3.5 py-1.5 rounded-lg text-xs transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+        allTab.className = `px-3.5 py-1.5 rounded-lg text-xs transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer shrink-0 ${
           isAll
             ? 'bg-primary text-on-primary shadow-sm font-bold'
-            : 'bg-surface-container text-text-secondary hover:text-text-primary hover:bg-surface-overlay font-medium'
+            : 'bg-surface-container text-text-secondary hover:text-text-primary hover:bg-surface-overlay font-medium border border-border-subtle'
         }`;
         allTab.innerHTML = `
           <span class="material-symbols-outlined text-[15px]">school</span>
-          <span>All Years (CGPA: ${cumMetrics.cgpa})</span>
+          <span>All Semesters (CGPA: ${cumMetrics.cgpa})</span>
         `;
         allTab.onclick = () => switchView('all');
         pillsContainer.appendChild(allTab);
 
-        // Individual Academic Year Tabs
-        uniqueAvailableYears.forEach(yr => {
-          let yObj = breakdown[yr];
-          if (!yObj) {
-            for (const k in breakdown) {
-              if (k.toLowerCase().includes(yr.toLowerCase().slice(0, 3))) {
-                yObj = breakdown[k];
-                break;
-              }
-            }
-          }
-          const yrGpa = (yObj && (yObj.gpa || yObj.sgpa)) ? (yObj.gpa || yObj.sgpa) : '0.00';
+        // Divider
+        if (availableSemesters.length > 0) {
+          const div1 = document.createElement('div');
+          div1.className = 'h-5 w-px bg-border-subtle shrink-0 mx-1';
+          pillsContainer.appendChild(div1);
+        }
+
+        // 2. Individual Semester Pills (SGPA)
+        availableSemesters.forEach(sem => {
+          const sData = semsBreakdown[sem];
+          const sgpa = (sData && (sData.sgpa || sData.gpa)) ? (sData.sgpa || sData.gpa) : '0.00';
+          const cr = sData ? sData.totalCredits : 0;
+          const isAct = currentView === sem;
+          const shortSem = sem.replace('Semester', 'Sem').trim();
+
+          const semTab = document.createElement('button');
+          semTab.type = 'button';
+          semTab.className = `px-3 py-1.5 rounded-lg text-xs transition-all flex items-center gap-1 whitespace-nowrap cursor-pointer shrink-0 ${
+            isAct
+              ? 'bg-primary text-on-primary shadow-sm font-bold'
+              : 'bg-surface-container text-text-secondary hover:text-text-primary hover:bg-surface-overlay font-medium border border-border-subtle'
+          }`;
+          semTab.innerHTML = `<span>${shortSem} (SGPA: ${sgpa})</span>`;
+          semTab.onclick = () => switchView(sem);
+          pillsContainer.appendChild(semTab);
+        });
+
+        // Divider
+        if (availableYears.length > 0) {
+          const div2 = document.createElement('div');
+          div2.className = 'h-5 w-px bg-border-subtle shrink-0 mx-1';
+          pillsContainer.appendChild(div2);
+        }
+
+        // 3. Academic Year Combined Pills (GPA)
+        availableYears.forEach(yr => {
+          const yData = yrsBreakdown[yr];
+          const gpa = (yData && (yData.gpa || yData.sgpa)) ? (yData.gpa || yData.sgpa) : '0.00';
           const isAct = currentView === yr;
 
           const yrTab = document.createElement('button');
           yrTab.type = 'button';
-          yrTab.className = `px-3.5 py-1.5 rounded-lg text-xs transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+          yrTab.className = `px-3 py-1.5 rounded-lg text-xs transition-all flex items-center gap-1 whitespace-nowrap cursor-pointer shrink-0 ${
             isAct
               ? 'bg-primary text-on-primary shadow-sm font-bold'
-              : 'bg-surface-container text-text-secondary hover:text-text-primary hover:bg-surface-overlay font-medium'
+              : 'bg-surface-container-high text-primary/90 hover:text-primary hover:bg-surface-overlay font-medium border border-border-subtle'
           }`;
-          yrTab.innerHTML = `<span>${yr} (GPA: ${yrGpa})</span>`;
+          yrTab.innerHTML = `<span>${yr} Combined (GPA: ${gpa})</span>`;
           yrTab.onclick = () => switchView(yr);
           pillsContainer.appendChild(yrTab);
         });
       }
 
-      // Interactive Click on CGPA Card: toggles between 'all' and latest year
+      // Interactive Click on CGPA Card: cycles between All -> Semesters -> Years
       if (interactiveCgpaCard) {
         interactiveCgpaCard.addEventListener('click', () => {
-          if (currentView === 'all') {
-            const target = uniqueAvailableYears.length > 0 ? uniqueAvailableYears[uniqueAvailableYears.length - 1] : '1st Year';
-            switchView(target);
-          } else {
-            switchView('all');
-          }
+          const cycleViews = ['all', ...availableSemesters, ...availableYears];
+          const currentIdx = cycleViews.indexOf(currentView);
+          const nextIdx = (currentIdx + 1) % cycleViews.length;
+          switchView(cycleViews[nextIdx]);
         });
       }
 
-      // Dynamic Progression SVG Chart
+      // Dynamic Progression SVG Chart by Semester
       function renderProgressionSvg() {
         const svgContainer = document.getElementById('svgContainer');
         const trendLabelsRow = document.getElementById('trendLabelsRow');
         if (!svgContainer || !trendLabelsRow) return;
 
-        if (uniqueAvailableYears.length === 0) return;
+        // Use semesters for progression curve; fallback to years if semesters are absent
+        const timelineKeys = availableSemesters.length > 0 ? availableSemesters : availableYears;
+        if (timelineKeys.length === 0) {
+          svgContainer.innerHTML = '<div class="h-full flex items-center justify-center text-xs text-text-secondary">No progression data available</div>';
+          return;
+        }
 
         trendLabelsRow.innerHTML = '';
         const points = [];
         const w = 360;
         const h = 100;
-        const step = uniqueAvailableYears.length > 1 ? (w - 40) / (uniqueAvailableYears.length - 1) : (w - 40);
+        const step = timelineKeys.length > 1 ? (w - 40) / (timelineKeys.length - 1) : (w - 40);
 
-        uniqueAvailableYears.forEach((yr, idx) => {
-          let yData = breakdown[yr];
-          if (!yData) {
-            for (const k in breakdown) {
-              if (k.toLowerCase().includes(yr.toLowerCase().slice(0, 3))) {
-                yData = breakdown[k];
-                break;
-              }
-            }
-          }
-          const gpaNum = parseFloat(yData?.gpa || yData?.sgpa) || 8.0;
+        timelineKeys.forEach((key, idx) => {
+          const itemData = semsBreakdown[key] || yrsBreakdown[key] || {};
+          const gpaNum = parseFloat(itemData.sgpa || itemData.gpa) || 8.0;
           const y = Math.round(h - ((gpaNum / 10.0) * (h - 20)) - 10);
           const x = Math.round(20 + (idx * step));
-          points.push({ x, y, yr, gpa: yData?.gpa || yData?.sgpa || '0.00' });
+          points.push({ x, y, key, gpa: itemData.sgpa || itemData.gpa || '0.00' });
 
           const lbl = document.createElement('span');
-          const shortYr = yr.replace('Year', 'Yr').trim();
-          lbl.textContent = `${shortYr} (${yData?.gpa || yData?.sgpa || '0.00'})`;
+          const shortKey = key.replace('Semester', 'S').replace('Year', 'Yr').trim();
+          lbl.className = `cursor-pointer transition-colors ${currentView === key ? 'text-primary font-bold' : 'hover:text-text-primary'}`;
+          lbl.textContent = `${shortKey} (${itemData.sgpa || itemData.gpa || '0.00'})`;
+          lbl.onclick = () => switchView(key);
           trendLabelsRow.appendChild(lbl);
         });
 
@@ -859,20 +1015,23 @@
         const polyPoints = `20,${h} ${pointsStr} ${points[points.length - 1].x},${h}`;
 
         let svgHtml = `
-          <svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 380 110">
+          <svg class="w-full h-full" preserveAspectRatio="none" viewBox="0 0 380 110">
             <defs>
-              <lineargradient id="gradTrendDynamic" x1="0%" x2="0%" y1="0%" y2="100%">
-                <stop offset="0%" stop-color="#818cf8" stop-opacity="0.3"></stop>
+              <linearGradient id="gradTrendDynamic" x1="0%" x2="0%" y1="0%" y2="100%">
+                <stop offset="0%" stop-color="#818cf8" stop-opacity="0.35"></stop>
                 <stop offset="100%" stop-color="#818cf8" stop-opacity="0.0"></stop>
-              </lineargradient>
+              </linearGradient>
             </defs>
             <polygon fill="url(#gradTrendDynamic)" points="${polyPoints}"></polygon>
             <path d="${points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ')}" fill="none" stroke="#bdc2ff" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path>
         `;
 
         points.forEach((p, idx) => {
+          const isSelected = p.key === currentView;
           const isLast = idx === points.length - 1;
-          svgHtml += `<circle cx="${p.x}" cy="${p.y}" fill="${isLast ? '#4edea3' : '#818cf8'}" r="${isLast ? 5 : 4}"></circle>`;
+          const color = isSelected ? '#4edea3' : (isLast ? '#bdc2ff' : '#818cf8');
+          const radius = isSelected ? 6 : (isLast ? 5 : 4);
+          svgHtml += `<circle cx="${p.x}" cy="${p.y}" fill="${color}" r="${radius}" stroke="#0b1326" stroke-width="1.5"></circle>`;
         });
 
         svgHtml += `</svg>`;
@@ -880,14 +1039,14 @@
       }
 
       // Initial Render
-      renderYearTabs();
+      renderNavTabs();
       updateDashboard(currentView);
       renderProgressionSvg();
     })();
   </script>
 
   <!-- Footer -->
-  <footer class="w-full bg-surface-container-lowest border-t border-border-subtle">
+  <footer class="w-full bg-surface-container-lowest border-t border-border-subtle mt-auto">
     <div class="w-full px-margin-mobile md:px-margin-desktop py-lg flex flex-col md:flex-row items-center justify-between gap-md text-on-surface-variant font-label-md text-xs sm:text-label-md max-w-container-max mx-auto">
       <div>© 2026 GradeFlow. All rights reserved.</div>
       <div class="flex items-center gap-lg">

@@ -123,7 +123,6 @@
     }
     html, body {
       overflow-x: hidden;
-      touch-action: pan-y;
       -webkit-font-smoothing: antialiased;
     }
     ::-webkit-scrollbar {
@@ -200,19 +199,31 @@
               </div>
             </div>
 
-            <!-- Target Academic Year Dropdown -->
+            <!-- Target Academic Target Dropdown -->
             <div class="flex flex-col gap-sm">
               <div class="flex items-center justify-between">
-                <label class="font-label-md text-label-md text-text-secondary uppercase tracking-wider" for="year-input">Academic Year</label>
-                <span class="text-[11px] text-primary/80">Auto-filters records</span>
+                <label class="font-label-md text-label-md text-text-secondary uppercase tracking-wider" for="year-input">Academic Target</label>
+                <span class="text-[11px] text-primary/80">Semester or Year</span>
               </div>
               <div class="relative">
                 <select id="year-input" class="w-full bg-surface-container border border-border-subtle rounded-lg px-md py-sm text-text-primary font-body-md text-base focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-transparent transition-all appearance-none cursor-pointer">
-                  <option value="all" selected>All Years (Cumulative CGPA)</option>
-                  <option value="1st Year">1st Year</option>
-                  <option value="2nd Year">2nd Year</option>
-                  <option value="3rd Year">3rd Year</option>
-                  <option value="4th Year">4th Year</option>
+                  <option value="all" selected>All Semesters (Cumulative CGPA)</option>
+                  <optgroup label="Individual Semesters (SGPA)">
+                    <option value="Semester 1">Semester 1 (1st Year)</option>
+                    <option value="Semester 2">Semester 2 (1st Year)</option>
+                    <option value="Semester 3">Semester 3 (2nd Year)</option>
+                    <option value="Semester 4">Semester 4 (2nd Year)</option>
+                    <option value="Semester 5">Semester 5 (3rd Year)</option>
+                    <option value="Semester 6">Semester 6 (3rd Year)</option>
+                    <option value="Semester 7">Semester 7 (4th Year)</option>
+                    <option value="Semester 8">Semester 8 (4th Year)</option>
+                  </optgroup>
+                  <optgroup label="Academic Years (Combined GPA)">
+                    <option value="1st Year">1st Year (Sem 1 &amp; 2)</option>
+                    <option value="2nd Year">2nd Year (Sem 3 &amp; 4)</option>
+                    <option value="3rd Year">3rd Year (Sem 5 &amp; 6)</option>
+                    <option value="4th Year">4th Year (Sem 7 &amp; 8)</option>
+                  </optgroup>
                 </select>
                 <span class="material-symbols-outlined absolute right-md top-1/2 -translate-y-1/2 text-text-secondary pointer-events-none">expand_more</span>
               </div>
@@ -526,6 +537,7 @@
             if (targetYear && targetYear !== 'all') {
               queryParams.append('year', targetYear);
               queryParams.append('semester', targetYear);
+              queryParams.append('filter', targetYear);
             }
             const queryStr = queryParams.toString() ? `?${queryParams.toString()}` : '';
 

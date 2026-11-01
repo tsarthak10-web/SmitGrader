@@ -19,7 +19,6 @@
         margin: 0;
         padding: 0;
         overflow-x: hidden;
-        touch-action: pan-y;
         -webkit-font-smoothing: antialiased;
       }
       main > :first-child {
@@ -259,8 +258,8 @@
         </div>
       </div>
 
-      <!-- File Upload Modal Overlay (Mobile scroll-friendly with z-[100] above header) -->
-      <div class="fixed inset-0 z-[100] bg-surface-container-lowest/80 backdrop-blur-md overflow-y-auto p-2 sm:p-4 md:p-6 flex flex-col items-center justify-start sm:justify-center min-h-screen transition-all duration-300" id="modal-container">
+      <!-- File Upload Modal Overlay (Mobile scroll-friendly with safe bottom padding) -->
+      <div class="fixed inset-0 z-[100] bg-surface-container-lowest/80 backdrop-blur-md overflow-y-auto p-2 sm:p-4 md:p-6 pb-28 sm:pb-6 flex flex-col items-center justify-start sm:justify-center min-h-screen transition-all duration-300" id="modal-container">
         <div class="relative w-full max-w-[660px] bg-surface-card rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.6)] my-2 sm:my-auto overflow-hidden flex flex-col max-h-[92vh]">
           <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400/80 via-primary-container to-amber-400/80"></div>
           
@@ -534,10 +533,17 @@
           if (targetReg) {
             formData.append('registration_number', targetReg.trim());
           }
-          const targetYear = sessionStorage.getItem('target_year') || sessionStorage.getItem('target_semester');
-          if (targetYear && targetYear !== 'all') {
-            formData.append('target_year', targetYear.trim());
-            formData.append('target_semester', targetYear.trim());
+          const targetTerm = sessionStorage.getItem('target_year') || sessionStorage.getItem('target_semester');
+          if (targetTerm && targetTerm !== 'all') {
+            if (targetTerm.toLowerCase().includes('year')) {
+              formData.append('target_year', targetTerm.trim());
+            } else {
+              formData.append('target_semester', targetTerm.trim());
+              const semNum = parseInt(targetTerm.replace(/\D/g, '')) || 1;
+              const yr = Math.max(1, Math.min(4, Math.floor((semNum + 1) / 2)));
+              const suff = yr === 1 ? 'st' : (yr === 2 ? 'nd' : (yr === 3 ? 'rd' : 'th'));
+              formData.append('target_year', `${yr}${suff} Year`);
+            }
           }
 
           try {
