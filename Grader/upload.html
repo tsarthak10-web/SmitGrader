@@ -339,6 +339,13 @@
       const submitBtn = document.getElementById('btn-submit');
       const submitBtnLabel = document.getElementById('btn-submit-label');
 
+      // Configurable API Base URL
+      const API_BASE_URL = localStorage.getItem('gradeflow_api_url') || (
+        window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost'
+          ? 'http://127.0.0.1:8000'
+          : 'https://gradeflow-backend.onrender.com'
+      );
+
       // Sync UI search preview from sessionStorage
       const targetReg = sessionStorage.getItem('target_reg_num') || '202400712';
       const targetSem = sessionStorage.getItem('target_semester') || 'all';
@@ -491,7 +498,7 @@
           }
 
           try {
-            const response = await fetch('http://127.0.0.1:8000/api/upload', {
+            const response = await fetch(`${API_BASE_URL}/api/upload`, {
               method: 'POST',
               body: formData
             });
