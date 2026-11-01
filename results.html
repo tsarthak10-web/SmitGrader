@@ -169,11 +169,11 @@
                 <span class="px-sm py-xs rounded-full bg-primary/15 text-primary font-label-md text-label-md uppercase tracking-wider">Academic Audit</span>
                 <span class="flex items-center gap-xs text-secondary font-label-md text-label-md">
                   <span class="inline-block w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
-                  Live Record Verified
+                  Multi-Semester Verified
                 </span>
               </div>
-              <h1 class="font-headline-lg text-headline-lg text-text-primary tracking-tight">Semester Academic Results</h1>
-              <p class="font-body-md text-body-md text-text-secondary" id="studentInfoBanner">Student: <span class="text-text-primary font-medium" id="studentNameReg">Sarthak Tiwari (202400712)</span> • <span id="bannerSemester">Fall 2024</span> • <span id="bannerCredits">11 Total Credits</span></p>
+              <h1 class="font-headline-lg text-headline-lg text-text-primary tracking-tight">Academic Performance Results</h1>
+              <p class="font-body-md text-body-md text-text-secondary" id="studentInfoBanner">Student: <span class="text-text-primary font-medium" id="studentNameReg">Sarthak Tiwari (202400712)</span> • <span id="bannerSemester">All Semesters</span> • <span id="bannerCredits">0 Total Credits</span></p>
             </div>
             
             <div class="flex items-center gap-sm self-start md:self-auto">
@@ -189,16 +189,27 @@
           </div>
         </div>
 
+        <!-- Semester Switcher Navigation Bar -->
+        <div class="flex items-center justify-between gap-3 overflow-x-auto pb-2 border-b border-border-subtle" id="resultsSemesterTabsBar">
+          <div class="flex items-center gap-2 flex-nowrap" id="resultsSemesterPillsList">
+            <!-- Dynamically populated: [ Degree Audit (CGPA) ] [ Semester 1 ] [ Semester 2 ] ... -->
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <span class="text-xs text-text-secondary">Active View:</span>
+            <span class="px-2.5 py-1 rounded bg-surface-container font-semibold text-xs text-primary" id="activeSemesterBadgeDisplay">All Semesters</span>
+          </div>
+        </div>
+
         <!-- Metric Stat Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-lg">
           
-          <!-- SGPA Card -->
+          <!-- SGPA / CGPA Card -->
           <div class="relative overflow-hidden rounded-xl bg-surface-container p-lg shadow-md flex flex-col justify-between group hover:bg-surface-container-high transition-colors">
             <div class="flex items-start justify-between">
               <div class="space-y-xs">
-                <span class="font-label-md text-label-md text-text-secondary uppercase tracking-wider">Semester SGPA</span>
+                <span class="font-label-md text-label-md text-text-secondary uppercase tracking-wider" id="metricTitleLabel">Semester SGPA</span>
                 <div class="flex items-baseline gap-xs">
-                  <span class="font-display-lg text-display-lg font-bold text-text-primary" id="metricSgpa">9.09</span>
+                  <span class="font-display-lg text-display-lg font-bold text-text-primary" id="metricSgpa">0.00</span>
                   <span class="font-body-md text-body-md text-text-secondary">/ 10.00</span>
                 </div>
               </div>
@@ -231,7 +242,7 @@
                 <span class="material-symbols-outlined text-secondary text-[18px]">check_circle</span>
                 <span>Official Examination Board</span>
               </div>
-              <span class="font-label-md text-label-md text-text-primary font-medium" id="creditBoardSpan">11 / 11 Credits</span>
+              <span class="font-label-md text-label-md text-text-primary font-medium" id="creditBoardSpan">0 / 0 Credits</span>
             </div>
           </div>
 
@@ -241,7 +252,7 @@
               <div class="space-y-xs">
                 <span class="font-label-md text-label-md text-text-secondary uppercase tracking-wider">Course Clearance</span>
                 <div class="flex items-baseline gap-xs">
-                  <span class="font-display-lg text-display-lg font-bold text-text-primary" id="courseClearanceRatio">3 / 3</span>
+                  <span class="font-display-lg text-display-lg font-bold text-text-primary" id="courseClearanceRatio">0 / 0</span>
                   <span class="font-body-md text-body-md text-text-secondary">Courses</span>
                 </div>
               </div>
@@ -268,13 +279,13 @@
                 <div>
                   <div class="flex items-center gap-sm">
                     <h3 class="font-headline-md text-headline-md text-text-primary">Passed Courses</h3>
-                    <span class="px-sm py-xs rounded-full bg-secondary/15 text-secondary font-label-md text-label-md font-bold" id="passedSummaryBadge">3 / 3 Complete</span>
+                    <span class="px-sm py-xs rounded-full bg-secondary/15 text-secondary font-label-md text-label-md font-bold" id="passedSummaryBadge">0 / 0 Complete</span>
                   </div>
-                  <p class="font-body-md text-body-md text-text-secondary">All enrolled semester modules successfully passed with credit criteria met.</p>
+                  <p class="font-body-md text-body-md text-text-secondary">All enrolled modules successfully passed with credit criteria met.</p>
                 </div>
               </div>
               <div class="text-right">
-                <span class="font-headline-lg text-headline-lg font-bold text-secondary" id="passedCreditsEarned">11</span>
+                <span class="font-headline-lg text-headline-lg font-bold text-secondary" id="passedCreditsEarned">0</span>
                 <span class="block font-label-md text-label-md text-text-secondary">Credits Earned</span>
               </div>
             </div>
@@ -308,8 +319,8 @@
               <div class="rounded-xl bg-surface-container p-lg shadow-md space-y-md">
                 <div class="flex items-center justify-between">
                   <div>
-                    <h2 class="font-headline-md text-headline-md text-text-primary">Final Semester Breakdown</h2>
-                    <p class="font-body-md text-body-md text-text-secondary" id="breakdownTermText">Fall 2024 Grade Roster &amp; Honors Index</p>
+                    <h2 class="font-headline-md text-headline-md text-text-primary">Academic Grade Breakdown</h2>
+                    <p class="font-body-md text-body-md text-text-secondary" id="breakdownTermText">Grade Roster &amp; Quality Points</p>
                   </div>
                   <div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-primary">
                     <span class="material-symbols-outlined text-[22px]">fact_check</span>
@@ -321,6 +332,7 @@
                     <thead>
                       <tr class="bg-surface-container-low text-text-secondary font-label-md text-label-md uppercase tracking-wider">
                         <th class="py-sm px-md rounded-l-lg">Course</th>
+                        <th class="py-sm px-md">Semester</th>
                         <th class="py-sm px-md">Credits</th>
                         <th class="py-sm px-md">Result</th>
                         <th class="py-sm px-md">Grade</th>
@@ -339,12 +351,12 @@
                       <span class="material-symbols-outlined text-[24px]">workspace_premium</span>
                     </div>
                     <div>
-                      <p class="font-body-md text-body-md text-text-primary font-medium" id="qualityPointsLabel">Quality Points Earned: 100.0</p>
-                      <p class="font-label-md text-label-md text-text-secondary" id="maxPointsLabel">Total Weighted Score / 110.0 Max</p>
+                      <p class="font-body-md text-body-md text-text-primary font-medium" id="qualityPointsLabel">Quality Points Earned: 0.0</p>
+                      <p class="font-label-md text-label-md text-text-secondary" id="maxPointsLabel">Total Weighted Score / 0.0 Max</p>
                     </div>
                   </div>
                   <div class="text-right">
-                    <span class="font-headline-md text-headline-md font-bold text-secondary" id="performanceRatio">90.90%</span>
+                    <span class="font-headline-md text-headline-md font-bold text-secondary" id="performanceRatio">0.00%</span>
                     <p class="font-label-md text-label-md text-text-secondary">Performance Ratio</p>
                   </div>
                 </div>
@@ -354,7 +366,7 @@
                     <span class="material-symbols-outlined text-[16px]">help_center</span>
                     <span>Dispute Grade Evaluation</span>
                   </button>
-                  <span class="font-label-md text-label-md text-text-secondary">Signed by Dean of Academics</span>
+                  <span class="font-label-md text-label-md text-text-secondary">Verified by SMU Academic Records</span>
                 </div>
               </div>
             </div>
@@ -367,47 +379,31 @@
                     <h3 class="font-headline-md text-headline-md text-text-primary">CGPA Progression</h3>
                     <p class="font-body-md text-body-md text-text-secondary">Cumulative trajectory across terms</p>
                   </div>
-                  <span class="px-sm py-xs rounded-full bg-surface-container-highest text-primary font-label-md text-label-md font-semibold" id="currentCgpaBadge">8.50 Current</span>
+                  <span class="px-sm py-xs rounded-full bg-surface-container-highest text-primary font-label-md text-label-md font-semibold" id="currentCgpaBadge">0.00 Current</span>
                 </div>
 
-                <div class="w-full h-48 pt-sm">
-                  <svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 400 120">
-                    <defs>
-                      <lineargradient id="gradTrend" x1="0%" x2="0%" y1="0%" y2="100%">
-                        <stop offset="0%" stop-color="#818cf8" stop-opacity="0.3"></stop>
-                        <stop offset="100%" stop-color="#818cf8" stop-opacity="0"></stop>
-                      </lineargradient>
-                    </defs>
-                    <polygon fill="url(#gradTrend)" points="20,95 100,75 180,60 260,65 340,30 380,20 380,115 20,115"></polygon>
-                    <path d="M 20 95 L 100 75 L 180 60 L 260 65 L 340 30 L 380 20" fill="none" stroke="#bdc2ff" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path>
-                    <circle cx="20" cy="95" fill="#818cf8" r="4"></circle>
-                    <circle cx="100" cy="75" fill="#818cf8" r="4"></circle>
-                    <circle cx="180" cy="60" fill="#818cf8" r="4"></circle>
-                    <circle cx="260" cy="65" fill="#818cf8" r="4"></circle>
-                    <circle cx="340" cy="30" fill="#818cf8" r="4"></circle>
-                    <circle cx="380" cy="20" fill="#4edea3" r="5"></circle>
-                  </svg>
-                  <div class="flex justify-between font-label-md text-label-md text-text-secondary px-xs mt-xs">
-                    <span>S1 (7.80)</span>
-                    <span>S2 (8.10)</span>
-                    <span>S3 (8.25)</span>
-                    <span>S4 (8.38)</span>
-                    <span id="trendLatestLabel">S5 (8.50)</span>
+                <!-- Dynamic SVG Chart -->
+                <div class="w-full h-48 pt-sm flex flex-col justify-between">
+                  <div class="w-full h-36" id="svgContainer">
+                    <!-- Dynamic Polyline SVG -->
+                  </div>
+                  <div class="flex justify-between font-label-md text-label-md text-text-secondary px-xs mt-xs overflow-x-auto" id="trendLabelsRow">
+                    <!-- Dynamic labels -->
                   </div>
                 </div>
 
                 <div class="p-md rounded-xl bg-surface-container-low space-y-sm mt-md">
                   <div class="flex items-center justify-between text-label-md font-label-md">
                     <span class="text-text-secondary">Cumulative Credits:</span>
-                    <span class="text-text-primary font-semibold" id="cumCreditsDisplay">84 Credits</span>
+                    <span class="text-text-primary font-semibold" id="cumCreditsDisplay">0 Credits</span>
                   </div>
                   <div class="flex items-center justify-between text-label-md font-label-md">
-                    <span class="text-text-secondary">Academic Standing:</span>
-                    <span class="text-secondary font-semibold" id="standingDisplay">Good Standing</span>
+                    <span class="text-text-secondary">Cumulative CGPA:</span>
+                    <span class="text-secondary font-semibold" id="cumCgpaDisplay">0.00</span>
                   </div>
                   <div class="flex items-center justify-between text-label-md font-label-md">
                     <span class="text-text-secondary">Degree Completion:</span>
-                    <span class="text-primary font-semibold">70.0% Completed</span>
+                    <span class="text-primary font-semibold" id="degreeCompletionDisplay">0% Completed</span>
                   </div>
                 </div>
               </div>
@@ -431,7 +427,7 @@
         });
       }
 
-      // 2. Official Transcript Button (Interactive Modal/Download)
+      // 2. Official Transcript Button
       const officialTranscriptBtn = document.getElementById('officialTranscriptBtn');
       if (officialTranscriptBtn) {
         officialTranscriptBtn.addEventListener('click', () => {
@@ -440,7 +436,7 @@
         });
       }
 
-      // 3. Dispute Grade Evaluation Modal
+      // 3. Dispute Grade Evaluation
       const disputeBtn = document.getElementById('disputeBtn');
       if (disputeBtn) {
         disputeBtn.addEventListener('click', () => {
@@ -452,165 +448,340 @@
         });
       }
 
-      // 4. Populate Dynamic Academic Results from Session Storage
+      // 4. Data Loading and Multi-Semester Breakdown
       const reg = sessionStorage.getItem('target_reg_num') || '202400712';
-      const sem = sessionStorage.getItem('target_semester') || 'Fall 2024';
-      const savedRecordRaw = sessionStorage.getItem('final_academic_record');
-
       const studentNameReg = document.getElementById('studentNameReg');
-      const bannerSemester = document.getElementById('bannerSemester');
-      const bannerCredits = document.getElementById('bannerCredits');
-      const breakdownTermText = document.getElementById('breakdownTermText');
+      if (studentNameReg) studentNameReg.textContent = `Student (${reg})`;
 
-      if (studentNameReg) studentNameReg.textContent = `Sarthak Tiwari (${reg})`;
-      if (bannerSemester) bannerSemester.textContent = sem === 'all' ? 'All Semesters' : sem.replace('-', ' ').toUpperCase();
-      if (breakdownTermText) breakdownTermText.textContent = `${sem === 'all' ? 'Cumulative' : sem.replace('-', ' ').toUpperCase()} Grade Roster & Honors Index`;
-
-      const resultsTableBody = document.getElementById('resultsTableBody');
-
-      // Default fallback courses if none verified yet
-      let courses = [
-        { code: 'MA206B1', name: 'Probability & Statistics', credits: 4, grade: 'S', points: '40.0' },
-        { code: 'CS302', name: 'Computer Architecture', credits: 4, grade: 'A', points: '36.0' },
-        { code: 'CS410', name: 'Web Development', credits: 3, grade: 'B', points: '24.0' }
-      ];
-      let sgpa = '9.09';
-      let totalCredits = 11;
-      let weightedPoints = '100.0';
-      let passedCount = 3;
-      let backlogCount = 0;
+      const savedRecordRaw = sessionStorage.getItem('final_academic_record');
+      let payload = null;
 
       if (savedRecordRaw) {
         try {
-          const parsed = JSON.parse(savedRecordRaw);
-          if (parsed.courses && parsed.courses.length > 0) {
-            courses = parsed.courses;
-            sgpa = parsed.sgpa;
-            totalCredits = parsed.totalCredits;
-            weightedPoints = parsed.weightedPoints;
-            passedCount = parsed.passedCount;
-            backlogCount = parsed.backlogCount;
-          }
+          payload = JSON.parse(savedRecordRaw);
         } catch (e) {
           console.warn('Error reading saved academic record:', e);
         }
       }
 
-      // Render Metrics
-      const metricSgpa = document.getElementById('metricSgpa');
-      if (metricSgpa) metricSgpa.textContent = sgpa;
+      // Fallback data if none
+      if (!payload) {
+        payload = {
+          active_semester: 'Semester 1',
+          selected_semester: 'Semester 1',
+          available_semesters: ['Semester 1'],
+          semesters_breakdown: {
+            'Semester 1': {
+              semester: 'Semester 1',
+              courses: [
+                { code: 'MA206B1', semester: 'Semester 1', name: 'Probability & Statistics', credits: 4, grade: 'S', points: '40.0' },
+                { code: 'CS302', semester: 'Semester 1', name: 'Computer Architecture', credits: 4, grade: 'A', points: '36.0' },
+                { code: 'CS410', semester: 'Semester 1', name: 'Web Development', credits: 3, grade: 'B', points: '24.0' }
+              ],
+              totalCredits: 11,
+              weightedPoints: '100.0',
+              sgpa: '9.09',
+              passedCount: 3,
+              backlogCount: 0
+            }
+          },
+          cumulative_metrics: {
+            cgpa: '9.09',
+            totalCredits: 11,
+            weightedPoints: '100.0',
+            passedCount: 3,
+            backlogCount: 0
+          },
+          all_courses: [
+            { code: 'MA206B1', semester: 'Semester 1', name: 'Probability & Statistics', credits: 4, grade: 'S', points: '40.0' },
+            { code: 'CS302', semester: 'Semester 1', name: 'Computer Architecture', credits: 4, grade: 'A', points: '36.0' },
+            { code: 'CS410', semester: 'Semester 1', name: 'Web Development', credits: 3, grade: 'B', points: '24.0' }
+          ]
+        };
+      }
 
+      const breakdown = payload.semesters_breakdown || {};
+      const cumMetrics = payload.cumulative_metrics || {
+        cgpa: payload.cgpa || '0.00',
+        totalCredits: payload.totalCredits || 0,
+        weightedPoints: payload.weightedPoints || '0.0',
+        passedCount: payload.passedCount || 0,
+        backlogCount: payload.backlogCount || 0
+      };
+
+      const availableSemesters = payload.available_semesters && payload.available_semesters.length > 0
+        ? payload.availableSemesters || payload.available_semesters
+        : Object.keys(breakdown);
+
+      let currentView = payload.active_semester || 'all';
+
+      // Elements
+      const pillsContainer = document.getElementById('resultsSemesterPillsList');
+      const activeSemesterBadgeDisplay = document.getElementById('activeSemesterBadgeDisplay');
+      const bannerSemester = document.getElementById('bannerSemester');
+      const bannerCredits = document.getElementById('bannerCredits');
+      const metricTitleLabel = document.getElementById('metricTitleLabel');
+      const metricSgpa = document.getElementById('metricSgpa');
       const honorsBadge = document.getElementById('honorsBadge');
       const honorsLabel = document.getElementById('honorsLabel');
       const rankLabel = document.getElementById('rankLabel');
-      const currentCgpaBadge = document.getElementById('currentCgpaBadge');
-
-      const numericSgpa = parseFloat(sgpa) || 0;
-      if (numericSgpa >= 9.0) {
-        if (honorsBadge) honorsBadge.textContent = "Dean's List";
-        if (honorsLabel) honorsLabel.textContent = "Distinction Honors";
-        if (rankLabel) rankLabel.textContent = "Top 5% Rank";
-      } else if (numericSgpa >= 8.0) {
-        if (honorsBadge) honorsBadge.textContent = "First Class";
-        if (honorsLabel) honorsLabel.textContent = "Merit Honors";
-        if (rankLabel) rankLabel.textContent = "Top 15% Rank";
-      } else {
-        if (honorsBadge) honorsBadge.textContent = "Satisfactory";
-        if (honorsLabel) honorsLabel.textContent = "Standard Standing";
-        if (rankLabel) rankLabel.textContent = "Average Cohort";
-      }
-
-      if (currentCgpaBadge) currentCgpaBadge.textContent = `${sgpa} Term GPA`;
-
-      // Status Card
       const resultStatusText = document.getElementById('resultStatusText');
       const clearedBadge = document.getElementById('clearedBadge');
       const creditBoardSpan = document.getElementById('creditBoardSpan');
-
-      if (backlogCount === 0) {
-        if (resultStatusText) {
-          resultStatusText.textContent = "PASSED";
-          resultStatusText.className = "font-display-lg text-display-lg font-bold text-secondary";
-        }
-        if (clearedBadge) {
-          clearedBadge.innerHTML = `<span class="inline-block w-2 h-2 rounded-full bg-secondary animate-pulse"></span>All Cleared`;
-        }
-      } else {
-        if (resultStatusText) {
-          resultStatusText.textContent = "REMEDIATION";
-          resultStatusText.className = "font-display-lg text-display-lg font-bold text-amber-400";
-        }
-        if (clearedBadge) {
-          clearedBadge.className = "px-sm py-xs rounded-full bg-amber-400/15 text-amber-400 font-label-md text-label-md font-semibold flex items-center gap-xs";
-          clearedBadge.innerHTML = `<span class="inline-block w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>${backlogCount} Backlog${backlogCount > 1 ? 's' : ''}`;
-        }
-      }
-
-      if (creditBoardSpan) creditBoardSpan.textContent = `${totalCredits} / ${totalCredits} Credits`;
-      if (bannerCredits) bannerCredits.textContent = `${totalCredits} Total Credits`;
-
-      // Course Clearance Card
       const courseClearanceRatio = document.getElementById('courseClearanceRatio');
       const backlogTag = document.getElementById('backlogTag');
       const clearanceProgressBar = document.getElementById('clearanceProgressBar');
       const clearancePercent = document.getElementById('clearancePercent');
-
-      const clearancePercentage = courses.length > 0 ? Math.round((passedCount / courses.length) * 100) : 100;
-      if (courseClearanceRatio) courseClearanceRatio.textContent = `${passedCount} / ${courses.length}`;
-      if (backlogTag) backlogTag.textContent = `${backlogCount} Backlog${backlogCount === 1 ? '' : 's'}`;
-      if (clearanceProgressBar) clearanceProgressBar.style.width = `${clearancePercentage}%`;
-      if (clearancePercent) clearancePercent.textContent = `${clearancePercentage}% Passed`;
-
-      // Passed Summary
       const passedSummaryBadge = document.getElementById('passedSummaryBadge');
       const passedCreditsEarned = document.getElementById('passedCreditsEarned');
-      if (passedSummaryBadge) passedSummaryBadge.textContent = `${passedCount} / ${courses.length} Complete`;
-      if (passedCreditsEarned) passedCreditsEarned.textContent = totalCredits;
-
-      // Backlog Summary
       const backlogSummaryBadge = document.getElementById('backlogSummaryBadge');
       const backlogCreditsCount = document.getElementById('backlogCreditsCount');
-      if (backlogSummaryBadge) backlogSummaryBadge.textContent = `${backlogCount} Course${backlogCount === 1 ? '' : 's'}`;
-      if (backlogCreditsCount) backlogCreditsCount.textContent = backlogCount > 0 ? 'Remedial' : '0';
-
-      // Table Generation
-      if (resultsTableBody) {
-        resultsTableBody.innerHTML = '';
-        courses.forEach(c => {
-          const isPassed = c.grade !== 'F';
-          const badgeClass = isPassed ? 'bg-secondary/15 text-secondary' : 'bg-error/15 text-error';
-          const badgeText = isPassed ? 'PASS' : 'FAIL';
-          const gradeBoxClass = c.grade === 'S' || c.grade === 'A' 
-            ? 'bg-secondary/15 text-secondary' 
-            : (c.grade === 'F' ? 'bg-error/15 text-error' : 'bg-primary/15 text-primary');
-
-          const tr = document.createElement('tr');
-          tr.className = 'hover:bg-surface-container-high/50 transition-colors border-b border-border-subtle/50';
-          tr.innerHTML = `
-            <td class="py-md px-md">
-              <div class="font-medium text-text-primary">${c.code}</div>
-              <div class="text-text-secondary text-sm">${c.name}</div>
-            </td>
-            <td class="py-md px-md text-text-secondary">${c.credits} cr</td>
-            <td class="py-md px-md"><span class="px-xs py-0.5 rounded text-[10px] ${badgeClass} font-semibold">${badgeText}</span></td>
-            <td class="py-md px-md"><span class="inline-flex items-center justify-center w-8 h-8 rounded-lg ${gradeBoxClass} font-bold font-label-md text-label-md">${c.grade}</span></td>
-            <td class="py-md px-md text-right font-medium text-text-primary font-mono">${c.points}</td>
-          `;
-          resultsTableBody.appendChild(tr);
-        });
-      }
-
-      // Quality Points
+      const resultsTableBody = document.getElementById('resultsTableBody');
+      const breakdownTermText = document.getElementById('breakdownTermText');
       const qualityPointsLabel = document.getElementById('qualityPointsLabel');
       const maxPointsLabel = document.getElementById('maxPointsLabel');
       const performanceRatio = document.getElementById('performanceRatio');
+      const currentCgpaBadge = document.getElementById('currentCgpaBadge');
+      const cumCreditsDisplay = document.getElementById('cumCreditsDisplay');
+      const cumCgpaDisplay = document.getElementById('cumCgpaDisplay');
+      const degreeCompletionDisplay = document.getElementById('degreeCompletionDisplay');
 
-      const maxPossiblePoints = (totalCredits * 10).toFixed(1);
-      if (qualityPointsLabel) qualityPointsLabel.textContent = `Quality Points Earned: ${weightedPoints}`;
-      if (maxPointsLabel) maxPointsLabel.textContent = `Total Weighted Score / ${maxPossiblePoints} Max`;
-      
-      const ratio = totalCredits > 0 ? ((parseFloat(weightedPoints) / (totalCredits * 10)) * 100).toFixed(2) : '0.00';
-      if (performanceRatio) performanceRatio.textContent = `${ratio}%`;
+      function updateDashboard(viewSem) {
+        currentView = viewSem;
+        if (activeSemesterBadgeDisplay) activeSemesterBadgeDisplay.textContent = viewSem === 'all' ? 'All Semesters (CGPA)' : viewSem;
+        if (bannerSemester) bannerSemester.textContent = viewSem === 'all' ? 'All Semesters (Degree Audit)' : viewSem;
+
+        let activeCourses = [];
+        let activeGpa = '0.00';
+        let activeCredits = 0;
+        let activePoints = '0.0';
+        let activePassed = 0;
+        let activeBacklogs = 0;
+
+        if (viewSem === 'all') {
+          activeCourses = payload.all_courses || payload.courses || [];
+          activeGpa = cumMetrics.cgpa || '0.00';
+          activeCredits = cumMetrics.totalCredits || 0;
+          activePoints = cumMetrics.weightedPoints || '0.0';
+          activePassed = cumMetrics.passedCount || 0;
+          activeBacklogs = cumMetrics.backlogCount || 0;
+          if (metricTitleLabel) metricTitleLabel.textContent = 'Cumulative CGPA';
+        } else {
+          const semData = breakdown[viewSem] || {};
+          activeCourses = semData.courses || [];
+          activeGpa = semData.sgpa || '0.00';
+          activeCredits = semData.totalCredits || 0;
+          activePoints = semData.weightedPoints || '0.0';
+          activePassed = semData.passedCount || 0;
+          activeBacklogs = semData.backlogCount || 0;
+          if (metricTitleLabel) metricTitleLabel.textContent = `${viewSem} SGPA`;
+        }
+
+        if (metricSgpa) metricSgpa.textContent = activeGpa;
+        if (bannerCredits) bannerCredits.textContent = `${activeCredits} Total Credits`;
+
+        // Honors & Ranking
+        const numGpa = parseFloat(activeGpa) || 0;
+        if (numGpa >= 9.0) {
+          if (honorsBadge) honorsBadge.textContent = "Dean's List";
+          if (honorsLabel) honorsLabel.textContent = "Distinction Honors";
+          if (rankLabel) rankLabel.textContent = "Top 5% Rank";
+        } else if (numGpa >= 8.0) {
+          if (honorsBadge) honorsBadge.textContent = "First Class";
+          if (honorsLabel) honorsLabel.textContent = "Merit Honors";
+          if (rankLabel) rankLabel.textContent = "Top 15% Rank";
+        } else {
+          if (honorsBadge) honorsBadge.textContent = "Satisfactory";
+          if (honorsLabel) honorsLabel.textContent = "Standard Standing";
+          if (rankLabel) rankLabel.textContent = "Average Cohort";
+        }
+
+        // Result Status
+        if (activeBacklogs === 0) {
+          if (resultStatusText) {
+            resultStatusText.textContent = "PASSED";
+            resultStatusText.className = "font-display-lg text-display-lg font-bold text-secondary";
+          }
+          if (clearedBadge) {
+            clearedBadge.className = "px-sm py-xs rounded-full bg-secondary/15 text-secondary font-label-md text-label-md font-semibold flex items-center gap-xs";
+            clearedBadge.innerHTML = `<span class="inline-block w-2 h-2 rounded-full bg-secondary animate-pulse"></span>All Cleared`;
+          }
+        } else {
+          if (resultStatusText) {
+            resultStatusText.textContent = "REMEDIATION";
+            resultStatusText.className = "font-display-lg text-display-lg font-bold text-amber-400";
+          }
+          if (clearedBadge) {
+            clearedBadge.className = "px-sm py-xs rounded-full bg-amber-400/15 text-amber-400 font-label-md text-label-md font-semibold flex items-center gap-xs";
+            clearedBadge.innerHTML = `<span class="inline-block w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>${activeBacklogs} Backlog${activeBacklogs > 1 ? 's' : ''}`;
+          }
+        }
+
+        if (creditBoardSpan) creditBoardSpan.textContent = `${activeCredits} / ${activeCredits} Credits`;
+
+        // Course Clearance Card
+        const totalNum = activeCourses.length;
+        const passPercent = totalNum > 0 ? Math.round((activePassed / totalNum) * 100) : 100;
+        if (courseClearanceRatio) courseClearanceRatio.textContent = `${activePassed} / ${totalNum}`;
+        if (backlogTag) backlogTag.textContent = `${activeBacklogs} Backlog${activeBacklogs === 1 ? '' : 's'}`;
+        if (clearanceProgressBar) clearanceProgressBar.style.width = `${passPercent}%`;
+        if (clearancePercent) clearancePercent.textContent = `${passPercent}% Passed`;
+
+        // Summary Badges
+        if (passedSummaryBadge) passedSummaryBadge.textContent = `${activePassed} / ${totalNum} Complete`;
+        if (passedCreditsEarned) passedCreditsEarned.textContent = activeCredits;
+        if (backlogSummaryBadge) backlogSummaryBadge.textContent = `${activeBacklogs} Course${activeBacklogs === 1 ? '' : 's'}`;
+        if (backlogCreditsCount) backlogCreditsCount.textContent = activeBacklogs > 0 ? 'Remedial' : '0';
+
+        // Table Generation
+        if (resultsTableBody) {
+          resultsTableBody.innerHTML = '';
+          activeCourses.forEach(c => {
+            const isPassed = c.grade !== 'F';
+            const badgeClass = isPassed ? 'bg-secondary/15 text-secondary' : 'bg-error/15 text-error';
+            const badgeText = isPassed ? 'PASS' : 'FAIL';
+            const gradeBoxClass = (c.grade === 'S' || c.grade === 'A')
+              ? 'bg-secondary/15 text-secondary'
+              : (c.grade === 'F' ? 'bg-error/15 text-error' : 'bg-primary/15 text-primary');
+
+            const tr = document.createElement('tr');
+            tr.className = 'hover:bg-surface-container-high/50 transition-colors border-b border-border-subtle/50';
+            tr.innerHTML = `
+              <td class="py-md px-md">
+                <div class="font-medium text-text-primary">${c.code || 'COURSE'}</div>
+                <div class="text-text-secondary text-sm">${c.name || 'Module'}</div>
+              </td>
+              <td class="py-md px-md"><span class="px-2 py-0.5 rounded text-[11px] bg-surface-container text-primary font-medium">${c.semester || viewSem}</span></td>
+              <td class="py-md px-md text-text-secondary">${c.credits} cr</td>
+              <td class="py-md px-md"><span class="px-xs py-0.5 rounded text-[10px] ${badgeClass} font-semibold">${badgeText}</span></td>
+              <td class="py-md px-md"><span class="inline-flex items-center justify-center w-8 h-8 rounded-lg ${gradeBoxClass} font-bold font-label-md text-label-md">${c.grade}</span></td>
+              <td class="py-md px-md text-right font-medium text-text-primary font-mono">${c.points || '0.0'}</td>
+            `;
+            resultsTableBody.appendChild(tr);
+          });
+        }
+
+        // Quality Points
+        if (breakdownTermText) breakdownTermText.textContent = `${viewSem === 'all' ? 'Cumulative' : viewSem} Grade Roster & Points`;
+        const maxPts = (activeCredits * 10).toFixed(1);
+        if (qualityPointsLabel) qualityPointsLabel.textContent = `Quality Points Earned: ${activePoints}`;
+        if (maxPointsLabel) maxPointsLabel.textContent = `Total Weighted Score / ${maxPts} Max`;
+        const perfRatio = activeCredits > 0 ? ((parseFloat(activePoints) / (activeCredits * 10)) * 100).toFixed(2) : '0.00';
+        if (performanceRatio) performanceRatio.textContent = `${perfRatio}%`;
+
+        // Cumulative sidebar values
+        if (currentCgpaBadge) currentCgpaBadge.textContent = `${cumMetrics.cgpa} Cumulative`;
+        if (cumCreditsDisplay) cumCreditsDisplay.textContent = `${cumMetrics.totalCredits} Credits`;
+        if (cumCgpaDisplay) cumCgpaDisplay.textContent = cumMetrics.cgpa;
+        const compPercent = Math.min(100, Math.round((cumMetrics.totalCredits / 120) * 100));
+        if (degreeCompletionDisplay) degreeCompletionDisplay.textContent = `${compPercent}% Completed`;
+      }
+
+      // Render Semester Switcher Tabs
+      function renderSemesterTabs() {
+        if (!pillsContainer) return;
+        pillsContainer.innerHTML = '';
+
+        // All Semesters tab
+        const allTab = document.createElement('button');
+        allTab.type = 'button';
+        const isAll = currentView === 'all';
+        allTab.className = `px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
+          isAll
+            ? 'bg-primary text-on-primary shadow-sm'
+            : 'bg-surface-container text-text-secondary hover:text-text-primary hover:bg-surface-overlay'
+        }`;
+        allTab.innerHTML = `
+          <span class="material-symbols-outlined text-[15px]">school</span>
+          <span>All Semesters (CGPA: ${cumMetrics.cgpa})</span>
+        `;
+        allTab.onclick = () => {
+          renderSemesterTabs();
+          updateDashboard('all');
+        };
+        pillsContainer.appendChild(allTab);
+
+        // Individual Semester tabs
+        availableSemesters.forEach(s => {
+          const sObj = breakdown[s] || {};
+          const isAct = currentView === s;
+          const sTab = document.createElement('button');
+          sTab.type = 'button';
+          sTab.className = `px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
+            isAct
+              ? 'bg-primary text-on-primary shadow-sm'
+              : 'bg-surface-container text-text-secondary hover:text-text-primary hover:bg-surface-overlay'
+          }`;
+          sTab.innerHTML = `<span>${s} (SGPA: ${sObj.sgpa || '0.00'})</span>`;
+          sTab.onclick = () => {
+            renderSemesterTabs();
+            updateDashboard(s);
+          };
+          pillsContainer.appendChild(sTab);
+        });
+      }
+
+      // Dynamic Progression SVG Chart
+      function renderProgressionSvg() {
+        const svgContainer = document.getElementById('svgContainer');
+        const trendLabelsRow = document.getElementById('trendLabelsRow');
+        if (!svgContainer || !trendLabelsRow) return;
+
+        const sortedSems = [...availableSemesters].sort((a, b) => {
+          const na = parseInt((a.match(/\d+/) || ['99'])[0]);
+          const nb = parseInt((b.match(/\d+/) || ['99'])[0]);
+          return na - nb;
+        });
+
+        if (sortedSems.length === 0) return;
+
+        trendLabelsRow.innerHTML = '';
+        const points = [];
+        const w = 360;
+        const h = 100;
+        const step = sortedSems.length > 1 ? (w - 40) / (sortedSems.length - 1) : (w - 40);
+
+        sortedSems.forEach((sem, idx) => {
+          const sData = breakdown[sem] || {};
+          const sgpaNum = parseFloat(sData.sgpa) || 8.0;
+          // SGPA between 0 and 10, normalize to height
+          const y = Math.round(h - ((sgpaNum / 10.0) * (h - 20)) - 10);
+          const x = Math.round(20 + (idx * step));
+          points.push({ x, y, sem, sgpa: sData.sgpa || '0.00' });
+
+          const lbl = document.createElement('span');
+          const shortSem = sem.replace('Semester', 'S').trim();
+          lbl.textContent = `${shortSem} (${sData.sgpa || '0.00'})`;
+          trendLabelsRow.appendChild(lbl);
+        });
+
+        const pointsStr = points.map(p => `${p.x},${p.y}`).join(' ');
+        const polyPoints = `20,${h} ${pointsStr} ${points[points.length - 1].x},${h}`;
+
+        let svgHtml = `
+          <svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 380 110">
+            <defs>
+              <lineargradient id="gradTrendDynamic" x1="0%" x2="0%" y1="0%" y2="100%">
+                <stop offset="0%" stop-color="#818cf8" stop-opacity="0.3"></stop>
+                <stop offset="100%" stop-color="#818cf8" stop-opacity="0.0"></stop>
+              </lineargradient>
+            </defs>
+            <polygon fill="url(#gradTrendDynamic)" points="${polyPoints}"></polygon>
+            <path d="${points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ')}" fill="none" stroke="#bdc2ff" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path>
+        `;
+
+        points.forEach((p, idx) => {
+          const isLast = idx === points.length - 1;
+          svgHtml += `<circle cx="${p.x}" cy="${p.y}" fill="${isLast ? '#4edea3' : '#818cf8'}" r="${isLast ? 5 : 4}"></circle>`;
+        });
+
+        svgHtml += `</svg>`;
+        svgContainer.innerHTML = svgHtml;
+      }
+
+      renderSemesterTabs();
+      updateDashboard(currentView);
+      renderProgressionSvg();
     })();
   </script>
 

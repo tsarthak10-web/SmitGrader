@@ -196,12 +196,15 @@
               </div>
               <div class="relative">
                 <select id="sem-input" class="w-full bg-surface-container border border-border-subtle rounded-lg px-md py-sm text-text-primary font-body-md focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-transparent transition-all appearance-none cursor-pointer">
-                  <option value="all" selected>All Semesters / Auto-Detect from Transcript</option>
-                  <option value="fall-2024">Fall 2024 (Current / Term 5)</option>
-                  <option value="spring-2024">Spring 2024 (Term 4)</option>
-                  <option value="fall-2023">Fall 2023 (Term 3)</option>
-                  <option value="spring-2023">Spring 2023 (Term 2)</option>
-                  <option value="fall-2022">Fall 2022 (Term 1)</option>
+                  <option value="all" selected>All Semesters (Auto-Detect / Cumulative CGPA)</option>
+                  <option value="Semester 1">Semester 1</option>
+                  <option value="Semester 2">Semester 2</option>
+                  <option value="Semester 3">Semester 3</option>
+                  <option value="Semester 4">Semester 4</option>
+                  <option value="Semester 5">Semester 5</option>
+                  <option value="Semester 6">Semester 6</option>
+                  <option value="Semester 7">Semester 7</option>
+                  <option value="Semester 8">Semester 8</option>
                 </select>
                 <span class="material-symbols-outlined absolute right-md top-1/2 -translate-y-1/2 text-text-secondary pointer-events-none">expand_more</span>
               </div>
@@ -513,7 +516,13 @@
           const controller = new AbortController();
           const timeoutId = setTimeout(() => controller.abort(), 50000);
 
-          const res = await fetch(`${API_BASE_URL}/api/student/${encodeURIComponent(regNum)}`, {
+          const queryParams = new URLSearchParams();
+          if (targetSemester && targetSemester !== 'all') {
+            queryParams.append('semester', targetSemester);
+          }
+          const queryStr = queryParams.toString() ? `?${queryParams.toString()}` : '';
+
+          const res = await fetch(`${API_BASE_URL}/api/student/${encodeURIComponent(regNum)}${queryStr}`, {
             signal: controller.signal
           });
           clearTimeout(timeoutId);
@@ -522,13 +531,24 @@
 
           if (res.ok) {
             const result = await res.json();
-            if (result.found && result.data && result.data.length > 0) {
+            if (result.found && ((result.data && result.data.length > 0) || (result.all_records && result.all_records.length > 0))) {
               // Existing records found in Supabase!
-              analyzeBtn.innerHTML = `
-                <span class="material-symbols-outlined text-[20px]">check_circle</span>
-                <span>Records Found! Loading...</span>
-              `;
               sessionStorage.setItem('parsed_transcript', JSON.stringify(result));
+
+              if (targetSemester !== 'all' && !result.is_requested_semester_present) {
+                const avail = (result.available_semesters && result.available_semesters.length > 0)
+                  ? result.available_semesters.join(', ')
+                  : 'None';
+                analyzeBtn.innerHTML = `
+                  <span class="material-symbols-outlined text-[20px]">info</span>
+                  <span>${targetSemester} not uploaded (Found: ${avail}). Loading...</span>
+                `;
+              } else {
+                analyzeBtn.innerHTML = `
+                  <span class="material-symbols-outlined text-[20px]">check_circle</span>
+                  <span>Records Found (${result.total_records} courses)! Loading...</span>
+                `;
+              }
               setTimeout(() => {
                 window.location.href = './verify.html';
               }, 500);

@@ -194,9 +194,9 @@
         </div>
       </div>
 
-      <!-- Verification Modal Overlay (z-[100] sits directly over top navigation header) -->
+      <!-- Verification Modal Overlay -->
       <div class="fixed inset-0 z-[100] flex items-center justify-center p-md bg-surface-container-lowest/80 backdrop-blur-md overflow-y-auto" id="modalOverlay">
-        <div class="relative w-full max-w-4xl bg-surface-card rounded-xl shadow-[0_20px_50px_rgba(129,140,248,0.12)] p-lg md:p-xl my-auto flex flex-col">
+        <div class="relative w-full max-w-5xl bg-surface-card rounded-xl shadow-[0_20px_50px_rgba(129,140,248,0.12)] p-lg md:p-xl my-auto flex flex-col">
           <div class="absolute -top-px left-8 right-8 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent"></div>
 
           <!-- Modal Header -->
@@ -211,7 +211,7 @@
                 <span class="bg-surface-container px-2.5 py-0.5 rounded font-mono text-xs font-semibold text-secondary" id="modalRegBadge">202400712</span>
               </div>
               <p class="font-body-md text-body-md text-text-secondary mt-xs max-w-2xl">
-                Confirm detected courses, credits, and grades. You can adjust values, add missing courses manually, or upload additional class result files (.pdf / .txt).
+                Confirm detected courses, credits, and grades. Switch between semester tabs, adjust values, add missing courses manually, or upload additional class result files (.pdf / .txt).
               </p>
               <div id="sourceDocsContainer" class="flex items-center gap-2 flex-wrap mt-2"></div>
             </div>
@@ -235,6 +235,41 @@
           <!-- Live Status / Notification Alert Banner -->
           <div id="uploadStatusBanner" class="hidden mb-md p-3 rounded-lg text-xs font-medium flex items-center justify-between transition-all"></div>
 
+          <!-- Missing Semester Notice Banner -->
+          <div id="missingSemesterNotice" class="hidden mb-md p-3.5 rounded-lg bg-amber-500/15 border border-amber-500/30 text-amber-200 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-amber-400 text-[20px] shrink-0">info</span>
+              <span id="missingSemesterNoticeText">Requested semester results are not available yet. Showing available semesters below.</span>
+            </div>
+            <button id="uploadMissingSemBtn" class="shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-lg bg-amber-500/25 hover:bg-amber-500/35 text-amber-200 font-semibold border border-amber-400/40 transition-colors text-xs" type="button">
+              <span class="material-symbols-outlined text-[16px]">upload_file</span>
+              <span id="uploadMissingSemBtnText">Upload This Semester (.pdf / .txt)</span>
+            </button>
+          </div>
+
+          <!-- Semester Tabs Navigation Bar -->
+          <div class="flex items-center justify-between gap-2 overflow-x-auto pb-2 mb-md border-b border-border-subtle" id="semesterTabsContainer">
+            <div class="flex items-center gap-1.5 flex-nowrap" id="semesterPillsList">
+              <!-- Dynamically rendered pills: [ All Semesters (CGPA) ] [ Sem 1 ] [ Sem 2 ] ... -->
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+              <select id="quickAddSemesterSelect" class="bg-surface-container border border-border-subtle rounded-lg px-2 py-1 text-xs text-text-primary focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer">
+                <option value="Semester 1">Semester 1</option>
+                <option value="Semester 2">Semester 2</option>
+                <option value="Semester 3">Semester 3</option>
+                <option value="Semester 4">Semester 4</option>
+                <option value="Semester 5">Semester 5</option>
+                <option value="Semester 6">Semester 6</option>
+                <option value="Semester 7">Semester 7</option>
+                <option value="Semester 8">Semester 8</option>
+              </select>
+              <button id="addSemesterTabBtn" class="flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-primary hover:text-text-primary bg-surface-container hover:bg-surface-overlay rounded-lg border border-border-subtle transition-all" type="button" title="Upload files for the selected semester">
+                <span class="material-symbols-outlined text-[16px] text-secondary">add_circle</span>
+                <span>+ Add Semester</span>
+              </button>
+            </div>
+          </div>
+
           <!-- Courses Table & Drop Zone Container -->
           <div class="bg-surface-container-low rounded-lg p-sm md:p-md mb-lg overflow-x-auto relative min-h-[160px]" id="tableWrapper">
             
@@ -242,10 +277,11 @@
             <table class="w-full text-left border-collapse" id="mainCoursesTable">
               <thead>
                 <tr class="text-text-secondary font-label-md text-label-md uppercase tracking-wider">
-                  <th class="py-sm px-md font-semibold">Course Code</th>
+                  <th class="py-sm px-md font-semibold w-32">Course Code</th>
+                  <th class="py-sm px-md font-semibold w-28">Semester</th>
                   <th class="py-sm px-md font-semibold">Course Name</th>
-                  <th class="py-sm px-md font-semibold w-36">Credits</th>
-                  <th class="py-sm px-md font-semibold w-48">Grade</th>
+                  <th class="py-sm px-md font-semibold w-32">Credits</th>
+                  <th class="py-sm px-md font-semibold w-36">Grade</th>
                   <th class="py-sm px-md font-semibold text-center w-16">Action</th>
                 </tr>
               </thead>
@@ -254,7 +290,7 @@
               </tbody>
             </table>
 
-            <!-- Empty State & Upload Drop Zone (Shown when 0 courses are loaded) -->
+            <!-- Empty State & Drop Zone (Shown when 0 courses are loaded) -->
             <div id="emptyDropZone" class="hidden my-4 border-2 border-dashed border-border-subtle hover:border-primary rounded-xl p-8 text-center flex flex-col items-center justify-center gap-3 bg-surface-container-lowest/60 cursor-pointer transition-all duration-200">
               <div class="w-14 h-14 rounded-full bg-surface-container flex items-center justify-center text-primary-container shadow-sm">
                 <span class="material-symbols-outlined text-[32px]">upload_file</span>
@@ -293,7 +329,7 @@
           <div class="bg-surface-container-lowest rounded-lg p-md flex flex-wrap items-center justify-between gap-md mb-lg">
             <div class="flex items-center gap-lg">
               <div class="flex items-center gap-sm">
-                <span class="text-text-secondary font-label-md text-label-md uppercase tracking-wider">Total Credits:</span>
+                <span class="text-text-secondary font-label-md text-label-md uppercase tracking-wider">Credits:</span>
                 <span class="font-headline-md text-headline-md text-primary" id="totalCreditsBadge">0</span>
               </div>
               <div class="w-1.5 h-1.5 rounded-full bg-outline-variant"></div>
@@ -302,10 +338,17 @@
                 <span class="font-headline-md text-headline-md text-text-primary" id="totalCoursesBadge">0</span>
               </div>
             </div>
-            <div class="flex items-center gap-sm bg-surface-container px-md py-xs rounded-full">
-              <span class="material-symbols-outlined text-secondary text-[18px]">bolt</span>
-              <span class="text-text-secondary font-label-md text-label-md">Estimated Term SGPA:</span>
-              <span class="text-secondary font-bold font-body-md text-body-md" id="liveGpaPreview">0.00</span>
+            <div class="flex items-center gap-md flex-wrap">
+              <div class="flex items-center gap-sm bg-surface-container px-md py-xs rounded-full border border-border-subtle">
+                <span class="material-symbols-outlined text-primary text-[18px]">analytics</span>
+                <span class="text-text-secondary font-label-md text-label-md" id="liveGpaLabel">Estimated Term SGPA:</span>
+                <span class="text-primary font-bold font-body-md text-body-md" id="liveGpaPreview">0.00</span>
+              </div>
+              <div class="flex items-center gap-sm bg-surface-container px-md py-xs rounded-full border border-border-subtle" id="overallCgpaPill">
+                <span class="material-symbols-outlined text-secondary text-[18px]">school</span>
+                <span class="text-text-secondary font-label-md text-label-md">Cumulative CGPA:</span>
+                <span class="text-secondary font-bold font-body-md text-body-md" id="cumulativeCgpaPreview">0.00</span>
+              </div>
             </div>
           </div>
 
@@ -357,6 +400,8 @@
       const totalCreditsDisplay = document.getElementById('totalCreditsBadge');
       const totalCoursesDisplay = document.getElementById('totalCoursesBadge');
       const liveGpaDisplay = document.getElementById('liveGpaPreview');
+      const liveGpaLabel = document.getElementById('liveGpaLabel');
+      const cumulativeCgpaPreview = document.getElementById('cumulativeCgpaPreview');
       const calculateBtn = document.getElementById('calculateSgpaBtn');
 
       const topNavRegSpan = document.getElementById('topNavRegSpan');
@@ -365,6 +410,14 @@
       const emptyDropZone = document.getElementById('emptyDropZone');
       const mainCoursesTable = document.getElementById('mainCoursesTable');
       const uploadStatusBanner = document.getElementById('uploadStatusBanner');
+      const missingSemesterNotice = document.getElementById('missingSemesterNotice');
+      const missingSemesterNoticeText = document.getElementById('missingSemesterNoticeText');
+      const uploadMissingSemBtn = document.getElementById('uploadMissingSemBtn');
+      const uploadMissingSemBtnText = document.getElementById('uploadMissingSemBtnText');
+
+      const semesterPillsList = document.getElementById('semesterPillsList');
+      const quickAddSemesterSelect = document.getElementById('quickAddSemesterSelect');
+      const addSemesterTabBtn = document.getElementById('addSemesterTabBtn');
 
       const verifyUploadBtn = document.getElementById('verifyUploadBtn');
       const verifyUploadBtnLabel = document.getElementById('verifyUploadBtnLabel');
@@ -372,14 +425,32 @@
       const addMoreFilesTableBtn = document.getElementById('addMoreFilesTableBtn');
       const sourceDocsContainer = document.getElementById('sourceDocsContainer');
 
-      // Current Student Identifier
+      // Current Student & Filter State
       const targetRegNum = (sessionStorage.getItem("target_reg_num") || "202400712").trim();
+      let targetSemester = sessionStorage.getItem("target_semester") || "all";
+      let currentFilterSemester = targetSemester;
+      let targetUploadSemesterOverride = null;
+
       if (topNavRegSpan) topNavRegSpan.textContent = targetRegNum;
       if (modalRegBadge) modalRegBadge.textContent = targetRegNum;
       if (emptyRegSpan) emptyRegSpan.textContent = targetRegNum;
 
       // Grade to SMU 10.0 scale points map
       const gradePoints = { 'S': 10.0, 'A': 9.0, 'B': 8.0, 'C': 7.0, 'D': 6.0, 'E': 5.0, 'F': 0.0 };
+
+      function inferSemester(code) {
+        if (!code) return 'Semester 1';
+        const m = code.match(/[A-Z]{2,4}(\d)/i);
+        if (m) {
+          const d = parseInt(m[1]);
+          if (d === 1) return 'Semester 1';
+          if (d === 2) return 'Semester 3';
+          if (d === 3) return 'Semester 5';
+          if (d === 4) return 'Semester 7';
+          if (d >= 5 && d <= 8) return `Semester ${d}`;
+        }
+        return 'Semester 1';
+      }
 
       function showBanner(message, type = 'info') {
         if (!uploadStatusBanner) return;
@@ -416,50 +487,139 @@
       }
 
       function calculateTotals() {
-        const rows = tableBody.querySelectorAll('tr[data-course-row]');
-        let totalCredits = 0;
-        let weightedPoints = 0;
+        const allRows = tableBody.querySelectorAll('tr[data-course-row]');
+        let activeCredits = 0;
+        let activeWeightedPoints = 0;
+        let activeCount = 0;
 
-        rows.forEach(row => {
+        let cumCredits = 0;
+        let cumWeightedPoints = 0;
+
+        allRows.forEach(row => {
+          const sem = row.querySelector('.semester-select')?.value || row.getAttribute('data-sem') || 'Semester 1';
+          const isVisible = (currentFilterSemester === 'all' || sem === currentFilterSemester);
+
           const creditInput = row.querySelector('.credit-input');
           const gradeSelect = row.querySelector('.grade-select');
-          
           const credits = parseFloat(creditInput?.value) || 0;
           const gradePoint = parseFloat(gradeSelect?.value) || 0;
+          const pts = credits * gradePoint;
 
-          totalCredits += credits;
-          weightedPoints += (credits * gradePoint);
+          cumCredits += credits;
+          cumWeightedPoints += pts;
+
+          if (isVisible) {
+            row.classList.remove('hidden');
+            activeCredits += credits;
+            activeWeightedPoints += pts;
+            activeCount++;
+          } else {
+            row.classList.add('hidden');
+          }
         });
 
-        totalCoursesDisplay.textContent = rows.length;
-        totalCreditsDisplay.textContent = totalCredits;
+        totalCoursesDisplay.textContent = activeCount;
+        totalCreditsDisplay.textContent = activeCredits;
 
-        if (totalCredits > 0) {
-          const sgpa = (weightedPoints / totalCredits).toFixed(2);
-          liveGpaDisplay.textContent = sgpa;
-        } else {
-          liveGpaDisplay.textContent = '0.00';
+        const activeSgpa = activeCredits > 0 ? (activeWeightedPoints / activeCredits).toFixed(2) : '0.00';
+        const overallCgpa = cumCredits > 0 ? (cumWeightedPoints / cumCredits).toFixed(2) : '0.00';
+
+        if (liveGpaDisplay) liveGpaDisplay.textContent = activeSgpa;
+        if (liveGpaLabel) {
+          liveGpaLabel.textContent = currentFilterSemester === 'all' ? 'Cumulative CGPA:' : `Estimated SGPA (${currentFilterSemester}):`;
         }
+        if (cumulativeCgpaPreview) cumulativeCgpaPreview.textContent = overallCgpa;
+
         updateEmptyState();
+      }
+
+      function renderSemesterPills() {
+        if (!semesterPillsList) return;
+        const rows = tableBody.querySelectorAll('tr[data-course-row]');
+        const foundSemesters = new Set();
+        rows.forEach(r => {
+          const sem = r.querySelector('.semester-select')?.value || r.getAttribute('data-sem');
+          if (sem) foundSemesters.add(sem);
+        });
+
+        const sortedSems = Array.from(foundSemesters).sort((a, b) => {
+          const na = parseInt((a.match(/\d+/) || ['99'])[0]);
+          const nb = parseInt((b.match(/\d+/) || ['99'])[0]);
+          return na - nb;
+        });
+        semesterPillsList.innerHTML = '';
+
+        // 1. "All Semesters" pill
+        const allBtn = document.createElement('button');
+        allBtn.type = 'button';
+        const isAllActive = currentFilterSemester === 'all';
+        allBtn.className = `px-3 py-1 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
+          isAllActive
+            ? 'bg-primary text-on-primary shadow-sm'
+            : 'bg-surface-container text-text-secondary hover:text-text-primary hover:bg-surface-overlay'
+        }`;
+        allBtn.innerHTML = `
+          <span class="material-symbols-outlined text-[14px]">school</span>
+          <span>All Semesters</span>
+        `;
+        allBtn.addEventListener('click', () => {
+          currentFilterSemester = 'all';
+          renderSemesterPills();
+          calculateTotals();
+        });
+        semesterPillsList.appendChild(allBtn);
+
+        // 2. Individual semester pills
+        sortedSems.forEach(sem => {
+          const semBtn = document.createElement('button');
+          semBtn.type = 'button';
+          const isActive = currentFilterSemester === sem;
+          semBtn.className = `px-3 py-1 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
+            isActive
+              ? 'bg-primary text-on-primary shadow-sm'
+              : 'bg-surface-container text-text-secondary hover:text-text-primary hover:bg-surface-overlay'
+          }`;
+          semBtn.innerHTML = `<span>${sem}</span>`;
+          semBtn.addEventListener('click', () => {
+            currentFilterSemester = sem;
+            renderSemesterPills();
+            calculateTotals();
+          });
+          semesterPillsList.appendChild(semBtn);
+        });
       }
 
       function createCourseRow(course) {
         const tr = document.createElement('tr');
         tr.setAttribute('data-course-row', '');
+        const cSem = course.semester || (currentFilterSemester !== 'all' ? currentFilterSemester : inferSemester(course.course_code || course.code));
+        tr.setAttribute('data-sem', cSem);
         tr.className = 'bg-surface-card/60 hover:bg-surface-overlay/40 rounded-lg transition-colors group';
 
-        const cCode = course.course_code || 'COURSE';
-        const cName = course.course_name || 'Subject Module';
+        const cCode = course.course_code || course.code || 'COURSE';
+        const cName = course.course_name || course.name || 'Subject Module';
         const cCred = course.credits !== undefined ? course.credits : 4;
         const cGrade = (course.grade || 'S').trim().toUpperCase();
         const pt = gradePoints[cGrade] !== undefined ? gradePoints[cGrade] : 10.0;
 
         tr.innerHTML = `
           <td class="py-md px-md">
-            <input type="text" value="${cCode}" class="w-full bg-surface-container-lowest font-body-md text-body-md font-medium text-text-primary px-sm py-xs rounded focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Code">
+            <input type="text" value="${cCode}" class="course-code-input w-full bg-surface-container-lowest font-body-md text-body-md font-medium text-text-primary px-sm py-xs rounded focus:outline-none focus:ring-1 focus:ring-primary uppercase" placeholder="Code">
           </td>
           <td class="py-md px-md">
-            <input type="text" value="${cName}" class="w-full bg-surface-container-lowest font-body-md text-body-md text-text-primary px-sm py-xs rounded focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Course Title">
+            <select class="semester-select w-full bg-surface-container-lowest font-body-md text-xs font-semibold text-primary px-2 py-1.5 rounded focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer">
+              <option value="Semester 1" ${cSem === 'Semester 1' ? 'selected' : ''}>Sem 1</option>
+              <option value="Semester 2" ${cSem === 'Semester 2' ? 'selected' : ''}>Sem 2</option>
+              <option value="Semester 3" ${cSem === 'Semester 3' ? 'selected' : ''}>Sem 3</option>
+              <option value="Semester 4" ${cSem === 'Semester 4' ? 'selected' : ''}>Sem 4</option>
+              <option value="Semester 5" ${cSem === 'Semester 5' ? 'selected' : ''}>Sem 5</option>
+              <option value="Semester 6" ${cSem === 'Semester 6' ? 'selected' : ''}>Sem 6</option>
+              <option value="Semester 7" ${cSem === 'Semester 7' ? 'selected' : ''}>Sem 7</option>
+              <option value="Semester 8" ${cSem === 'Semester 8' ? 'selected' : ''}>Sem 8</option>
+            </select>
+          </td>
+          <td class="py-md px-md">
+            <input type="text" value="${cName}" class="course-name-input w-full bg-surface-container-lowest font-body-md text-body-md text-text-primary px-sm py-xs rounded focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Course Title">
           </td>
           <td class="py-md px-md">
             <div class="relative flex items-center">
@@ -496,15 +656,24 @@
         const deleteBtn = row.querySelector('.delete-row-btn');
         const creditInput = row.querySelector('.credit-input');
         const gradeSelect = row.querySelector('.grade-select');
+        const semSelect = row.querySelector('.semester-select');
 
         if (deleteBtn) {
           deleteBtn.addEventListener('click', () => {
             row.remove();
+            renderSemesterPills();
             calculateTotals();
           });
         }
         if (creditInput) creditInput.addEventListener('input', calculateTotals);
         if (gradeSelect) gradeSelect.addEventListener('change', calculateTotals);
+        if (semSelect) {
+          semSelect.addEventListener('change', function() {
+            row.setAttribute('data-sem', this.value);
+            renderSemesterPills();
+            calculateTotals();
+          });
+        }
       }
 
       function renderLoadedGrades(gradeList) {
@@ -512,6 +681,7 @@
         gradeList.forEach(c => {
           tableBody.appendChild(createCourseRow(c));
         });
+        renderSemesterPills();
         calculateTotals();
       }
 
@@ -522,8 +692,26 @@
       if (savedData) {
         try {
           const parsed = JSON.parse(savedData);
-          const rawList = parsed.data || [];
-          
+          const rawList = parsed.all_records || parsed.data || [];
+
+          // Handle Missing Semester Notification
+          if (targetSemester !== 'all' && parsed.is_requested_semester_present === false) {
+            missingSemesterNotice.classList.remove('hidden');
+            const avail = (parsed.available_semesters && parsed.available_semesters.length > 0)
+              ? parsed.available_semesters.join(', ')
+              : 'None';
+            missingSemesterNoticeText.innerHTML = `
+              <strong>Notice:</strong> <span>${targetSemester} results have not been uploaded to the database yet. (Available: <strong>${avail}</strong>). You can view existing semesters above or upload ${targetSemester} below.</span>
+            `;
+            if (uploadMissingSemBtnText) uploadMissingSemBtnText.textContent = `Upload ${targetSemester} (.pdf / .txt)`;
+            uploadMissingSemBtn.onclick = () => {
+              targetUploadSemesterOverride = targetSemester;
+              verifyFileInput.click();
+            };
+          } else {
+            missingSemesterNotice.classList.add('hidden');
+          }
+
           // Display source documents if present
           const uploadedFiles = parsed.uploaded_files || parsed.upload_history || [];
           if (sourceDocsContainer && uploadedFiles.length > 0) {
@@ -540,10 +728,17 @@
           initialGrades = rawList.filter(row => {
             const rowReg = String(row.registration_number || '').trim();
             if (!rowReg || rowReg === 'general' || rowReg === 'UNKNOWN') {
-              return true; // Include individual transcript entries
+              return true;
             }
             return rowReg === targetRegNum;
           });
+
+          // If requested semester exists, set active tab to it; else default to 'all' or latest
+          if (parsed.is_requested_semester_present && targetSemester !== 'all') {
+            currentFilterSemester = parsed.active_semester || targetSemester;
+          } else if (targetSemester !== 'all' && !parsed.is_requested_semester_present) {
+            currentFilterSemester = 'all';
+          }
         } catch (e) {
           console.warn('Error reading saved transcript JSON:', e);
         }
@@ -559,29 +754,44 @@
       addBtn.addEventListener('click', () => {
         const dummyRow = createCourseRow({
           course_code: '',
+          semester: currentFilterSemester !== 'all' ? currentFilterSemester : 'Semester 1',
           course_name: '',
           credits: 4,
           grade: 'S'
         });
         tableBody.appendChild(dummyRow);
+        renderSemesterPills();
         calculateTotals();
         const firstInput = dummyRow.querySelector('input');
         if (firstInput) firstInput.focus();
       });
 
+      // Quick Add Semester Button
+      if (addSemesterTabBtn && quickAddSemesterSelect) {
+        addSemesterTabBtn.addEventListener('click', () => {
+          const sem = quickAddSemesterSelect.value;
+          targetUploadSemesterOverride = sem;
+          verifyFileInput.click();
+        });
+      }
+
       // 4. File Upload Logic directly inside verify.html
-      async function uploadAndProcessFiles(files) {
+      async function uploadAndProcessFiles(files, semesterOverride = null) {
         if (!files || !files.length) return;
 
         verifyUploadBtn.disabled = true;
         if (verifyUploadBtnLabel) verifyUploadBtnLabel.textContent = `Uploading & Parsing ${files.length} File(s)...`;
-        showBanner(`Processing ${files.length} document(s)... Extracting grades for class and referencing student #${targetRegNum}`, 'info');
+        const semTarget = semesterOverride || targetUploadSemesterOverride || (currentFilterSemester !== 'all' ? currentFilterSemester : targetSemester);
+        showBanner(`Processing ${files.length} document(s)... Target Semester: ${semTarget} for Student #${targetRegNum}`, 'info');
 
         const formData = new FormData();
         for (let i = 0; i < files.length; i++) {
           formData.append('files', files[i]);
         }
         formData.append('registration_number', targetRegNum);
+        if (semTarget && semTarget !== 'all') {
+          formData.append('target_semester', semTarget);
+        }
 
         try {
           const res = await fetch(`${API_BASE_URL}/api/upload`, {
@@ -597,39 +807,47 @@
           console.log('[Verify Upload] Response:', result);
 
           const allParsed = result.data || [];
-          // Filter matching courses for target student
           const matchingForStudent = allParsed.filter(row => {
             const r = String(row.registration_number || '').trim();
             return !r || r === 'general' || r === 'UNKNOWN' || r === targetRegNum;
           });
 
           if (matchingForStudent.length > 0) {
-            // Merge with existing table rows (avoid duplicating course codes)
-            const existingCodes = new Set();
+            const existingKeys = new Set();
             tableBody.querySelectorAll('tr[data-course-row]').forEach(row => {
-              const codeVal = row.querySelectorAll('input')[0]?.value.trim().toUpperCase();
-              if (codeVal) existingCodes.add(codeVal);
+              const codeVal = row.querySelector('.course-code-input')?.value.trim().toUpperCase();
+              const semVal = row.querySelector('.semester-select')?.value.trim();
+              if (codeVal) existingKeys.add(`${codeVal}_${semVal}`);
             });
 
             let addedCount = 0;
+            let detectedSem = semTarget !== 'all' ? semTarget : null;
+
             matchingForStudent.forEach(c => {
               const cUpper = (c.course_code || '').trim().toUpperCase();
-              if (!existingCodes.has(cUpper) || cUpper === 'UNKNOWN' || !cUpper) {
-                tableBody.appendChild(createCourseRow(c));
-                existingCodes.add(cUpper);
+              const cSem = c.semester || semTarget || 'Semester 1';
+              if (!detectedSem) detectedSem = cSem;
+              const key = `${cUpper}_${cSem}`;
+              if (!existingKeys.has(key) || cUpper === 'UNKNOWN' || !cUpper) {
+                tableBody.appendChild(createCourseRow({ ...c, semester: cSem }));
+                existingKeys.add(key);
                 addedCount++;
               }
             });
 
+            if (detectedSem) {
+              currentFilterSemester = detectedSem;
+            }
+            renderSemesterPills();
             calculateTotals();
-            sessionStorage.setItem('parsed_transcript', JSON.stringify(result));
-            showBanner(`Successfully extracted ${addedCount > 0 ? addedCount : matchingForStudent.length} course grade(s) for #${targetRegNum} from uploaded files!`, 'success');
+            missingSemesterNotice.classList.add('hidden');
+
+            showBanner(`Successfully extracted ${addedCount > 0 ? addedCount : matchingForStudent.length} course grade(s) across detected semesters for #${targetRegNum}!`, 'success');
           } else {
-            showBanner(`Uploaded file parsed (${allParsed.length} student records saved to database for class), but registration number #${targetRegNum} was not found in this specific file. You can upload another sheet or add courses manually.`, 'error');
+            showBanner(`Uploaded file parsed (${allParsed.length} records saved to database for class), but registration number #${targetRegNum} was not found in this specific file. You can upload another sheet or add courses manually.`, 'error');
             updateEmptyState();
           }
 
-          // Add file pill to source docs
           if (result.uploaded_files && result.uploaded_files.length > 0 && sourceDocsContainer) {
             sourceDocsContainer.innerHTML = result.uploaded_files.map(f => `
               <a href="${f.file_url || '#'}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high hover:bg-surface-overlay text-primary text-xs font-medium border border-border-subtle transition-colors shadow-sm">
@@ -645,6 +863,7 @@
           showBanner(`Failed to process document: ${err.message}. Please check that the server is online.`, 'error');
         } finally {
           verifyUploadBtn.disabled = false;
+          targetUploadSemesterOverride = null;
           if (verifyUploadBtnLabel) verifyUploadBtnLabel.textContent = 'Upload Transcript (.pdf / .txt)';
           verifyFileInput.value = '';
         }
@@ -652,18 +871,27 @@
 
       // Triggers
       if (verifyUploadBtn) {
-        verifyUploadBtn.addEventListener('click', () => verifyFileInput.click());
+        verifyUploadBtn.addEventListener('click', () => {
+          targetUploadSemesterOverride = null;
+          verifyFileInput.click();
+        });
       }
       if (addMoreFilesTableBtn) {
-        addMoreFilesTableBtn.addEventListener('click', () => verifyFileInput.click());
+        addMoreFilesTableBtn.addEventListener('click', () => {
+          targetUploadSemesterOverride = null;
+          verifyFileInput.click();
+        });
       }
       if (emptyDropZone) {
-        emptyDropZone.addEventListener('click', () => verifyFileInput.click());
+        emptyDropZone.addEventListener('click', () => {
+          targetUploadSemesterOverride = null;
+          verifyFileInput.click();
+        });
       }
       if (verifyFileInput) {
         verifyFileInput.addEventListener('change', function() {
           if (this.files && this.files.length) {
-            uploadAndProcessFiles(this.files);
+            uploadAndProcessFiles(this.files, targetUploadSemesterOverride);
           }
         });
       }
@@ -687,34 +915,35 @@
         target.addEventListener('drop', (e) => {
           const dt = e.dataTransfer;
           if (dt && dt.files && dt.files.length) {
-            uploadAndProcessFiles(dt.files);
+            uploadAndProcessFiles(dt.files, targetUploadSemesterOverride);
           }
         }, false);
       });
 
       // 5. Calculate and Proceed to results.html
       calculateBtn.addEventListener('click', () => {
-        const rows = tableBody.querySelectorAll('tr[data-course-row]');
-        if (rows.length === 0) {
+        const allRows = tableBody.querySelectorAll('tr[data-course-row]');
+        if (allRows.length === 0) {
           alert('Please add or upload at least one course before confirming.');
           return;
         }
 
         calculateBtn.innerHTML = `
           <span class="material-symbols-outlined animate-spin text-[20px]">progress_activity</span>
-          <span>Computing Metrics...</span>
+          <span>Computing Multi-Semester Metrics...</span>
         `;
 
-        const finalCourses = [];
-        let totalCredits = 0;
-        let weightedPoints = 0;
-        let passedCount = 0;
-        let backlogCount = 0;
+        const semestersData = {};
+        const allFinalCourses = [];
+        let cumCredits = 0;
+        let cumWeightedPoints = 0;
+        let cumPassed = 0;
+        let cumBacklogs = 0;
 
-        rows.forEach(row => {
-          const inputs = row.querySelectorAll('input');
-          const code = inputs[0]?.value.trim() || 'COURSE';
-          const name = inputs[1]?.value.trim() || 'Module';
+        allRows.forEach(row => {
+          const code = row.querySelector('.course-code-input')?.value.trim() || 'COURSE';
+          const sem = row.querySelector('.semester-select')?.value || row.getAttribute('data-sem') || 'Semester 1';
+          const name = row.querySelector('.course-name-input')?.value.trim() || 'Module';
           const creditInput = row.querySelector('.credit-input');
           const gradeSelect = row.querySelector('.grade-select');
 
@@ -723,45 +952,103 @@
           const gradeText = gradeSelect?.options[gradeSelect.selectedIndex]?.text.split(' ')[0] || 'S';
           const points = credits * gradePoint;
 
-          totalCredits += credits;
-          weightedPoints += points;
-
-          if (gradePoint > 0) {
-            passedCount++;
-          } else {
-            backlogCount++;
-          }
-
-          finalCourses.push({
+          const courseObj = {
             code,
+            semester: sem,
             name,
             credits,
             grade: gradeText,
             gradePoint,
             points: points.toFixed(1)
-          });
+          };
+
+          allFinalCourses.push(courseObj);
+          if (!semestersData[sem]) {
+            semestersData[sem] = {
+              semester: sem,
+              courses: [],
+              totalCredits: 0,
+              weightedPoints: 0,
+              passedCount: 0,
+              backlogCount: 0
+            };
+          }
+
+          semestersData[sem].courses.push(courseObj);
+          semestersData[sem].totalCredits += credits;
+          semestersData[sem].weightedPoints += points;
+
+          cumCredits += credits;
+          cumWeightedPoints += points;
+
+          if (gradePoint > 0) {
+            semestersData[sem].passedCount++;
+            cumPassed++;
+          } else {
+            semestersData[sem].backlogCount++;
+            cumBacklogs++;
+          }
         });
 
-        const sgpa = totalCredits > 0 ? (weightedPoints / totalCredits).toFixed(2) : '0.00';
-        sessionStorage.setItem('final_academic_record', JSON.stringify({
-          courses: finalCourses,
-          totalCredits,
-          weightedPoints: weightedPoints.toFixed(1),
-          sgpa,
-          passedCount,
-          backlogCount
-        }));
+        // Compute SGPA for each semester
+        Object.keys(semestersData).forEach(sem => {
+          const sObj = semestersData[sem];
+          sObj.sgpa = sObj.totalCredits > 0 ? (sObj.weightedPoints / sObj.totalCredits).toFixed(2) : '0.00';
+          sObj.weightedPoints = sObj.weightedPoints.toFixed(1);
+        });
+
+        const overallCgpa = cumCredits > 0 ? (cumWeightedPoints / cumCredits).toFixed(2) : '0.00';
+
+        const activeSemName = currentFilterSemester !== 'all' ? currentFilterSemester : Object.keys(semestersData)[0];
+        const activeSemData = semestersData[activeSemName] || {
+          courses: allFinalCourses,
+          totalCredits: cumCredits,
+          weightedPoints: cumWeightedPoints.toFixed(1),
+          sgpa: overallCgpa,
+          passedCount: cumPassed,
+          backlogCount: cumBacklogs
+        };
+
+        const sortedSemestersList = Object.keys(semestersData).sort((a, b) => {
+          const na = parseInt((a.match(/\d+/) || ['99'])[0]);
+          const nb = parseInt((b.match(/\d+/) || ['99'])[0]);
+          return na - nb;
+        });
+
+        const payload = {
+          active_semester: currentFilterSemester,
+          selected_semester: activeSemName,
+          available_semesters: sortedSemestersList,
+          semesters_breakdown: semestersData,
+          cumulative_metrics: {
+            cgpa: overallCgpa,
+            totalCredits: cumCredits,
+            weightedPoints: cumWeightedPoints.toFixed(1),
+            passedCount: cumPassed,
+            backlogCount: cumBacklogs
+          },
+          courses: currentFilterSemester === 'all' ? allFinalCourses : activeSemData.courses,
+          all_courses: allFinalCourses,
+          sgpa: activeSemData.sgpa,
+          cgpa: overallCgpa,
+          totalCredits: currentFilterSemester === 'all' ? cumCredits : activeSemData.totalCredits,
+          weightedPoints: currentFilterSemester === 'all' ? cumWeightedPoints.toFixed(1) : activeSemData.weightedPoints,
+          passedCount: currentFilterSemester === 'all' ? cumPassed : activeSemData.passedCount,
+          backlogCount: currentFilterSemester === 'all' ? cumBacklogs : activeSemData.backlogCount
+        };
+
+        sessionStorage.setItem('final_academic_record', JSON.stringify(payload));
 
         setTimeout(() => {
           calculateBtn.innerHTML = `
             <span class="material-symbols-outlined text-[20px]">check</span>
-            <span>SGPA Verified</span>
+            <span>Verified</span>
           `;
           calculateBtn.classList.remove('bg-primary-container');
           calculateBtn.classList.add('bg-secondary-container', 'text-text-primary');
           setTimeout(() => {
             window.location.href = './results.html';
-          }, 500);
+          }, 400);
         }, 400);
       });
     })();

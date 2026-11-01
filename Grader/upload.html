@@ -512,6 +512,10 @@
           if (targetReg) {
             formData.append('registration_number', targetReg.trim());
           }
+          const targetSem = sessionStorage.getItem('target_semester');
+          if (targetSem && targetSem !== 'all') {
+            formData.append('target_semester', targetSem.trim());
+          }
 
           try {
             const response = await fetch(`${API_BASE_URL}/api/upload`, {
