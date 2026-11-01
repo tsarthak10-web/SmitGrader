@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <meta content="web_standard" name="shell-type" />
+  <title>Verify &amp; Adjust Course Data - GradeFlow</title>
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+
+  <!-- Base Styles -->
+  <style>
+    @layer base {
+      html, body {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        overscroll-behavior: none;
+      }
+      main > :first-child {
+        margin-top: 0 !important;
+      }
+      main > :last-child {
+        margin-bottom: 0 !important;
+      }
+    }
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  </style>
+
+  <!-- Tailwind CSS & Configuration -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "background": "#0b1326",
+            "surface": "#0b1326",
+            "surface-dim": "#0b1326",
+            "surface-bright": "#31394d",
+            "surface-container-lowest": "#060e20",
+            "surface-container-low": "#131b2e",
+            "surface-container": "#171f33",
+            "surface-container-high": "#222a3d",
+            "surface-container-highest": "#2d3449",
+            "surface-card": "#1e293b",
+            "surface-overlay": "#334155",
+            "surface-variant": "#2d3449",
+            "on-surface": "#dae2fd",
+            "on-surface-variant": "#c6c5d5",
+            "inverse-surface": "#dae2fd",
+            "inverse-on-surface": "#283044",
+            "text-primary": "#f8fafc",
+            "text-secondary": "#94a3b8",
+            "border-subtle": "#1e293b",
+            "outline": "#908f9e",
+            "outline-variant": "#454653",
+            "primary": "#bdc2ff",
+            "primary-fixed": "#e0e0ff",
+            "primary-fixed-dim": "#bdc2ff",
+            "primary-container": "#818cf8",
+            "on-primary": "#131e8c",
+            "on-primary-fixed": "#000767",
+            "on-primary-fixed-variant": "#2f3aa3",
+            "on-primary-container": "#101b8a",
+            "inverse-primary": "#4953bc",
+            "surface-tint": "#bdc2ff",
+            "secondary": "#4edea3",
+            "secondary-fixed": "#6ffbbe",
+            "secondary-fixed-dim": "#4edea3",
+            "secondary-container": "#00a572",
+            "on-secondary": "#003824",
+            "on-secondary-fixed": "#002113",
+            "on-secondary-fixed-variant": "#005236",
+            "on-secondary-container": "#00311f",
+            "tertiary": "#c0c1ff",
+            "tertiary-fixed": "#e1e0ff",
+            "tertiary-fixed-dim": "#c0c1ff",
+            "tertiary-container": "#8689ff",
+            "on-tertiary": "#1000a9",
+            "on-tertiary-fixed": "#07006c",
+            "on-tertiary-fixed-variant": "#2f2ebe",
+            "on-tertiary-container": "#0f00a2",
+            "error": "#ffb4ab",
+            "error-container": "#93000a",
+            "on-error": "#690005",
+            "on-error-container": "#ffdad6"
+          },
+          borderRadius: {
+            DEFAULT: "0.125rem",
+            lg: "0.25rem",
+            xl: "0.5rem",
+            full: "0.75rem"
+          },
+          spacing: {
+            base: "4px",
+            xs: "4px",
+            sm: "8px",
+            md: "16px",
+            lg: "24px",
+            xl: "32px",
+            "2xl": "48px",
+            gutter: "24px",
+            "margin-mobile": "16px",
+            "margin-desktop": "32px",
+            "container-max": "1280px"
+          },
+          fontFamily: {
+            "body-md": ["Inter"],
+            "body-lg": ["Inter"],
+            "label-md": ["Inter"],
+            "headline-md": ["Manrope"],
+            "headline-lg": ["Manrope"],
+            "headline-lg-mobile": ["Manrope"],
+            "display-lg": ["Manrope"]
+          },
+          fontSize: {
+            "label-md": ["12px", { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "600" }],
+            "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+            "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+            "headline-md": ["24px", { lineHeight: "32px", fontWeight: "600" }],
+            "headline-lg": ["32px", { lineHeight: "40px", letterSpacing: "-0.02em", fontWeight: "700" }],
+            "headline-lg-mobile": ["28px", { lineHeight: "36px", letterSpacing: "-0.02em", fontWeight: "700" }],
+            "display-lg": ["48px", { lineHeight: "56px", letterSpacing: "-0.03em", fontWeight: "800" }]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+
+<body class="bg-surface font-body-md text-body-md text-on-surface antialiased">
+  <!-- Top Navigation Header -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-surface/80 backdrop-blur-xl border-b border-border-subtle shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+    <div class="h-16 w-full px-margin-desktop flex items-center justify-between">
+      <div class="flex items-center gap-xl">
+        <a class="flex items-center gap-sm text-primary" href="index.html">
+          <span class="material-symbols-outlined text-[26px]">school</span>
+          <span class="font-headline-md text-headline-md tracking-tight text-text-primary">GradeFlow</span>
+        </a>
+        <nav class="flex items-center">
+          <a aria-current="page" class="py-base transition-colors text-primary border-b-2 border-primary" href="index.html">Dashboard</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="w-full pt-16 bg-surface min-h-[calc(100vh-80px)]">
+    <div class="flex flex-col w-full relative">
+
+      <!-- Background Dashboard Overview (Blurred) -->
+      <div class="w-full px-margin-desktop py-lg max-w-container-max mx-auto filter blur-[3px] opacity-40 pointer-events-none select-none">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-gutter mb-xl">
+          
+          <!-- Current CGPA -->
+          <div class="bg-surface-card rounded-xl p-lg flex flex-col justify-between shadow-md">
+            <div class="flex items-center justify-between">
+              <span class="font-label-md text-label-md uppercase tracking-wider text-text-secondary">Current CGPA</span>
+              <span class="material-symbols-outlined text-primary text-[20px]">insights</span>
+            </div>
+            <div class="mt-md flex items-baseline gap-sm">
+              <span class="font-display-lg text-display-lg text-text-primary">8.50</span>
+              <span class="font-label-md text-label-md text-secondary">/ 10.00</span>
+            </div>
+            <div class="mt-sm flex items-center gap-xs font-label-md text-label-md text-secondary">
+              <span class="material-symbols-outlined text-[16px]">trending_up</span>
+              <span>+0.12 from last semester</span>
+            </div>
+          </div>
+
+          <!-- Total Credits Earned -->
+          <div class="bg-surface-card rounded-xl p-lg flex flex-col justify-between shadow-md">
+            <div class="flex items-center justify-between">
+              <span class="font-label-md text-label-md uppercase tracking-wider text-text-secondary">Total Credits Earned</span>
+              <span class="material-symbols-outlined text-tertiary text-[20px]">school</span>
+            </div>
+            <div class="mt-md flex items-baseline gap-sm">
+              <span class="font-display-lg text-display-lg text-text-primary">84</span>
+              <span class="font-label-md text-label-md text-text-secondary">/ 120 required</span>
+            </div>
+            <div class="mt-sm w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+              <div class="bg-primary h-full w-[70%] rounded-full"></div>
+            </div>
+          </div>
+
+          <!-- Semester Progress -->
+          <div class="bg-surface-card rounded-xl p-lg flex flex-col justify-between shadow-md">
+            <div class="flex items-center justify-between">
+              <span class="font-label-md text-label-md uppercase tracking-wider text-text-secondary">Semester Progress</span>
+              <span class="material-symbols-outlined text-primary-container text-[20px]">calendar_month</span>
+            </div>
+            <div class="mt-md flex items-baseline gap-sm">
+              <span class="font-display-lg text-display-lg text-text-primary">Fall '24</span>
+              <span class="font-label-md text-label-md text-text-secondary">Term 5</span>
+            </div>
+            <span class="font-label-md text-label-md text-on-surface-variant mt-sm">5 active enrollments detected</span>
+          </div>
+
+          <!-- Academic Standing -->
+          <div class="bg-surface-card rounded-xl p-lg flex flex-col justify-between shadow-md">
+            <div class="flex items-center justify-between">
+              <span class="font-label-md text-label-md uppercase tracking-wider text-text-secondary">Academic Standing</span>
+              <span class="material-symbols-outlined text-secondary text-[20px]">verified</span>
+            </div>
+            <div class="mt-md">
+              <span class="font-headline-md text-headline-md text-text-primary">Dean's Honor List</span>
+            </div>
+            <span class="font-label-md text-label-md text-secondary mt-sm">Top 5% in cohort</span>
+          </div>
+        </div>
+
+        <div class="bg-surface-card rounded-xl p-lg shadow-md mb-xl">
+          <div class="flex items-center justify-between mb-lg">
+            <h3 class="font-headline-md text-headline-md text-text-primary">Transcript Ingestion Pipeline</h3>
+            <span class="bg-surface-container text-text-secondary px-md py-xs rounded-full font-label-md text-label-md">Status: Processing Optical Scan</span>
+          </div>
+          <div class="h-64 rounded-lg bg-surface-container-low flex items-center justify-center">
+            <span class="text-text-secondary font-body-md text-body-md">Ingestion view background preview</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Verification Modal Overlay (z-[100] sits directly over top navigation header) -->
+      <div class="fixed inset-0 z-[100] flex items-center justify-center p-md bg-surface-container-lowest/80 backdrop-blur-md overflow-y-auto" id="modalOverlay">
+        <div class="relative w-full max-w-4xl bg-surface-card rounded-xl shadow-[0_20px_50px_rgba(129,140,248,0.12)] p-lg md:p-xl my-auto flex flex-col">
+          <div class="absolute -top-px left-8 right-8 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent"></div>
+
+          <!-- Modal Header -->
+          <div class="flex flex-col md:flex-row md:items-start justify-between gap-md mb-lg">
+            <div class="flex-1">
+              <div class="flex items-center gap-sm flex-wrap">
+                <h2 class="font-headline-lg text-headline-lg text-text-primary">Verify &amp; Adjust Course Data</h2>
+                <span class="bg-primary/15 text-primary px-sm py-xs rounded-full font-label-md text-label-md uppercase tracking-wider flex items-center gap-xs">
+                  <span class="material-symbols-outlined text-[14px]">edit_note</span>
+                  Manual Review
+                </span>
+              </div>
+              <p class="font-body-md text-body-md text-text-secondary mt-xs max-w-2xl">
+                Confirm detected courses, credits, and grades. You can edit any value before calculating final SGPA/CGPA.
+              </p>
+              <div id="sourceDocsContainer" class="flex items-center gap-2 flex-wrap mt-2"></div>
+            </div>
+            <div class="flex flex-col gap-xs min-w-[240px]">
+              <label class="font-label-md text-label-md uppercase tracking-wider text-text-secondary flex items-center gap-xs" for="gradingSystem">
+                <span class="material-symbols-outlined text-[16px] text-primary">tune</span> Grading System
+              </label>
+              <div class="relative">
+                <span class="w-full block bg-surface-container-lowest text-text-primary font-body-md text-body-md px-md py-sm rounded-lg border border-border-subtle text-center font-semibold">10.0 Point Scale (SMU)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Editable Courses Table -->
+          <div class="bg-surface-container-low rounded-lg p-sm md:p-md mb-lg overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="text-text-secondary font-label-md text-label-md uppercase tracking-wider">
+                  <th class="py-sm px-md font-semibold">Course Code</th>
+                  <th class="py-sm px-md font-semibold">Course Name</th>
+                  <th class="py-sm px-md font-semibold w-36">Credits</th>
+                  <th class="py-sm px-md font-semibold w-48">Grade</th>
+                  <th class="py-sm px-md font-semibold text-center w-16">Action</th>
+                </tr>
+              </thead>
+              <tbody class="space-y-sm" id="courseTableBody">
+                <tr class="bg-surface-card/60 hover:bg-surface-overlay/40 rounded-lg transition-colors group" data-course-row="">
+                  <td class="py-md px-md">
+                    <input class="w-full bg-surface-container-lowest font-body-md text-body-md font-medium text-text-primary px-sm py-xs rounded focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Code" type="text" value="MA206B1" />
+                  </td>
+                  <td class="py-md px-md">
+                    <input class="w-full bg-surface-container-lowest font-body-md text-body-md text-text-primary px-sm py-xs rounded focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Course Title" type="text" value="Probability &amp; Statistics" />
+                  </td>
+                  <td class="py-md px-md">
+                    <div class="relative flex items-center">
+                      <input class="credit-input w-full bg-surface-container-lowest font-body-md text-body-md text-text-primary px-sm py-xs rounded focus:outline-none focus:ring-1 focus:ring-primary" max="12" min="0" step="0.5" type="number" value="4" />
+                      <span class="text-text-secondary font-label-md text-label-md ml-xs select-none">CR</span>
+                    </div>
+                  </td>
+                  <td class="py-md px-md">
+                    <div class="relative">
+                      <select class="grade-select w-full bg-surface-container-lowest font-body-md text-body-md text-text-primary px-sm py-xs rounded appearance-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-primary pr-8">
+                        <option selected="" value="10.0">S (10)</option>
+                        <option value="9.0">A (9)</option>
+                        <option value="8.0">B (8)</option>
+                        <option value="7.0">C (7)</option>
+                        <option value="6.0">D (6)</option>
+                        <option value="5.0">E (5)</option>
+                        <option value="0.0">F (0)</option>
+                      </select>
+                      <span class="material-symbols-outlined text-text-secondary pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[18px]">arrow_drop_down</span>
+                    </div>
+                  </td>
+                  <td class="py-md px-md text-center">
+                    <button class="delete-row-btn w-8 h-8 rounded-lg flex items-center justify-center text-text-secondary hover:text-error hover:bg-error-container/20 transition-colors" title="Delete Course" type="button">
+                      <span class="material-symbols-outlined text-[20px]">delete</span>
+                    </button>
+                  </td>
+                </tr>
+                <tr class="bg-surface-card/60 hover:bg-surface-overlay/40 rounded-lg transition-colors group" data-course-row="">
+                  <td class="py-md px-md">
+                    <input class="w-full bg-surface-container-lowest font-body-md text-body-md font-medium text-text-primary px-sm py-xs rounded focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Code" type="text" value="CS302" />
+                  </td>
+                  <td class="py-md px-md">
+                    <input class="w-full bg-surface-container-lowest font-body-md text-body-md text-text-primary px-sm py-xs rounded focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Course Title" type="text" value="Computer Architecture" />
+                  </td>
+                  <td class="py-md px-md">
+                    <div class="relative flex items-center">
+                      <input class="credit-input w-full bg-surface-container-lowest font-body-md text-body-md text-text-primary px-sm py-xs rounded focus:outline-none focus:ring-1 focus:ring-primary" max="12" min="0" step="0.5" type="number" value="4" />
+                      <span class="text-text-secondary font-label-md text-label-md ml-xs select-none">CR</span>
+                    </div>
+                  </td>
+                  <td class="py-md px-md">
+                    <div class="relative">
+                      <select class="grade-select w-full bg-surface-container-lowest font-body-md text-body-md text-text-primary px-sm py-xs rounded appearance-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-primary pr-8">
+                        <option value="10.0">S (10)</option>
+                        <option selected="" value="9.0">A (9)</option>
+                        <option value="8.0">B (8)</option>
+                        <option value="7.0">C (7)</option>
+                        <option value="6.0">D (6)</option>
+                        <option value="5.0">E (5)</option>
+                        <option value="0.0">F (0)</option>
+                      </select>
+                      <span class="material-symbols-outlined text-text-secondary pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[18px]">arrow_drop_down</span>
+                    </div>
+                  </td>
+                  <td class="py-md px-md text-center">
+                    <button class="delete-row-btn w-8 h-8 rounded-lg flex items-center justify-center text-text-secondary hover:text-error hover:bg-error-container/20 transition-colors" title="Delete Course" type="button">
+                      <span class="material-symbols-outlined text-[20px]">delete</span>
+                    </button>
+                  </td>
+                </tr>
+                <tr class="bg-surface-card/60 hover:bg-surface-overlay/40 rounded-lg transition-colors group" data-course-row="">
+                  <td class="py-md px-md">
+                    <input class="w-full bg-surface-container-lowest font-body-md text-body-md font-medium text-text-primary px-sm py-xs rounded focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Code" type="text" value="CS410" />
+                  </td>
+                  <td class="py-md px-md">
+                    <input class="w-full bg-surface-container-lowest font-body-md text-body-md text-text-primary px-sm py-xs rounded focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Course Title" type="text" value="Web Development" />
+                  </td>
+                  <td class="py-md px-md">
+                    <div class="relative flex items-center">
+                      <input class="credit-input w-full bg-surface-container-lowest font-body-md text-body-md text-text-primary px-sm py-xs rounded focus:outline-none focus:ring-1 focus:ring-primary" max="12" min="0" step="0.5" type="number" value="3" />
+                      <span class="text-text-secondary font-label-md text-label-md ml-xs select-none">CR</span>
+                    </div>
+                  </td>
+                  <td class="py-md px-md">
+                    <div class="relative">
+                      <select class="grade-select w-full bg-surface-container-lowest font-body-md text-body-md text-text-primary px-sm py-xs rounded appearance-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-primary pr-8">
+                        <option value="10.0" selected>S (10)</option>
+                        <option value="9.0">A (9)</option>
+                        <option selected="" value="8.0">B (8)</option>
+                        <option value="7.0">C (7)</option>
+                        <option value="6.0">D (6)</option>
+                        <option value="5.0">E (5)</option>
+                        <option value="0.0">F (0)</option>
+                      </select>
+                      <span class="material-symbols-outlined text-text-secondary pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[18px]">arrow_drop_down</span>
+                    </div>
+                  </td>
+                  <td class="py-md px-md text-center">
+                    <button class="delete-row-btn w-8 h-8 rounded-lg flex items-center justify-center text-text-secondary hover:text-error hover:bg-error-container/20 transition-colors" title="Delete Course" type="button">
+                      <span class="material-symbols-outlined text-[20px]">delete</span>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="mt-md flex justify-start">
+              <button class="flex items-center gap-xs px-md py-sm bg-surface-card hover:bg-surface-overlay text-primary font-body-md text-body-md rounded-lg transition-colors group" id="addCourseBtn" type="button">
+                <span class="material-symbols-outlined text-[20px] transition-transform group-hover:rotate-90">add_circle</span>
+                <span>+ Add Missing Course</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Total Metrics Bar -->
+          <div class="bg-surface-container-lowest rounded-lg p-md flex flex-wrap items-center justify-between gap-md mb-lg">
+            <div class="flex items-center gap-lg">
+              <div class="flex items-center gap-sm">
+                <span class="text-text-secondary font-label-md text-label-md uppercase tracking-wider">Total Credits:</span>
+                <span class="font-headline-md text-headline-md text-primary" id="totalCreditsBadge">11</span>
+              </div>
+              <div class="w-1.5 h-1.5 rounded-full bg-outline-variant"></div>
+              <div class="flex items-center gap-sm">
+                <span class="text-text-secondary font-label-md text-label-md uppercase tracking-wider">Courses:</span>
+                <span class="font-headline-md text-headline-md text-text-primary" id="totalCoursesBadge">3</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-sm bg-surface-container px-md py-xs rounded-full">
+              <span class="material-symbols-outlined text-secondary text-[18px]">bolt</span>
+              <span class="text-text-secondary font-label-md text-label-md">Estimated Term SGPA:</span>
+              <span class="text-secondary font-bold font-body-md text-body-md" id="liveGpaPreview">9.09</span>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex flex-col sm:flex-row items-center justify-end gap-md pt-xs">
+            <a href="upload.html" class="w-full sm:w-auto">
+              <button class="w-full sm:w-auto px-lg py-sm bg-surface-container hover:bg-surface-overlay text-on-surface font-body-md text-body-md rounded-lg transition-colors text-center" type="button">
+                Back
+              </button>
+            </a>
+            <button class="w-full sm:w-auto flex items-center justify-center gap-sm px-xl py-sm bg-primary-container text-on-surface-container hover:brightness-110 font-headline-md text-body-md rounded-lg shadow-md transition-all" id="calculateSgpaBtn" type="button">
+              <span>Confirm &amp; Calculate SGPA</span>
+              <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="w-full bg-surface-container-lowest border-t border-border-subtle">
+    <div class="w-full px-margin-desktop py-lg flex flex-col md:flex-row items-center justify-between gap-md text-on-surface-variant font-label-md text-label-md">
+      <div>© 2026 GradeFlow. All rights reserved.</div>
+      <div class="flex items-center gap-lg">
+        <a class="hover:text-on-surface transition-colors" href="#">Privacy Policy</a>
+        <a class="hover:text-on-surface transition-colors" href="#">Terms of Service</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Verification Logic & Dynamic Table Script -->
+  <script>
+    (function initVerificationModal() {
+      const tableBody = document.getElementById('courseTableBody');
+      const addBtn = document.getElementById('addCourseBtn');
+      const totalCreditsDisplay = document.getElementById('totalCreditsBadge');
+      const totalCoursesDisplay = document.getElementById('totalCoursesBadge');
+      const liveGpaDisplay = document.getElementById('liveGpaPreview');
+
+      // 1. Fetch the parsed data from the previous screen
+      const savedData = sessionStorage.getItem("parsed_transcript");
+      if (savedData) {
+        const transcript = JSON.parse(savedData);
+        tableBody.innerHTML = ''; // Clear placeholder rows
+        
+        // Render stored source document links if available from Supabase Storage
+        const docsContainer = document.getElementById('sourceDocsContainer');
+        const uploadedFiles = transcript.uploaded_files || transcript.upload_history || [];
+        if (docsContainer && uploadedFiles.length > 0) {
+          docsContainer.innerHTML = uploadedFiles.map(f => `
+            <a href="${f.file_url}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high hover:bg-surface-overlay text-primary text-xs font-medium border border-border-subtle transition-colors shadow-sm">
+              <span class="material-symbols-outlined text-[15px] text-secondary">cloud_done</span>
+              <span>Stored: ${f.file_name}</span>
+              <span class="material-symbols-outlined text-[13px] opacity-70">open_in_new</span>
+            </a>
+          `).join('');
+        }
+
+        // Isolate only specific grades matching target student
+        const targetRegNum = sessionStorage.getItem("target_reg_num") || "202400712";
+        const myGrades = transcript.data.filter(row => row.registration_number === targetRegNum);
+        if (myGrades.length === 0) {
+          tableBody.innerHTML = `<tr><td colspan="5" class="py-md text-center text-error">No records found for ${targetRegNum} in this document.</td></tr>`;
+        }
+
+        // 2. Generate a new row for every parsed course that belongs to you
+        myGrades.forEach(course => {
+          const newRow = document.createElement('tr');
+          newRow.setAttribute('data-course-row', '');
+          newRow.className = 'bg-surface-card/60 hover:bg-surface-overlay/40 rounded-lg transition-colors group';
+          
+          // Map SMU grades to the 10-point scale
+          const gradePoints = { 'S': '10.0', 'A': '9.0', 'B': '8.0', 'C': '7.0', 'D': '6.0', 'E': '5.0', 'F': '0.0' };
+          const defaultPoint = gradePoints[course.grade] || '0.0';
+
+          newRow.innerHTML = `
+            <td class="py-md px-md"><input type="text" value="${course.course_code}" class="w-full bg-surface-container-lowest font-body-md text-body-md font-medium text-text-primary px-sm py-xs rounded focus:outline-none focus:ring-1 focus:ring-primary"></td>
+            <td class="py-md px-md"><input type="text" value="${course.course_name}" class="w-full bg-surface-container-lowest font-body-md text-body-md text-text-primary px-sm py-xs rounded focus:outline-none focus:ring-1 focus:ring-primary"></td>
+            <td class="py-md px-md"><div class="relative flex items-center"><input type="number" min="0" max="12" step="0.5" value="${course.credits}" class="credit-input w-full bg-surface-container-lowest font-body-md text-body-md text-text-primary px-sm py-xs rounded focus:outline-none focus:ring-1 focus:ring-primary"><span class="text-text-secondary font-label-md text-label-md ml-xs select-none">CR</span></div></td>
+            <td class="py-md px-md"><div class="relative"><select class="grade-select w-full bg-surface-container-lowest font-body-md text-body-md text-text-primary px-sm py-xs rounded appearance-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-primary pr-8">
+              <option value="10.0" ${defaultPoint === '10.0' ? 'selected' : ''}>S (10)</option>
+              <option value="9.0" ${defaultPoint === '9.0' ? 'selected' : ''}>A (9)</option>
+              <option value="8.0" ${defaultPoint === '8.0' ? 'selected' : ''}>B (8)</option>
+              <option value="7.0" ${defaultPoint === '7.0' ? 'selected' : ''}>C (7)</option>
+              <option value="6.0" ${defaultPoint === '6.0' ? 'selected' : ''}>D (6)</option>
+              <option value="5.0" ${defaultPoint === '5.0' ? 'selected' : ''}>E (5)</option>
+              <option value="0.0" ${defaultPoint === '0.0' ? 'selected' : ''}>F (0)</option>
+            </select><span class="material-symbols-outlined text-text-secondary pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[18px]">arrow_drop_down</span></div></td>
+            <td class="py-md px-md text-center"><button type="button" class="delete-row-btn w-8 h-8 rounded-lg flex items-center justify-center text-text-secondary hover:text-error hover:bg-error-container/20 transition-colors" title="Delete Course"><span class="material-symbols-outlined text-[20px]">delete</span></button></td>
+          `;
+          tableBody.appendChild(newRow);
+          attachRowListeners(newRow); 
+        });
+      }
+
+      function calculateTotals() {
+        const rows = tableBody.querySelectorAll('tr[data-course-row]');
+        let totalCredits = 0;
+        let weightedPoints = 0;
+
+        rows.forEach(row => {
+          const creditInput = row.querySelector('.credit-input');
+          const gradeSelect = row.querySelector('.grade-select');
+          
+          const credits = parseFloat(creditInput?.value) || 0;
+          const gradePoint = parseFloat(gradeSelect?.value) || 0;
+
+          totalCredits += credits;
+          weightedPoints += (credits * gradePoint);
+        });
+
+        totalCoursesDisplay.textContent = rows.length;
+        totalCreditsDisplay.textContent = totalCredits;
+
+        if (totalCredits > 0) {
+          const sgpa = (weightedPoints / totalCredits).toFixed(2);
+          liveGpaDisplay.textContent = sgpa;
+        } else {
+          liveGpaDisplay.textContent = '0.00';
+        }
+      }
+
+      function attachRowListeners(row) {
+        const deleteBtn = row.querySelector('.delete-row-btn');
+        const creditInput = row.querySelector('.credit-input');
+        const gradeSelect = row.querySelector('.grade-select');
+
+        if (deleteBtn) {
+          deleteBtn.addEventListener('click', () => {
+            const rows = tableBody.querySelectorAll('tr[data-course-row]');
+            if (rows.length > 1) {
+              row.remove();
+              calculateTotals();
+            } else {
+              alert('At least one course is required for SGPA calculation.');
+            }
+          });
+        }
+        if (creditInput) creditInput.addEventListener('input', calculateTotals);
+        if (gradeSelect) gradeSelect.addEventListener('change', calculateTotals);
+      }
+
+      tableBody.querySelectorAll('tr[data-course-row]').forEach(attachRowListeners);
+      calculateTotals();
+
+      addBtn.addEventListener('click', () => {
+        const newRow = document.createElement('tr');
+        newRow.setAttribute('data-course-row', '');
+        newRow.className = 'bg-surface-card/60 hover:bg-surface-overlay/40 rounded-lg transition-colors group';
+        newRow.innerHTML = `
+          <td class="py-md px-md"><input type="text" value="" class="w-full bg-surface-container-lowest font-body-md text-body-md font-medium text-text-primary px-sm py-xs rounded focus:outline-none focus:ring-1 focus:ring-primary" placeholder="e.g. CS490"></td>
+          <td class="py-md px-md"><input type="text" value="" class="w-full bg-surface-container-lowest font-body-md text-body-md text-text-primary px-sm py-xs rounded focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Course Name"></td>
+          <td class="py-md px-md"><div class="relative flex items-center"><input type="number" min="0" max="12" step="0.5" value="4" class="credit-input w-full bg-surface-container-lowest font-body-md text-body-md text-text-primary px-sm py-xs rounded focus:outline-none focus:ring-1 focus:ring-primary"><span class="text-text-secondary font-label-md text-label-md ml-xs select-none">CR</span></div></td>
+          <td class="py-md px-md"><div class="relative"><select class="grade-select w-full bg-surface-container-lowest font-body-md text-body-md text-text-primary px-sm py-xs rounded appearance-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-primary pr-8"><option value="10.0" selected>S (10)</option><option value="9.0">A (9)</option><option value="8.0">B (8)</option><option value="7.0">C (7)</option><option value="6.0">D (6)</option><option value="5.0">E (5)</option><option value="0.0">F (0)</option></select><span class="material-symbols-outlined text-text-secondary pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[18px]">arrow_drop_down</span></div></td>
+          <td class="py-md px-md text-center"><button type="button" class="delete-row-btn w-8 h-8 rounded-lg flex items-center justify-center text-text-secondary hover:text-error hover:bg-error-container/20 transition-colors" title="Delete Course"><span class="material-symbols-outlined text-[20px]">delete</span></button></td>
+        `;
+        tableBody.appendChild(newRow);
+        attachRowListeners(newRow);
+        calculateTotals();
+      });
+
+      const calculateBtn = document.getElementById('calculateSgpaBtn');
+      calculateBtn.addEventListener('click', () => {
+        calculateBtn.innerHTML = `
+          <span class="material-symbols-outlined animate-spin text-[20px]">progress_activity</span>
+          <span>Computing Metrics...</span>
+        `;
+
+        // Harvest all current table rows for results.html
+        const rows = tableBody.querySelectorAll('tr[data-course-row]');
+        const finalCourses = [];
+        let totalCredits = 0;
+        let weightedPoints = 0;
+        let passedCount = 0;
+        let backlogCount = 0;
+
+        rows.forEach(row => {
+          const inputs = row.querySelectorAll('input');
+          const code = inputs[0]?.value.trim() || 'COURSE';
+          const name = inputs[1]?.value.trim() || 'Module';
+          const creditInput = row.querySelector('.credit-input');
+          const gradeSelect = row.querySelector('.grade-select');
+
+          const credits = parseFloat(creditInput?.value) || 0;
+          const gradePoint = parseFloat(gradeSelect?.value) || 0;
+          const gradeText = gradeSelect?.options[gradeSelect.selectedIndex]?.text.split(' ')[0] || 'S';
+          const points = credits * gradePoint;
+
+          totalCredits += credits;
+          weightedPoints += points;
+
+          if (gradePoint > 0) {
+            passedCount++;
+          } else {
+            backlogCount++;
+          }
+
+          finalCourses.push({
+            code,
+            name,
+            credits,
+            grade: gradeText,
+            gradePoint,
+            points: points.toFixed(1)
+          });
+        });
+
+        const sgpa = totalCredits > 0 ? (weightedPoints / totalCredits).toFixed(2) : '0.00';
+        sessionStorage.setItem('final_academic_record', JSON.stringify({
+          courses: finalCourses,
+          totalCredits,
+          weightedPoints: weightedPoints.toFixed(1),
+          sgpa,
+          passedCount,
+          backlogCount
+        }));
+
+        setTimeout(() => {
+          calculateBtn.innerHTML = `
+            <span class="material-symbols-outlined text-[20px]">check</span>
+            <span>SGPA Verified</span>
+          `;
+          calculateBtn.classList.remove('bg-primary-container');
+          calculateBtn.classList.add('bg-secondary-container', 'text-text-primary');
+          setTimeout(() => {
+            window.location.href = './results.html';
+          }, 600);
+        }, 500);
+      });
+    })();
+  </script>
+</body>
+</html>

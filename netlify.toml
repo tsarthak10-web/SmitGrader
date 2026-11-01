@@ -1,6 +1,6 @@
-# Netlify Configuration for GradeFlow Frontend (Root Level)
+# Netlify Configuration for GradeFlow Frontend
 [build]
-  publish = "Grader/frontend"
+  publish = "frontend"
 
 # Clean URLs & Route Handling to prevent 404s
 [[redirects]]
