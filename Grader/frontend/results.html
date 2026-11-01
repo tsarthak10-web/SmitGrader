@@ -2,13 +2,13 @@
 <html class="dark" lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=5.0" name="viewport" />
   <meta content="web_standard" name="shell-type" />
-  <title>Semester Academic Results - GradeFlow</title>
+  <title>Academic Results &amp; Degree Audit - GradeFlow</title>
 
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
 
@@ -18,9 +18,9 @@
       html, body {
         margin: 0;
         padding: 0;
-      }
-      body {
-        overscroll-behavior: none;
+        overflow-x: hidden;
+        touch-action: pan-y;
+        -webkit-font-smoothing: antialiased;
       }
       main > :first-child {
         margin-top: 0 !important;
@@ -30,7 +30,18 @@
       }
     }
     ::-webkit-scrollbar {
-      display: none;
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0b1326;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
     }
   </style>
 
@@ -140,15 +151,21 @@
 <body class="bg-surface font-body-md text-body-md text-on-surface antialiased">
   <!-- Top Navigation Header -->
   <header class="fixed top-0 left-0 right-0 z-50 bg-surface/80 backdrop-blur-xl border-b border-border-subtle shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
-    <div class="h-16 w-full px-margin-desktop flex items-center justify-between">
-      <div class="flex items-center gap-xl">
+    <div class="h-16 w-full px-margin-mobile md:px-margin-desktop flex items-center justify-between max-w-container-max mx-auto">
+      <div class="flex items-center gap-md sm:gap-xl">
         <a class="flex items-center gap-sm text-primary" href="./index.html">
           <span class="material-symbols-outlined text-[26px]">school</span>
           <span class="font-headline-md text-headline-md tracking-tight text-text-primary">GradeFlow</span>
         </a>
         <nav class="flex items-center">
-          <a aria-current="page" class="py-base transition-colors text-primary border-b-2 border-primary" href="./index.html">Dashboard</a>
+          <a aria-current="page" class="py-base transition-colors text-primary border-b-2 border-primary text-sm sm:text-base" href="./index.html">Dashboard</a>
         </nav>
+      </div>
+      <div class="flex items-center gap-2">
+        <a href="./verify.html" class="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-overlay text-primary text-xs font-semibold border border-border-subtle transition-all">
+          <span class="material-symbols-outlined text-[16px]">edit</span>
+          <span class="hidden sm:inline">Edit Data</span>
+        </a>
       </div>
     </div>
   </header>
@@ -156,32 +173,34 @@
   <!-- Main Content -->
   <main class="w-full pt-16 bg-surface min-h-[calc(100vh-80px)]">
     <div class="flex flex-col w-full">
-      <div class="w-full max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-lg space-y-xl">
+      <div class="w-full max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-md sm:py-lg space-y-md sm:space-y-xl">
         
         <!-- Hero Banner Card -->
-        <div class="relative overflow-hidden rounded-xl bg-surface-container-low p-lg md:p-xl shadow-xl">
+        <div class="relative overflow-hidden rounded-xl bg-surface-container-low p-md sm:p-lg md:p-xl shadow-xl">
           <div class="absolute -right-24 -top-24 w-96 h-96 rounded-full bg-primary/10 blur-3xl pointer-events-none"></div>
           <div class="absolute right-48 -bottom-20 w-80 h-80 rounded-full bg-secondary/10 blur-2xl pointer-events-none"></div>
           
-          <div class="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-lg">
+          <div class="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-md sm:gap-lg">
             <div class="space-y-sm">
-              <div class="flex items-center gap-sm">
-                <span class="px-sm py-xs rounded-full bg-primary/15 text-primary font-label-md text-label-md uppercase tracking-wider">Academic Audit</span>
-                <span class="flex items-center gap-xs text-secondary font-label-md text-label-md">
+              <div class="flex items-center gap-sm flex-wrap">
+                <span class="px-sm py-xs rounded-full bg-primary/15 text-primary font-label-md text-xs uppercase tracking-wider">Academic Audit</span>
+                <span class="flex items-center gap-xs text-secondary font-label-md text-xs">
                   <span class="inline-block w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
-                  Multi-Semester Verified
+                  Year-Wise Breakdown Verified
                 </span>
               </div>
-              <h1 class="font-headline-lg text-headline-lg text-text-primary tracking-tight">Academic Performance Results</h1>
-              <p class="font-body-md text-body-md text-text-secondary" id="studentInfoBanner">Student: <span class="text-text-primary font-medium" id="studentNameReg">Sarthak Tiwari (202400712)</span> • <span id="bannerSemester">All Semesters</span> • <span id="bannerCredits">0 Total Credits</span></p>
+              <h1 class="font-headline-lg text-[24px] sm:text-[30px] md:text-headline-lg text-text-primary tracking-tight">Academic Performance Results</h1>
+              <p class="font-body-md text-xs sm:text-body-md text-text-secondary" id="studentInfoBanner">
+                Student: <span class="text-text-primary font-medium" id="studentNameReg">Student (202400712)</span> • <span id="bannerSemester">All Years</span> • <span id="bannerCredits">0 Total Credits</span>
+              </p>
             </div>
             
-            <div class="flex items-center gap-sm self-start md:self-auto">
-              <button class="flex items-center gap-sm px-md py-sm rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface transition-all duration-200 shadow-sm active:scale-95" id="printBtn">
+            <div class="flex items-center gap-sm self-start md:self-auto flex-wrap">
+              <button class="flex items-center gap-sm px-3.5 py-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface transition-all duration-200 shadow-sm active:scale-95 text-xs sm:text-sm font-semibold" id="printBtn">
                 <span class="material-symbols-outlined text-[18px]">print</span>
-                <span class="font-label-md text-label-md">Export PDF</span>
+                <span>Export PDF</span>
               </button>
-              <button class="flex items-center gap-sm px-md py-sm rounded-lg bg-primary-container text-on-primary font-label-md text-label-md hover:opacity-90 transition-all duration-200 shadow-md shadow-primary/20 active:scale-95" id="officialTranscriptBtn">
+              <button class="flex items-center gap-sm px-3.5 py-2 rounded-lg bg-primary-container text-on-primary font-semibold text-xs sm:text-sm hover:opacity-90 transition-all duration-200 shadow-md shadow-primary/20 active:scale-95" id="officialTranscriptBtn">
                 <span class="material-symbols-outlined text-[18px]">verified</span>
                 <span>Official Transcript</span>
               </button>
@@ -189,38 +208,49 @@
           </div>
         </div>
 
-        <!-- Semester Switcher Navigation Bar -->
-        <div class="flex items-center justify-between gap-3 overflow-x-auto pb-2 border-b border-border-subtle" id="resultsSemesterTabsBar">
+        <!-- Academic Year Switcher Navigation Bar (Fully Clickable & Interactive) -->
+        <div class="flex items-center justify-between gap-3 overflow-x-auto pb-2 border-b border-border-subtle" id="resultsSemesterTabsBar" style="-webkit-overflow-scrolling: touch;">
           <div class="flex items-center gap-2 flex-nowrap" id="resultsSemesterPillsList">
-            <!-- Dynamically populated: [ Degree Audit (CGPA) ] [ Semester 1 ] [ Semester 2 ] ... -->
+            <!-- Dynamically populated: [ All Years (CGPA) ] [ 1st Year ] [ 2nd Year ] ... -->
           </div>
           <div class="flex items-center gap-2 shrink-0">
-            <span class="text-xs text-text-secondary">Active View:</span>
-            <span class="px-2.5 py-1 rounded bg-surface-container font-semibold text-xs text-primary" id="activeSemesterBadgeDisplay">All Semesters</span>
+            <span class="text-xs text-text-secondary hidden sm:inline">Active View:</span>
+            <span class="px-2.5 py-1 rounded bg-surface-container font-semibold text-xs text-primary" id="activeSemesterBadgeDisplay">All Years</span>
           </div>
         </div>
 
         <!-- Metric Stat Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-lg">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-md sm:gap-lg">
           
-          <!-- SGPA / CGPA Card -->
-          <div class="relative overflow-hidden rounded-xl bg-surface-container p-lg shadow-md flex flex-col justify-between group hover:bg-surface-container-high transition-colors">
+          <!-- SGPA / CGPA Card (Interactive Click-to-Toggle) -->
+          <div id="interactiveCgpaCard" class="relative overflow-hidden rounded-xl bg-surface-container p-lg shadow-md flex flex-col justify-between group hover:bg-surface-container-high border border-border-subtle hover:border-primary/50 transition-all cursor-pointer" role="button" title="Click to toggle between Cumulative CGPA and Year GPA">
             <div class="flex items-start justify-between">
               <div class="space-y-xs">
-                <span class="font-label-md text-label-md text-text-secondary uppercase tracking-wider" id="metricTitleLabel">Semester SGPA</span>
+                <div class="flex items-center gap-2">
+                  <span class="font-label-md text-label-md text-text-secondary uppercase tracking-wider" id="metricTitleLabel">Cumulative CGPA</span>
+                  <span class="material-symbols-outlined text-primary text-[16px] opacity-70 group-hover:opacity-100 transition-opacity">swap_horiz</span>
+                </div>
                 <div class="flex items-baseline gap-xs">
-                  <span class="font-display-lg text-display-lg font-bold text-text-primary" id="metricSgpa">0.00</span>
+                  <span class="font-display-lg text-[36px] sm:text-display-lg font-bold text-text-primary" id="metricSgpa">0.00</span>
                   <span class="font-body-md text-body-md text-text-secondary">/ 10.00</span>
                 </div>
               </div>
-              <span id="honorsBadge" class="px-sm py-xs rounded-full bg-secondary/15 text-secondary font-label-md text-label-md font-semibold">Dean's List</span>
+              <span id="honorsBadge" class="px-sm py-xs rounded-full bg-secondary/15 text-secondary font-label-md text-xs font-semibold">Dean's List</span>
             </div>
-            <div class="mt-md pt-sm flex items-center justify-between">
-              <div class="flex items-center gap-xs text-text-secondary font-label-md text-label-md">
+
+            <div class="mt-sm">
+              <span class="text-[11px] text-primary/80 group-hover:text-primary flex items-center gap-1 transition-colors">
+                <span class="material-symbols-outlined text-[13px]">touch_app</span>
+                <span>Click card to switch Year / CGPA</span>
+              </span>
+            </div>
+
+            <div class="mt-md pt-sm flex items-center justify-between border-t border-border-subtle/40">
+              <div class="flex items-center gap-xs text-text-secondary font-label-md text-xs">
                 <span class="material-symbols-outlined text-secondary text-[18px]">verified</span>
                 <span id="honorsLabel">Distinction Honors</span>
               </div>
-              <span id="rankLabel" class="font-label-md text-label-md text-secondary font-semibold">Top 5% Rank</span>
+              <span id="rankLabel" class="font-label-md text-xs text-secondary font-semibold">Top 5% Rank</span>
             </div>
           </div>
 
@@ -230,19 +260,19 @@
               <div class="space-y-xs">
                 <span class="font-label-md text-label-md text-text-secondary uppercase tracking-wider">Result Status</span>
                 <div class="flex items-baseline gap-xs">
-                  <span class="font-display-lg text-display-lg font-bold text-secondary" id="resultStatusText">PASSED</span>
+                  <span class="font-display-lg text-[36px] sm:text-display-lg font-bold text-secondary" id="resultStatusText">PASSED</span>
                 </div>
               </div>
-              <span id="clearedBadge" class="px-sm py-xs rounded-full bg-secondary/15 text-secondary font-label-md text-label-md font-semibold flex items-center gap-xs">
+              <span id="clearedBadge" class="px-sm py-xs rounded-full bg-secondary/15 text-secondary font-label-md text-xs font-semibold flex items-center gap-xs">
                 <span class="inline-block w-2 h-2 rounded-full bg-secondary animate-pulse"></span>All Cleared
               </span>
             </div>
             <div class="mt-md pt-sm flex items-center justify-between">
-              <div class="flex items-center gap-xs text-text-secondary font-label-md text-label-md">
+              <div class="flex items-center gap-xs text-text-secondary font-label-md text-xs">
                 <span class="material-symbols-outlined text-secondary text-[18px]">check_circle</span>
-                <span>Official Examination Board</span>
+                <span>Examination Board</span>
               </div>
-              <span class="font-label-md text-label-md text-text-primary font-medium" id="creditBoardSpan">0 / 0 Credits</span>
+              <span class="font-label-md text-xs text-text-primary font-medium" id="creditBoardSpan">0 / 0 Credits</span>
             </div>
           </div>
 
@@ -252,94 +282,94 @@
               <div class="space-y-xs">
                 <span class="font-label-md text-label-md text-text-secondary uppercase tracking-wider">Course Clearance</span>
                 <div class="flex items-baseline gap-xs">
-                  <span class="font-display-lg text-display-lg font-bold text-text-primary" id="courseClearanceRatio">0 / 0</span>
+                  <span class="font-display-lg text-[36px] sm:text-display-lg font-bold text-text-primary" id="courseClearanceRatio">0 / 0</span>
                   <span class="font-body-md text-body-md text-text-secondary">Courses</span>
                 </div>
               </div>
-              <span class="px-sm py-xs rounded-full bg-secondary/15 text-secondary font-label-md text-label-md font-semibold" id="backlogTag">0 Backlogs</span>
+              <span class="px-sm py-xs rounded-full bg-secondary/15 text-secondary font-label-md text-xs font-semibold" id="backlogTag">0 Backlogs</span>
             </div>
             <div class="mt-md pt-sm flex items-center justify-between">
               <div class="w-full bg-surface-container-highest rounded-full h-2 overflow-hidden flex items-center mr-md">
                 <div class="bg-secondary h-full rounded-full" id="clearanceProgressBar" style="width: 100%"></div>
               </div>
-              <span class="font-label-md text-label-md text-secondary whitespace-nowrap font-medium" id="clearancePercent">100% Passed</span>
+              <span class="font-label-md text-xs text-secondary whitespace-nowrap font-medium" id="clearancePercent">100% Passed</span>
             </div>
           </div>
         </div>
 
         <!-- Clearance Summary Cards -->
-        <div class="space-y-xl">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+        <div class="space-y-md sm:space-y-xl">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-md sm:gap-lg">
             
-            <div class="rounded-xl bg-surface-container p-lg shadow-md flex items-center justify-between border-l-4 border-secondary">
+            <div class="rounded-xl bg-surface-container p-md sm:p-lg shadow-md flex items-center justify-between border-l-4 border-secondary">
               <div class="flex items-center gap-md">
-                <div class="w-12 h-12 rounded-xl bg-secondary/15 flex items-center justify-center text-secondary">
+                <div class="w-12 h-12 rounded-xl bg-secondary/15 flex items-center justify-center text-secondary shrink-0">
                   <span class="material-symbols-outlined text-[26px]">check_circle</span>
                 </div>
                 <div>
                   <div class="flex items-center gap-sm">
-                    <h3 class="font-headline-md text-headline-md text-text-primary">Passed Courses</h3>
-                    <span class="px-sm py-xs rounded-full bg-secondary/15 text-secondary font-label-md text-label-md font-bold" id="passedSummaryBadge">0 / 0 Complete</span>
+                    <h3 class="font-headline-md text-[18px] sm:text-headline-md text-text-primary">Passed Courses</h3>
+                    <span class="px-sm py-xs rounded-full bg-secondary/15 text-secondary font-label-md text-xs font-bold" id="passedSummaryBadge">0 / 0 Complete</span>
                   </div>
-                  <p class="font-body-md text-body-md text-text-secondary">All enrolled modules successfully passed with credit criteria met.</p>
+                  <p class="font-body-md text-xs sm:text-sm text-text-secondary">All enrolled modules successfully passed with credit criteria met.</p>
                 </div>
               </div>
-              <div class="text-right">
+              <div class="text-right shrink-0">
                 <span class="font-headline-lg text-headline-lg font-bold text-secondary" id="passedCreditsEarned">0</span>
-                <span class="block font-label-md text-label-md text-text-secondary">Credits Earned</span>
+                <span class="block font-label-md text-xs text-text-secondary">Credits Earned</span>
               </div>
             </div>
 
-            <div class="rounded-xl bg-surface-container p-lg shadow-md flex items-center justify-between border-l-4 border-border-subtle" id="backlogCard">
+            <div class="rounded-xl bg-surface-container p-md sm:p-lg shadow-md flex items-center justify-between border-l-4 border-border-subtle" id="backlogCard">
               <div class="flex items-center gap-md">
-                <div class="w-12 h-12 rounded-xl bg-surface-container-high flex items-center justify-center text-text-secondary" id="backlogIconWrap">
+                <div class="w-12 h-12 rounded-xl bg-surface-container-high flex items-center justify-center text-text-secondary shrink-0" id="backlogIconWrap">
                   <span class="material-symbols-outlined text-[26px]">task_alt</span>
                 </div>
                 <div>
                   <div class="flex items-center gap-sm">
-                    <h3 class="font-headline-md text-headline-md text-text-primary">Failed / Backlog Courses</h3>
-                    <span class="px-sm py-xs rounded-full bg-surface-container-highest text-text-secondary font-label-md text-label-md font-bold" id="backlogSummaryBadge">0 Courses</span>
+                    <h3 class="font-headline-md text-[18px] sm:text-headline-md text-text-primary">Backlog Courses</h3>
+                    <span class="px-sm py-xs rounded-full bg-surface-container-highest text-text-secondary font-label-md text-xs font-bold" id="backlogSummaryBadge">0 Courses</span>
                   </div>
-                  <p class="font-body-md text-body-md text-text-secondary" id="backlogDesc">No standing backlogs, remedial courses, or re-examination requirements.</p>
+                  <p class="font-body-md text-xs sm:text-sm text-text-secondary" id="backlogDesc">No standing backlogs, remedial courses, or re-examination requirements.</p>
                 </div>
               </div>
-              <div class="text-right">
+              <div class="text-right shrink-0">
                 <span class="font-headline-lg text-headline-lg font-bold text-text-primary" id="backlogCreditsCount">0</span>
-                <span class="block font-label-md text-label-md text-text-secondary">Backlog Credits</span>
+                <span class="block font-label-md text-xs text-text-secondary">Backlog Credits</span>
               </div>
             </div>
 
           </div>
 
           <!-- Detailed Breakdown Grid -->
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-xl items-start">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
             
-            <!-- Grade Roster Table -->
+            <!-- Grade Roster Table with Mobile Horizontal Scroll -->
             <div class="lg:col-span-8 space-y-lg">
-              <div class="rounded-xl bg-surface-container p-lg shadow-md space-y-md">
+              <div class="rounded-xl bg-surface-container p-md sm:p-lg shadow-md space-y-md">
                 <div class="flex items-center justify-between">
                   <div>
-                    <h2 class="font-headline-md text-headline-md text-text-primary">Academic Grade Breakdown</h2>
-                    <p class="font-body-md text-body-md text-text-secondary" id="breakdownTermText">Grade Roster &amp; Quality Points</p>
+                    <h2 class="font-headline-md text-[18px] sm:text-headline-md text-text-primary">Academic Grade Breakdown</h2>
+                    <p class="font-body-md text-xs sm:text-sm text-text-secondary" id="breakdownTermText">Grade Roster &amp; Quality Points</p>
                   </div>
-                  <div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-primary">
+                  <div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-primary shrink-0">
                     <span class="material-symbols-outlined text-[22px]">fact_check</span>
                   </div>
                 </div>
 
-                <div class="overflow-x-auto">
-                  <table class="w-full text-left">
+                <div class="overflow-x-auto -mx-1 sm:mx-0 px-1 sm:px-0" style="-webkit-overflow-scrolling: touch;">
+                  <table class="w-full text-left min-w-[520px]">
                     <thead>
-                      <tr class="bg-surface-container-low text-text-secondary font-label-md text-label-md uppercase tracking-wider">
+                      <tr class="bg-surface-container-low text-text-secondary font-label-md text-xs uppercase tracking-wider">
                         <th class="py-sm px-md rounded-l-lg">Course</th>
-                        <th class="py-sm px-md">Semester</th>
+                        <th class="py-sm px-md">Academic Year</th>
                         <th class="py-sm px-md">Credits</th>
                         <th class="py-sm px-md">Result</th>
                         <th class="py-sm px-md">Grade</th>
                         <th class="py-sm px-md text-right rounded-r-lg">Points</th>
                       </tr>
                     </thead>
-                    <tbody class="font-body-md text-body-md" id="resultsTableBody">
+                    <tbody class="font-body-md text-sm" id="resultsTableBody">
                       <!-- Rendered dynamically -->
                     </tbody>
                   </table>
@@ -347,39 +377,39 @@
 
                 <div class="p-md rounded-xl bg-surface-container-low flex flex-col md:flex-row gap-md items-center justify-between">
                   <div class="flex items-center gap-md">
-                    <div class="w-12 h-12 rounded-full bg-secondary/15 flex items-center justify-center text-secondary">
+                    <div class="w-12 h-12 rounded-full bg-secondary/15 flex items-center justify-center text-secondary shrink-0">
                       <span class="material-symbols-outlined text-[24px]">workspace_premium</span>
                     </div>
                     <div>
-                      <p class="font-body-md text-body-md text-text-primary font-medium" id="qualityPointsLabel">Quality Points Earned: 0.0</p>
-                      <p class="font-label-md text-label-md text-text-secondary" id="maxPointsLabel">Total Weighted Score / 0.0 Max</p>
+                      <p class="font-body-md text-sm text-text-primary font-medium" id="qualityPointsLabel">Quality Points Earned: 0.0</p>
+                      <p class="font-label-md text-xs text-text-secondary" id="maxPointsLabel">Total Weighted Score / 0.0 Max</p>
                     </div>
                   </div>
                   <div class="text-right">
                     <span class="font-headline-md text-headline-md font-bold text-secondary" id="performanceRatio">0.00%</span>
-                    <p class="font-label-md text-label-md text-text-secondary">Performance Ratio</p>
+                    <p class="font-label-md text-xs text-text-secondary">Performance Ratio</p>
                   </div>
                 </div>
 
-                <div class="pt-sm flex items-center justify-between">
-                  <button class="flex items-center gap-xs font-label-md text-label-md text-primary hover:text-text-primary transition-colors" id="disputeBtn">
+                <div class="pt-sm flex items-center justify-between text-xs sm:text-sm">
+                  <button class="flex items-center gap-xs font-label-md text-primary hover:text-text-primary transition-colors" id="disputeBtn">
                     <span class="material-symbols-outlined text-[16px]">help_center</span>
                     <span>Dispute Grade Evaluation</span>
                   </button>
-                  <span class="font-label-md text-label-md text-text-secondary">Verified by SMU Academic Records</span>
+                  <span class="font-label-md text-text-secondary text-xs">Verified by SMU Academic Records</span>
                 </div>
               </div>
             </div>
 
             <!-- CGPA Progression Trend & Degree Completion -->
             <div class="lg:col-span-4 space-y-lg">
-              <div class="rounded-xl bg-surface-container p-lg shadow-md space-y-md">
+              <div class="rounded-xl bg-surface-container p-md sm:p-lg shadow-md space-y-md">
                 <div class="flex items-center justify-between">
                   <div class="space-y-xs">
-                    <h3 class="font-headline-md text-headline-md text-text-primary">CGPA Progression</h3>
-                    <p class="font-body-md text-body-md text-text-secondary">Cumulative trajectory across terms</p>
+                    <h3 class="font-headline-md text-[18px] sm:text-headline-md text-text-primary">Progression Trend</h3>
+                    <p class="font-body-md text-xs text-text-secondary">Trajectory across academic years</p>
                   </div>
-                  <span class="px-sm py-xs rounded-full bg-surface-container-highest text-primary font-label-md text-label-md font-semibold" id="currentCgpaBadge">0.00 Current</span>
+                  <span class="px-sm py-xs rounded-full bg-surface-container-highest text-primary font-label-md text-xs font-semibold" id="currentCgpaBadge">0.00 Cumulative</span>
                 </div>
 
                 <!-- Dynamic SVG Chart -->
@@ -387,21 +417,21 @@
                   <div class="w-full h-36" id="svgContainer">
                     <!-- Dynamic Polyline SVG -->
                   </div>
-                  <div class="flex justify-between font-label-md text-label-md text-text-secondary px-xs mt-xs overflow-x-auto" id="trendLabelsRow">
+                  <div class="flex justify-between font-label-md text-xs text-text-secondary px-xs mt-xs overflow-x-auto" id="trendLabelsRow">
                     <!-- Dynamic labels -->
                   </div>
                 </div>
 
                 <div class="p-md rounded-xl bg-surface-container-low space-y-sm mt-md">
-                  <div class="flex items-center justify-between text-label-md font-label-md">
+                  <div class="flex items-center justify-between text-xs sm:text-sm">
                     <span class="text-text-secondary">Cumulative Credits:</span>
                     <span class="text-text-primary font-semibold" id="cumCreditsDisplay">0 Credits</span>
                   </div>
-                  <div class="flex items-center justify-between text-label-md font-label-md">
+                  <div class="flex items-center justify-between text-xs sm:text-sm">
                     <span class="text-text-secondary">Cumulative CGPA:</span>
                     <span class="text-secondary font-semibold" id="cumCgpaDisplay">0.00</span>
                   </div>
-                  <div class="flex items-center justify-between text-label-md font-label-md">
+                  <div class="flex items-center justify-between text-xs sm:text-sm">
                     <span class="text-text-secondary">Degree Completion:</span>
                     <span class="text-primary font-semibold" id="degreeCompletionDisplay">0% Completed</span>
                   </div>
@@ -441,14 +471,14 @@
       if (disputeBtn) {
         disputeBtn.addEventListener('click', () => {
           const reg = sessionStorage.getItem('target_reg_num') || '202400712';
-          const reason = prompt('Enter the Course Code and dispute justification for evaluation re-check:', 'e.g. MA206B1 - Re-evaluation of external end-sem marks');
+          const reason = prompt('Enter the Course Code and dispute justification for evaluation re-check:', 'e.g. MA206B1 - Re-evaluation of external marks');
           if (reason) {
             alert(`Dispute Ticket Created!\n\nTicket: #DISP-${Math.floor(100000 + Math.random() * 900000)}\nStudent: ${reg}\nDetails: ${reason}\n\nYour grievance has been submitted to the Academic Controller.`);
           }
         });
       }
 
-      // 4. Data Loading and Multi-Semester Breakdown
+      // 4. Data Loading and Academic Year Breakdown
       const reg = sessionStorage.getItem('target_reg_num') || '202400712';
       const studentNameReg = document.getElementById('studentNameReg');
       if (studentNameReg) studentNameReg.textContent = `Student (${reg})`;
@@ -464,56 +494,89 @@
         }
       }
 
-      // Fallback data if none
+      // Fallback sample data if none in storage
       if (!payload) {
         payload = {
-          active_semester: 'Semester 1',
-          selected_semester: 'Semester 1',
-          available_semesters: ['Semester 1'],
-          semesters_breakdown: {
-            'Semester 1': {
-              semester: 'Semester 1',
+          active_year: '2nd Year',
+          selected_year: '2nd Year',
+          available_years: ['1st Year', '2nd Year'],
+          years_breakdown: {
+            '1st Year': {
+              year: '1st Year',
+              academic_year: '1st Year',
               courses: [
-                { code: 'MA206B1', semester: 'Semester 1', name: 'Probability & Statistics', credits: 4, grade: 'S', points: '40.0' },
-                { code: 'CS302', semester: 'Semester 1', name: 'Computer Architecture', credits: 4, grade: 'A', points: '36.0' },
-                { code: 'CS410', semester: 'Semester 1', name: 'Web Development', credits: 3, grade: 'B', points: '24.0' }
+                { code: 'CS101', year: '1st Year', academic_year: '1st Year', name: 'Programming Fundamentals', credits: 4, grade: 'S', points: '40.0' },
+                { code: 'MA101', year: '1st Year', academic_year: '1st Year', name: 'Engineering Mathematics I', credits: 4, grade: 'A', points: '36.0' }
               ],
-              totalCredits: 11,
-              weightedPoints: '100.0',
-              sgpa: '9.09',
-              passedCount: 3,
+              totalCredits: 8,
+              weightedPoints: '76.0',
+              gpa: '9.50',
+              sgpa: '9.50',
+              passedCount: 2,
+              backlogCount: 0
+            },
+            '2nd Year': {
+              year: '2nd Year',
+              academic_year: '2nd Year',
+              courses: [
+                { code: 'MA206B1', year: '2nd Year', academic_year: '2nd Year', name: 'Probability & Statistics', credits: 4, grade: 'S', points: '40.0' },
+                { code: 'CS202', year: '2nd Year', academic_year: '2nd Year', name: 'Data Structures & Algorithms', credits: 4, grade: 'A', points: '36.0' }
+              ],
+              totalCredits: 8,
+              weightedPoints: '76.0',
+              gpa: '9.50',
+              sgpa: '9.50',
+              passedCount: 2,
               backlogCount: 0
             }
           },
           cumulative_metrics: {
-            cgpa: '9.09',
-            totalCredits: 11,
-            weightedPoints: '100.0',
-            passedCount: 3,
+            cgpa: '9.50',
+            gpa: '9.50',
+            totalCredits: 16,
+            weightedPoints: '152.0',
+            passedCount: 4,
             backlogCount: 0
           },
           all_courses: [
-            { code: 'MA206B1', semester: 'Semester 1', name: 'Probability & Statistics', credits: 4, grade: 'S', points: '40.0' },
-            { code: 'CS302', semester: 'Semester 1', name: 'Computer Architecture', credits: 4, grade: 'A', points: '36.0' },
-            { code: 'CS410', semester: 'Semester 1', name: 'Web Development', credits: 3, grade: 'B', points: '24.0' }
+            { code: 'CS101', year: '1st Year', academic_year: '1st Year', name: 'Programming Fundamentals', credits: 4, grade: 'S', points: '40.0' },
+            { code: 'MA101', year: '1st Year', academic_year: '1st Year', name: 'Engineering Mathematics I', credits: 4, grade: 'A', points: '36.0' },
+            { code: 'MA206B1', year: '2nd Year', academic_year: '2nd Year', name: 'Probability & Statistics', credits: 4, grade: 'S', points: '40.0' },
+            { code: 'CS202', year: '2nd Year', academic_year: '2nd Year', name: 'Data Structures & Algorithms', credits: 4, grade: 'A', points: '36.0' }
           ]
         };
       }
 
-      const breakdown = payload.semesters_breakdown || {};
+      // Year-first data binding
+      const breakdown = payload.years_breakdown || payload.semesters_breakdown || {};
       const cumMetrics = payload.cumulative_metrics || {
-        cgpa: payload.cgpa || '0.00',
+        cgpa: payload.cgpa || payload.gpa || '0.00',
         totalCredits: payload.totalCredits || 0,
         weightedPoints: payload.weightedPoints || '0.0',
         passedCount: payload.passedCount || 0,
         backlogCount: payload.backlogCount || 0
       };
 
-      const availableSemesters = payload.available_semesters && payload.available_semesters.length > 0
-        ? payload.availableSemesters || payload.available_semesters
-        : Object.keys(breakdown);
+      const rawAvailable = payload.available_years || payload.available_semesters || Object.keys(breakdown);
+      const availableYears = rawAvailable.map(y => {
+        const s = String(y).trim();
+        const m = s.match(/([1-4])(?:st|nd|rd|th)?(?:\s*year)?/i);
+        if (m) {
+          const num = parseInt(m[1]);
+          const suff = num === 1 ? 'st' : (num === 2 ? 'nd' : (num === 3 ? 'rd' : 'th'));
+          return `${num}${suff} Year`;
+        }
+        return s;
+      });
 
-      let currentView = payload.active_semester || 'all';
+      // Distinct and sorted years
+      const uniqueAvailableYears = Array.from(new Set(availableYears)).sort((a, b) => {
+        const na = parseInt((a.match(/\d+/) || ['99'])[0]);
+        const nb = parseInt((b.match(/\d+/) || ['99'])[0]);
+        return na - nb;
+      });
+
+      let currentView = payload.active_year || payload.active_semester || 'all';
 
       // Elements
       const pillsContainer = document.getElementById('resultsSemesterPillsList');
@@ -545,11 +608,13 @@
       const cumCreditsDisplay = document.getElementById('cumCreditsDisplay');
       const cumCgpaDisplay = document.getElementById('cumCgpaDisplay');
       const degreeCompletionDisplay = document.getElementById('degreeCompletionDisplay');
+      const interactiveCgpaCard = document.getElementById('interactiveCgpaCard');
 
-      function updateDashboard(viewSem) {
-        currentView = viewSem;
-        if (activeSemesterBadgeDisplay) activeSemesterBadgeDisplay.textContent = viewSem === 'all' ? 'All Semesters (CGPA)' : viewSem;
-        if (bannerSemester) bannerSemester.textContent = viewSem === 'all' ? 'All Semesters (Degree Audit)' : viewSem;
+      // Update Dashboard view
+      function updateDashboard(viewYear) {
+        currentView = viewYear;
+        if (activeSemesterBadgeDisplay) activeSemesterBadgeDisplay.textContent = viewYear === 'all' ? 'All Years (CGPA)' : viewYear;
+        if (bannerSemester) bannerSemester.textContent = viewYear === 'all' ? 'All Years (Cumulative CGPA)' : viewYear;
 
         let activeCourses = [];
         let activeGpa = '0.00';
@@ -558,23 +623,33 @@
         let activePassed = 0;
         let activeBacklogs = 0;
 
-        if (viewSem === 'all') {
+        if (viewYear === 'all') {
           activeCourses = payload.all_courses || payload.courses || [];
-          activeGpa = cumMetrics.cgpa || '0.00';
+          activeGpa = cumMetrics.cgpa || cumMetrics.gpa || '0.00';
           activeCredits = cumMetrics.totalCredits || 0;
           activePoints = cumMetrics.weightedPoints || '0.0';
           activePassed = cumMetrics.passedCount || 0;
           activeBacklogs = cumMetrics.backlogCount || 0;
           if (metricTitleLabel) metricTitleLabel.textContent = 'Cumulative CGPA';
         } else {
-          const semData = breakdown[viewSem] || {};
-          activeCourses = semData.courses || [];
-          activeGpa = semData.sgpa || '0.00';
-          activeCredits = semData.totalCredits || 0;
-          activePoints = semData.weightedPoints || '0.0';
-          activePassed = semData.passedCount || 0;
-          activeBacklogs = semData.backlogCount || 0;
-          if (metricTitleLabel) metricTitleLabel.textContent = `${viewSem} SGPA`;
+          // Look up year in breakdown (check both raw key and normalized key)
+          let yrData = breakdown[viewYear];
+          if (!yrData) {
+            for (const k in breakdown) {
+              if (k.toLowerCase().includes(viewYear.toLowerCase().slice(0, 3))) {
+                yrData = breakdown[k];
+                break;
+              }
+            }
+          }
+          yrData = yrData || {};
+          activeCourses = yrData.courses || [];
+          activeGpa = yrData.gpa || yrData.sgpa || '0.00';
+          activeCredits = yrData.totalCredits || 0;
+          activePoints = yrData.weightedPoints || '0.0';
+          activePassed = yrData.passedCount || 0;
+          activeBacklogs = yrData.backlogCount || 0;
+          if (metricTitleLabel) metricTitleLabel.textContent = `${viewYear} GPA`;
         }
 
         if (metricSgpa) metricSgpa.textContent = activeGpa;
@@ -600,19 +675,19 @@
         if (activeBacklogs === 0) {
           if (resultStatusText) {
             resultStatusText.textContent = "PASSED";
-            resultStatusText.className = "font-display-lg text-display-lg font-bold text-secondary";
+            resultStatusText.className = "font-display-lg text-[36px] sm:text-display-lg font-bold text-secondary";
           }
           if (clearedBadge) {
-            clearedBadge.className = "px-sm py-xs rounded-full bg-secondary/15 text-secondary font-label-md text-label-md font-semibold flex items-center gap-xs";
+            clearedBadge.className = "px-sm py-xs rounded-full bg-secondary/15 text-secondary font-label-md text-xs font-semibold flex items-center gap-xs";
             clearedBadge.innerHTML = `<span class="inline-block w-2 h-2 rounded-full bg-secondary animate-pulse"></span>All Cleared`;
           }
         } else {
           if (resultStatusText) {
             resultStatusText.textContent = "REMEDIATION";
-            resultStatusText.className = "font-display-lg text-display-lg font-bold text-amber-400";
+            resultStatusText.className = "font-display-lg text-[36px] sm:text-display-lg font-bold text-amber-400";
           }
           if (clearedBadge) {
-            clearedBadge.className = "px-sm py-xs rounded-full bg-amber-400/15 text-amber-400 font-label-md text-label-md font-semibold flex items-center gap-xs";
+            clearedBadge.className = "px-sm py-xs rounded-full bg-amber-400/15 text-amber-400 font-label-md text-xs font-semibold flex items-center gap-xs";
             clearedBadge.innerHTML = `<span class="inline-block w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>${activeBacklogs} Backlog${activeBacklogs > 1 ? 's' : ''}`;
           }
         }
@@ -649,12 +724,12 @@
             tr.innerHTML = `
               <td class="py-md px-md">
                 <div class="font-medium text-text-primary">${c.code || 'COURSE'}</div>
-                <div class="text-text-secondary text-sm">${c.name || 'Module'}</div>
+                <div class="text-text-secondary text-xs sm:text-sm">${c.name || 'Module'}</div>
               </td>
-              <td class="py-md px-md"><span class="px-2 py-0.5 rounded text-[11px] bg-surface-container text-primary font-medium">${c.semester || viewSem}</span></td>
+              <td class="py-md px-md"><span class="px-2 py-0.5 rounded text-[11px] bg-surface-container text-primary font-medium">${c.academic_year || c.year || viewYear}</span></td>
               <td class="py-md px-md text-text-secondary">${c.credits} cr</td>
               <td class="py-md px-md"><span class="px-xs py-0.5 rounded text-[10px] ${badgeClass} font-semibold">${badgeText}</span></td>
-              <td class="py-md px-md"><span class="inline-flex items-center justify-center w-8 h-8 rounded-lg ${gradeBoxClass} font-bold font-label-md text-label-md">${c.grade}</span></td>
+              <td class="py-md px-md"><span class="inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-lg ${gradeBoxClass} font-bold font-label-md text-xs sm:text-label-md">${c.grade}</span></td>
               <td class="py-md px-md text-right font-medium text-text-primary font-mono">${c.points || '0.0'}</td>
             `;
             resultsTableBody.appendChild(tr);
@@ -662,7 +737,7 @@
         }
 
         // Quality Points
-        if (breakdownTermText) breakdownTermText.textContent = `${viewSem === 'all' ? 'Cumulative' : viewSem} Grade Roster & Points`;
+        if (breakdownTermText) breakdownTermText.textContent = `${viewYear === 'all' ? 'Cumulative' : viewYear} Grade Roster & Points`;
         const maxPts = (activeCredits * 10).toFixed(1);
         if (qualityPointsLabel) qualityPointsLabel.textContent = `Quality Points Earned: ${activePoints}`;
         if (maxPointsLabel) maxPointsLabel.textContent = `Total Weighted Score / ${maxPts} Max`;
@@ -677,47 +752,71 @@
         if (degreeCompletionDisplay) degreeCompletionDisplay.textContent = `${compPercent}% Completed`;
       }
 
-      // Render Semester Switcher Tabs
-      function renderSemesterTabs() {
+      // View Switcher (Core Fix for Button Clicks!)
+      function switchView(viewName) {
+        currentView = viewName;
+        updateDashboard(viewName);
+        renderYearTabs();
+        renderProgressionSvg();
+      }
+
+      // Render Academic Year Switcher Tabs
+      function renderYearTabs() {
         if (!pillsContainer) return;
         pillsContainer.innerHTML = '';
 
-        // All Semesters tab
+        // All Years (CGPA) Tab
         const allTab = document.createElement('button');
         allTab.type = 'button';
         const isAll = currentView === 'all';
-        allTab.className = `px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
+        allTab.className = `px-3.5 py-1.5 rounded-lg text-xs transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
           isAll
-            ? 'bg-primary text-on-primary shadow-sm'
-            : 'bg-surface-container text-text-secondary hover:text-text-primary hover:bg-surface-overlay'
+            ? 'bg-primary text-on-primary shadow-sm font-bold'
+            : 'bg-surface-container text-text-secondary hover:text-text-primary hover:bg-surface-overlay font-medium'
         }`;
         allTab.innerHTML = `
           <span class="material-symbols-outlined text-[15px]">school</span>
-          <span>All Semesters (CGPA: ${cumMetrics.cgpa})</span>
+          <span>All Years (CGPA: ${cumMetrics.cgpa})</span>
         `;
-        allTab.onclick = () => {
-          renderSemesterTabs();
-          updateDashboard('all');
-        };
+        allTab.onclick = () => switchView('all');
         pillsContainer.appendChild(allTab);
 
-        // Individual Semester tabs
-        availableSemesters.forEach(s => {
-          const sObj = breakdown[s] || {};
-          const isAct = currentView === s;
-          const sTab = document.createElement('button');
-          sTab.type = 'button';
-          sTab.className = `px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
+        // Individual Academic Year Tabs
+        uniqueAvailableYears.forEach(yr => {
+          let yObj = breakdown[yr];
+          if (!yObj) {
+            for (const k in breakdown) {
+              if (k.toLowerCase().includes(yr.toLowerCase().slice(0, 3))) {
+                yObj = breakdown[k];
+                break;
+              }
+            }
+          }
+          const yrGpa = (yObj && (yObj.gpa || yObj.sgpa)) ? (yObj.gpa || yObj.sgpa) : '0.00';
+          const isAct = currentView === yr;
+
+          const yrTab = document.createElement('button');
+          yrTab.type = 'button';
+          yrTab.className = `px-3.5 py-1.5 rounded-lg text-xs transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
             isAct
-              ? 'bg-primary text-on-primary shadow-sm'
-              : 'bg-surface-container text-text-secondary hover:text-text-primary hover:bg-surface-overlay'
+              ? 'bg-primary text-on-primary shadow-sm font-bold'
+              : 'bg-surface-container text-text-secondary hover:text-text-primary hover:bg-surface-overlay font-medium'
           }`;
-          sTab.innerHTML = `<span>${s} (SGPA: ${sObj.sgpa || '0.00'})</span>`;
-          sTab.onclick = () => {
-            renderSemesterTabs();
-            updateDashboard(s);
-          };
-          pillsContainer.appendChild(sTab);
+          yrTab.innerHTML = `<span>${yr} (GPA: ${yrGpa})</span>`;
+          yrTab.onclick = () => switchView(yr);
+          pillsContainer.appendChild(yrTab);
+        });
+      }
+
+      // Interactive Click on CGPA Card: toggles between 'all' and latest year
+      if (interactiveCgpaCard) {
+        interactiveCgpaCard.addEventListener('click', () => {
+          if (currentView === 'all') {
+            const target = uniqueAvailableYears.length > 0 ? uniqueAvailableYears[uniqueAvailableYears.length - 1] : '1st Year';
+            switchView(target);
+          } else {
+            switchView('all');
+          }
         });
       }
 
@@ -727,31 +826,32 @@
         const trendLabelsRow = document.getElementById('trendLabelsRow');
         if (!svgContainer || !trendLabelsRow) return;
 
-        const sortedSems = [...availableSemesters].sort((a, b) => {
-          const na = parseInt((a.match(/\d+/) || ['99'])[0]);
-          const nb = parseInt((b.match(/\d+/) || ['99'])[0]);
-          return na - nb;
-        });
-
-        if (sortedSems.length === 0) return;
+        if (uniqueAvailableYears.length === 0) return;
 
         trendLabelsRow.innerHTML = '';
         const points = [];
         const w = 360;
         const h = 100;
-        const step = sortedSems.length > 1 ? (w - 40) / (sortedSems.length - 1) : (w - 40);
+        const step = uniqueAvailableYears.length > 1 ? (w - 40) / (uniqueAvailableYears.length - 1) : (w - 40);
 
-        sortedSems.forEach((sem, idx) => {
-          const sData = breakdown[sem] || {};
-          const sgpaNum = parseFloat(sData.sgpa) || 8.0;
-          // SGPA between 0 and 10, normalize to height
-          const y = Math.round(h - ((sgpaNum / 10.0) * (h - 20)) - 10);
+        uniqueAvailableYears.forEach((yr, idx) => {
+          let yData = breakdown[yr];
+          if (!yData) {
+            for (const k in breakdown) {
+              if (k.toLowerCase().includes(yr.toLowerCase().slice(0, 3))) {
+                yData = breakdown[k];
+                break;
+              }
+            }
+          }
+          const gpaNum = parseFloat(yData?.gpa || yData?.sgpa) || 8.0;
+          const y = Math.round(h - ((gpaNum / 10.0) * (h - 20)) - 10);
           const x = Math.round(20 + (idx * step));
-          points.push({ x, y, sem, sgpa: sData.sgpa || '0.00' });
+          points.push({ x, y, yr, gpa: yData?.gpa || yData?.sgpa || '0.00' });
 
           const lbl = document.createElement('span');
-          const shortSem = sem.replace('Semester', 'S').trim();
-          lbl.textContent = `${shortSem} (${sData.sgpa || '0.00'})`;
+          const shortYr = yr.replace('Year', 'Yr').trim();
+          lbl.textContent = `${shortYr} (${yData?.gpa || yData?.sgpa || '0.00'})`;
           trendLabelsRow.appendChild(lbl);
         });
 
@@ -779,7 +879,8 @@
         svgContainer.innerHTML = svgHtml;
       }
 
-      renderSemesterTabs();
+      // Initial Render
+      renderYearTabs();
       updateDashboard(currentView);
       renderProgressionSvg();
     })();
@@ -787,7 +888,7 @@
 
   <!-- Footer -->
   <footer class="w-full bg-surface-container-lowest border-t border-border-subtle">
-    <div class="w-full px-margin-desktop py-lg flex flex-col md:flex-row items-center justify-between gap-md text-on-surface-variant font-label-md text-label-md">
+    <div class="w-full px-margin-mobile md:px-margin-desktop py-lg flex flex-col md:flex-row items-center justify-between gap-md text-on-surface-variant font-label-md text-xs sm:text-label-md max-w-container-max mx-auto">
       <div>© 2026 GradeFlow. All rights reserved.</div>
       <div class="flex items-center gap-lg">
         <a class="hover:text-on-surface transition-colors" href="#">Privacy Policy</a>

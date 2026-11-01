@@ -114,135 +114,165 @@ def ensure_storage_bucket(bucket_name: str = "transcripts"):
             pass
 
 
-ROMAN_TO_SEMESTER = {
-    "I": 1, "II": 2, "III": 3, "IV": 4, "V": 5, "VI": 6, "VII": 7, "VIII": 8,
-    "1": 1, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8,
-    "1ST": 1, "2ND": 2, "3RD": 3, "4TH": 4, "5TH": 5, "6TH": 6, "7TH": 7, "8TH": 8,
-    "FIRST": 1, "SECOND": 2, "THIRD": 3, "FOURTH": 4, "FIFTH": 5, "SIXTH": 6, "SEVENTH": 7, "EIGHTH": 8
+ROMAN_TO_YEAR = {
+    "I": 1, "II": 2, "III": 3, "IV": 4,
+    "1": 1, "2": 2, "3": 3, "4": 4,
+    "1ST": 1, "2ND": 2, "3RD": 3, "4TH": 4,
+    "FIRST": 1, "SECOND": 2, "THIRD": 3, "FOURTH": 4
 }
 
-def normalize_semester(val: Optional[str]) -> str:
+def normalize_year(val: Optional[str]) -> str:
     """
-    Normalizes any semester string to a standard format: 'Semester X' or 'all'.
-    Handles roman numerals (III -> Semester 3), ordinal words (Third -> Semester 3),
-    numbers (3 -> Semester 3), and term names (fall-2024 -> Semester 5).
+    Normalizes any year or semester string to standard format:
+    '1st Year', '2nd Year', '3rd Year', '4th Year' or 'all'.
     """
     if not val:
-        return "Semester 1"
+        return "1st Year"
 
     s = str(val).strip()
-    if s.lower() in ("all", "all semesters", "all-semesters", "*", "cumulative"):
+    if s.lower() in ("all", "all years", "all-years", "all semesters", "*", "cumulative"):
         return "all"
 
-    # Direct match for digits 1-8 (e.g. 'Semester 3', 'Sem 3', 'Term 3', '3rd Sem')
-    m_num = re.search(r"(?:semester|sem|term)?[_\-\s]*([1-8])(?:st|nd|rd|th)?", s, re.IGNORECASE)
-    if m_num and m_num.group(1):
-        return f"Semester {m_num.group(1)}"
+    # Match Year 1-4 / 1st Year / 2nd Year / etc.
+    m_yr = re.search(r"(?:year|yr)?[_\-\s]*([1-4])(?:st|nd|rd|th)?(?:\s*year)?", s, re.IGNORECASE)
+    if m_yr and m_yr.group(1):
+        num = int(m_yr.group(1))
+        suff = "st" if num == 1 else ("nd" if num == 2 else ("rd" if num == 3 else "th"))
+        return f"{num}{suff} Year"
 
-    # Match for roman numerals I-VIII
-    m_rom = re.search(r"\b(VIII|VII|VI|IV|V|III|II|I)\b", s, re.IGNORECASE)
+    # Match Roman numeral I - IV for Year
+    m_rom = re.search(r"\b(IV|III|II|I)\b(?:\s*year)?", s, re.IGNORECASE)
     if m_rom:
-        rom_val = m_rom.group(1).upper()
-        if rom_val in ROMAN_TO_SEMESTER:
-            return f"Semester {ROMAN_TO_SEMESTER[rom_val]}"
+        rom = m_rom.group(1).upper()
+        if rom in ROMAN_TO_YEAR:
+            num = ROMAN_TO_YEAR[rom]
+            suff = "st" if num == 1 else ("nd" if num == 2 else ("rd" if num == 3 else "th"))
+            return f"{num}{suff} Year"
 
-    # Match ordinal words (e.g. Third Semester)
-    for word, num in ROMAN_TO_SEMESTER.items():
-        if len(word) > 2 and word in s.upper():
-            return f"Semester {num}"
+    # If input is semester (e.g. Semester 3 or 4 -> 2nd Year)
+    m_sem = re.search(r"(?:semester|sem|term)[_\-\s]*([1-8])", s, re.IGNORECASE)
+    if m_sem:
+        sem_num = int(m_sem.group(1))
+        yr_num = max(1, min(4, (sem_num + 1) // 2))
+        suff = "st" if yr_num == 1 else ("nd" if yr_num == 2 else ("rd" if yr_num == 3 else "th"))
+        return f"{yr_num}{suff} Year"
 
-    # Handle term names like Fall 2024 -> Semester 5 etc.
-    s_lower = s.lower()
-    if "term 5" in s_lower or "fall-2024" in s_lower or "fall 2024" in s_lower:
-        return "Semester 5"
-    elif "term 4" in s_lower or "spring-2024" in s_lower or "spring 2024" in s_lower:
-        return "Semester 4"
-    elif "term 3" in s_lower or "fall-2023" in s_lower or "fall 2023" in s_lower:
-        return "Semester 3"
-    elif "term 2" in s_lower or "spring-2023" in s_lower or "spring 2023" in s_lower:
-        return "Semester 2"
-    elif "term 1" in s_lower or "fall-2022" in s_lower or "fall 2022" in s_lower:
-        return "Semester 1"
+    # Match ordinal words like First Year / Second Year / Third Year / Fourth Year
+    s_upper = s.upper()
+    if "FIRST" in s_upper or "1ST" in s_upper:
+        return "1st Year"
+    elif "SECOND" in s_upper or "2ND" in s_upper:
+        return "2nd Year"
+    elif "THIRD" in s_upper or "3RD" in s_upper:
+        return "3rd Year"
+    elif "FOURTH" in s_upper or "4TH" in s_upper:
+        return "4th Year"
 
-    return "Semester 1"
+    return "1st Year"
 
+def normalize_semester(val: Optional[str]) -> str:
+    """Alias for backwards compatibility."""
+    return normalize_year(val)
 
-def semester_sort_key(sem_str: str) -> int:
-    """Sort helper so Semester 1 comes before Semester 2, etc."""
-    if not sem_str:
+def year_sort_key(yr_str: str) -> int:
+    """Sort helper so 1st Year comes before 2nd Year, etc."""
+    if not yr_str:
         return 999
-    m = re.search(r"(\d+)", str(sem_str))
+    m = re.search(r"(\d+)", str(yr_str))
     return int(m.group(1)) if m else 999
 
+def semester_sort_key(sem_str: str) -> int:
+    """Alias for backwards compatibility."""
+    return year_sort_key(sem_str)
 
-def infer_semester_from_course_code(course_code: Optional[str]) -> str:
+def infer_year_from_course_code(course_code: Optional[str]) -> str:
     """
-    Infers semester based on course level digits:
-    e.g. CS101 -> Semester 1, MA206 -> Semester 3, CS302 -> Semester 5, CS410 -> Semester 7
+    Infers academic year based on course level digits:
+    e.g. CS101, EC102 -> 1st Year
+         MA206B1, CS202 -> 2nd Year
+         CS302, IT305 -> 3rd Year
+         CS410, CS499 -> 4th Year
     """
     if not course_code:
-        return "Semester 1"
+        return "1st Year"
     m = re.search(r"[A-Z]{2,4}(\d)", course_code.strip().upper())
     if m:
         digit = int(m.group(1))
         if digit == 1:
-            return "Semester 1"
+            return "1st Year"
         elif digit == 2:
-            return "Semester 3"
+            return "2nd Year"
         elif digit == 3:
-            return "Semester 5"
+            return "3rd Year"
         elif digit == 4:
-            return "Semester 7"
+            return "4th Year"
         elif 5 <= digit <= 8:
-            return f"Semester {digit}"
-    return "Semester 1"
+            yr = (digit + 1) // 2
+            suff = "st" if yr == 1 else ("nd" if yr == 2 else ("rd" if yr == 3 else "th"))
+            return f"{yr}{suff} Year"
+    return "1st Year"
 
+def infer_semester_from_course_code(course_code: Optional[str]) -> str:
+    """Alias for backwards compatibility."""
+    return infer_year_from_course_code(course_code)
 
-def extract_semester_from_text(text: str) -> Optional[str]:
+def extract_year_from_text(text: str) -> Optional[str]:
     """
-    Extracts semester identifier from document text (headers, footers, titles).
+    Extracts academic year from document headers, footers, titles.
     """
     if not text:
         return None
-    # 1. Regex for: Semester : 3 / Sem - 5 / Term: 3 / Semester III
-    p1 = r"(?:Semester|Sem|Term)\s*[:\-]?\s*([0-9IVX]+(?:st|nd|rd|th)?)"
+
+    # 1. Regex for: Year : 2 / Yr - 1 / Year II / 2nd Year / Second Year
+    p1 = r"(?:Academic\s+)?(?:Year|Yr)\s*[:\-]?\s*([0-9IVX]+(?:st|nd|rd|th)?)"
     m1 = re.search(p1, text, re.IGNORECASE)
     if m1:
-        return normalize_semester(m1.group(1))
+        return normalize_year(m1.group(1))
 
-    # 2. Regex for: 3rd Semester / III SEMESTER / 5th Sem
-    p2 = r"([0-9IVX]+(?:st|nd|rd|th)?)\s+(?:Semester|Sem|Term)"
+    p2 = r"([0-9IVX]+(?:st|nd|rd|th)?)\s+(?:Year|Yr)"
     m2 = re.search(p2, text, re.IGNORECASE)
     if m2:
-        return normalize_semester(m2.group(1))
+        return normalize_year(m2.group(1))
 
-    # 3. Regex for word forms: THIRD SEMESTER / FIFTH SEMESTER
-    p3 = r"\b(FIRST|SECOND|THIRD|FOURTH|FIFTH|SIXTH|SEVENTH|EIGHTH)\s+(?:SEMESTER|SEM)\b"
+    p3 = r"\b(FIRST|SECOND|THIRD|FOURTH)\s+YEAR\b"
     m3 = re.search(p3, text, re.IGNORECASE)
     if m3:
-        return normalize_semester(m3.group(1))
+        return normalize_year(m3.group(1))
+
+    # 2. Semester headers mapped to Year
+    p_sem = r"(?:Semester|Sem|Term)\s*[:\-]?\s*([0-9IVX]+(?:st|nd|rd|th)?)"
+    m_sem = re.search(p_sem, text, re.IGNORECASE)
+    if m_sem:
+        return normalize_year(m_sem.group(1))
+
+    p_sem2 = r"([0-9IVX]+(?:st|nd|rd|th)?)\s+(?:Semester|Sem|Term)"
+    m_sem2 = re.search(p_sem2, text, re.IGNORECASE)
+    if m_sem2:
+        return normalize_year(m_sem2.group(1))
 
     return None
 
+def extract_semester_from_text(text: str) -> Optional[str]:
+    """Alias for backwards compatibility."""
+    return extract_year_from_text(text)
 
 def parse_page_text_for_metadata(page_text: str):
     """
-    Extracts Subject Code, Subject Title, Credits, and Semester from page header text.
+    Extracts Subject Code, Subject Title, Credits, and Academic Year from page header text.
     Handles flexible spacing, casing, and separators.
     """
     meta_pattern = r"Subject Code\s*[:\-]?\s*([A-Z0-9]+).*?(?:Subject Title\s*[:\-]?\s*(.*?))?(?:Subject Credit\s*[:\-]?\s*([\d\.]+)|Credit\s*[:\-]?\s*([\d\.]+))"
     match = re.search(meta_pattern, page_text, re.IGNORECASE | re.DOTALL)
-    c_sem = extract_semester_from_text(page_text)
+    c_year = extract_year_from_text(page_text)
 
     if not match:
-        # Fallback simpler regex
         code_m = re.search(r"Subject Code\s*[:\-]?\s*([A-Z0-9]+)", page_text, re.IGNORECASE)
         title_m = re.search(r"Subject Title\s*[:\-]?\s*([^\n\r]+)", page_text, re.IGNORECASE)
         cred_m = re.search(r"(?:Subject Credit|Credit)\s*[:\-]?\s*([\d\.]+)", page_text, re.IGNORECASE)
         c_code = code_m.group(1).strip() if code_m else None
         c_name = title_m.group(1).strip() if title_m else None
         c_cred = float(cred_m.group(1)) if cred_m else None
-        return c_code, c_name, c_cred, c_sem
+        return c_code, c_name, c_cred, c_year
 
     c_code = match.group(1).strip() if match.group(1) else None
     c_name = None
@@ -256,18 +286,19 @@ def parse_page_text_for_metadata(page_text: str):
             c_cred = float(cred_val)
         except ValueError:
             pass
-    return c_code, c_name, c_cred, c_sem
+    return c_code, c_name, c_cred, c_year
 
 
 def parse_document_bytes(
     file_bytes: bytes,
     filename: str,
     default_reg: Optional[str] = None,
+    default_year: Optional[str] = None,
     default_sem: Optional[str] = None
 ) -> List[dict]:
     """
     Comprehensive document parser:
-    1. Per-page / per-section Subject Code and Semester tracking
+    1. Per-page / per-section Subject Code and Academic Year tracking
     2. Class grade sheet student row parsing (RegNo, Internal, External, Total, Grade)
     3. Individual student transcript parsing fallback
     """
@@ -300,25 +331,26 @@ def parse_document_bytes(
     current_code = "UNKNOWN"
     current_name = "UNKNOWN"
     current_credits = 4.0
-    file_sem = extract_semester_from_text(filename)
-    current_sem = file_sem or (normalize_semester(default_sem) if default_sem and default_sem != 'all' else None)
+    file_year = extract_year_from_text(filename)
+    chosen_default = default_year or default_sem
+    current_year = file_year or (normalize_year(chosen_default) if chosen_default and chosen_default != 'all' else None)
 
     # Flexible row pattern for class grade sheet rows:
     # Match: RegNo (8-11 digits), Int marks/status, Ext marks/status, Total marks, Grade (S, A, B, C, D, E, F, etc.)
     row_pattern = r"(\d{8,11})\s+([\d\.]+|AB|DT|MP|NE|NA)\s+([\d\.]+|AB|DT|MP|NE|NA)\s+([\d\.]+)\s+([A-Z\+]{1,3})"
 
     for p_idx, text in enumerate(pages_text):
-        c_code, c_name, c_cred, c_sem = parse_page_text_for_metadata(text)
+        c_code, c_name, c_cred, c_yr = parse_page_text_for_metadata(text)
         if c_code:
             current_code = c_code
         if c_name:
             current_name = c_name
         if c_cred is not None:
             current_credits = c_cred
-        if c_sem:
-            current_sem = c_sem
+        if c_yr:
+            current_year = c_yr
 
-        effective_sem = current_sem or infer_semester_from_course_code(current_code)
+        effective_year = current_year or infer_year_from_course_code(current_code)
 
         # 1. Check for class grade sheet rows
         page_matches = list(re.finditer(row_pattern, text))
@@ -338,7 +370,9 @@ def parse_document_bytes(
                     "credits": current_credits,
                     "total_marks": tot_m,
                     "grade": grade_val,
-                    "semester": effective_sem
+                    "academic_year": effective_year,
+                    "year": effective_year,
+                    "semester": effective_year
                 })
         else:
             # 2. Check for individual student transcript format
@@ -363,7 +397,9 @@ def parse_document_bytes(
                     "credits": cr,
                     "total_marks": 0.0,
                     "grade": gr,
-                    "semester": effective_sem or infer_semester_from_course_code(code)
+                    "academic_year": effective_year or infer_year_from_course_code(code),
+                    "year": effective_year or infer_year_from_course_code(code),
+                    "semester": effective_year or infer_year_from_course_code(code)
                 })
 
     return parsed_courses
@@ -371,21 +407,21 @@ def parse_document_bytes(
 
 def save_courses_to_db(courses: List[dict]):
     """
-    Deduplicates courses by (registration_number, course_code, semester) and
+    Deduplicates courses by (registration_number, course_code, academic_year) and
     safely upserts/inserts them into the Supabase 'student_grades' table.
-    Gracefully handles schemas with or without a 'semester' column.
+    Gracefully handles schemas with or without an 'academic_year' or 'semester' column.
     """
     if not courses or not supabase:
         return
 
-    # In-memory deduplication: keep cleanest/latest record per (reg, course, semester)
+    # In-memory deduplication: keep cleanest/latest record per (reg, course, year)
     deduped: Dict[tuple, dict] = {}
     for c in courses:
         r = str(c.get("registration_number", "")).strip()
         code = str(c.get("course_code", "")).strip()
-        sem = str(c.get("semester", "")).strip()
+        yr = str(c.get("academic_year") or c.get("year") or c.get("semester") or "1st Year").strip()
         if r and code:
-            deduped[(r, code, sem)] = c
+            deduped[(r, code, yr)] = c
     clean_list = list(deduped.values())
 
     # Chunked upsert/insert
@@ -393,28 +429,51 @@ def save_courses_to_db(courses: List[dict]):
     for i in range(0, len(clean_list), chunk_size):
         chunk = clean_list[i:i + chunk_size]
         try:
-            # 1. Attempt upsert including 'semester'
+            # 1. Attempt upsert including 'academic_year' and 'semester'
             supabase.table("student_grades").upsert(
                 chunk,
                 on_conflict="registration_number,course_code"
             ).execute()
         except Exception as upsert_err:
-            err_str = str(upsert_err)
-            # If the semester column does not exist in the Supabase schema yet,
-            # strip 'semester' and upsert so the database write succeeds without crashing!
-            if "semester" in err_str.lower() and "column" in err_str.lower():
-                print("[Supabase Notice] 'semester' column not yet in student_grades schema. Stripping column for upsert.")
-                stripped_chunk = [{k: v for k, v in row.items() if k != "semester"} for row in chunk]
+            err_str = str(upsert_err).lower()
+            # If schema lacks 'academic_year', try with 'semester' only
+            if "academic_year" in err_str:
+                sem_chunk = []
+                for row in chunk:
+                    r_copy = dict(row)
+                    r_copy.pop("academic_year", None)
+                    r_copy.pop("year", None)
+                    sem_chunk.append(r_copy)
                 try:
                     supabase.table("student_grades").upsert(
-                        stripped_chunk,
+                        sem_chunk,
                         on_conflict="registration_number,course_code"
                     ).execute()
                     continue
                 except Exception:
                     pass
 
-            # Row-by-row fallback
+            # If schema also lacks 'semester', strip all period columns
+            base_chunk = []
+            for row in chunk:
+                base_chunk.append({
+                    "registration_number": row.get("registration_number"),
+                    "course_code": row.get("course_code"),
+                    "course_name": row.get("course_name"),
+                    "credits": row.get("credits"),
+                    "total_marks": row.get("total_marks", 0.0),
+                    "grade": row.get("grade")
+                })
+            try:
+                supabase.table("student_grades").upsert(
+                    base_chunk,
+                    on_conflict="registration_number,course_code"
+                ).execute()
+                continue
+            except Exception:
+                pass
+
+            # Final row-by-row fallback
             for row in chunk:
                 try:
                     supabase.table("student_grades").upsert(
@@ -423,16 +482,17 @@ def save_courses_to_db(courses: List[dict]):
                     ).execute()
                 except Exception:
                     try:
-                        stripped_row = {k: v for k, v in row.items() if k != "semester"}
-                        supabase.table("student_grades").upsert(
-                            stripped_row,
-                            on_conflict="registration_number,course_code"
-                        ).execute()
+                        base_row = {
+                            "registration_number": row.get("registration_number"),
+                            "course_code": row.get("course_code"),
+                            "course_name": row.get("course_name"),
+                            "credits": row.get("credits"),
+                            "total_marks": row.get("total_marks", 0.0),
+                            "grade": row.get("grade")
+                        }
+                        supabase.table("student_grades").upsert(base_row).execute()
                     except Exception:
-                        try:
-                            supabase.table("student_grades").insert(row).execute()
-                        except Exception:
-                            pass
+                        pass
 
 
 @app.get("/wakeup")
@@ -454,23 +514,35 @@ def read_root():
 
 
 @app.get("/api/student/{registration_number}")
-def get_student_records(registration_number: str, semester: Optional[str] = Query(None)):
+def get_student_records(
+    registration_number: str,
+    year: Optional[str] = Query(None),
+    semester: Optional[str] = Query(None)
+):
     """
     1. Queries Supabase 'student_grades' for this student.
     2. If not found, references previously uploaded class files to find and recover grades.
-    3. Categorizes courses by semester and computes both per-semester SGPA and cumulative CGPA.
-    4. Identifies whether requested semester is present or missing.
+    3. Categorizes courses by academic year and computes both per-year GPA and cumulative CGPA.
+    4. Identifies whether requested year is present or missing.
     """
     clean_reg = registration_number.strip()
+    target_period = year or semester
+    requested_year_clean = normalize_year(target_period) if target_period else "all"
+
     if not supabase:
         return {
             "found": False,
             "registration_number": clean_reg,
             "total_records": 0,
-            "requested_semester": normalize_semester(semester) if semester else "all",
+            "requested_year": requested_year_clean,
+            "requested_semester": requested_year_clean,
+            "is_requested_year_present": False,
             "is_requested_semester_present": False,
-            "active_semester": "Semester 1",
+            "active_year": "1st Year",
+            "active_semester": "1st Year",
+            "available_years": [],
             "available_semesters": [],
+            "years_breakdown": {},
             "semesters_breakdown": {},
             "cumulative_metrics": {
                 "total_credits": 0.0,
@@ -483,6 +555,7 @@ def get_student_records(registration_number: str, semester: Optional[str] = Quer
             "metrics": {
                 "total_credits": 0.0,
                 "weighted_points": 0.0,
+                "gpa": 0.0,
                 "sgpa": 0.0,
                 "passed_count": 0,
                 "backlog_count": 0
@@ -541,22 +614,24 @@ def get_student_records(registration_number: str, semester: Optional[str] = Quer
                                 newly_recovered.append(dc)
 
                 if newly_recovered:
-                    # Deduplicate by course_code and semester
+                    # Deduplicate by course_code and year
                     d_map = {}
                     for nr in newly_recovered:
-                        d_map[(nr.get("course_code"), nr.get("semester"))] = nr
+                        d_map[(nr.get("course_code"), nr.get("academic_year") or nr.get("semester"))] = nr
                     records = list(d_map.values())
             except Exception as ref_err:
                 print(f"[Reference Upload Notice]: {ref_err}")
 
-        # Ensure every record has a well-defined 'semester'
+        # Ensure every record has a well-defined 'academic_year' and 'semester'
         for r in records:
-            sem = r.get("semester")
-            if not sem or str(sem).strip() in ("Unknown", "None", ""):
-                sem = infer_semester_from_course_code(r.get("course_code"))
+            yr = r.get("academic_year") or r.get("year") or r.get("semester")
+            if not yr or str(yr).strip() in ("Unknown", "None", ""):
+                yr = infer_year_from_course_code(r.get("course_code"))
             else:
-                sem = normalize_semester(sem)
-            r["semester"] = sem
+                yr = normalize_year(yr)
+            r["academic_year"] = yr
+            r["year"] = yr
+            r["semester"] = yr
 
         # 3. Query upload history
         upload_history = []
@@ -571,106 +646,114 @@ def get_student_records(registration_number: str, semester: Optional[str] = Quer
         except Exception:
             pass
 
-        # 4. Group courses by semester & calculate per-semester and cumulative metrics
+        # 4. Group courses by academic year & calculate per-year and cumulative metrics
         grade_points_map = {
             "S": 10.0, "A": 9.0, "B": 8.0, "C": 7.0, "D": 6.0, "E": 5.0, "F": 0.0
         }
-        semesters_dict: Dict[str, List[dict]] = {}
+        years_dict: Dict[str, List[dict]] = {}
         for r in records:
-            sem = r.get("semester", "Semester 1")
-            if sem not in semesters_dict:
-                semesters_dict[sem] = []
-            semesters_dict[sem].append(r)
+            yr = r.get("academic_year", "1st Year")
+            if yr not in years_dict:
+                years_dict[yr] = []
+            years_dict[yr].append(r)
 
-        # Sort available semesters logically (Semester 1, Semester 2, ...)
-        available_semesters = sorted(list(semesters_dict.keys()), key=semester_sort_key)
+        # Sort available years logically (1st Year, 2nd Year, 3rd Year, 4th Year)
+        available_years = sorted(list(years_dict.keys()), key=year_sort_key)
 
-        semester_summaries: Dict[str, dict] = {}
+        year_summaries: Dict[str, dict] = {}
         cum_credits = 0.0
         cum_weighted_points = 0.0
         cum_passed = 0
         cum_backlog = 0
 
-        for sem, sem_courses in semesters_dict.items():
-            sem_cred = 0.0
-            sem_pts = 0.0
-            sem_passed = 0
-            sem_backlog = 0
-            for c_row in sem_courses:
+        for yr, yr_courses in years_dict.items():
+            yr_cred = 0.0
+            yr_pts = 0.0
+            yr_passed = 0
+            yr_backlog = 0
+            for c_row in yr_courses:
                 c = float(c_row.get("credits") or 0.0)
                 g = str(c_row.get("grade") or "").strip().upper()
                 pt = grade_points_map.get(g, 0.0)
-                sem_cred += c
-                sem_pts += (c * pt)
+                yr_cred += c
+                yr_pts += (c * pt)
                 if g == "F" or pt == 0.0:
-                    sem_backlog += 1
+                    yr_backlog += 1
                 else:
-                    sem_passed += 1
+                    yr_passed += 1
 
-            sem_sgpa = round(sem_pts / sem_cred, 2) if sem_cred > 0 else 0.0
-            semester_summaries[sem] = {
-                "semester": sem,
-                "total_credits": sem_cred,
-                "weighted_points": round(sem_pts, 1),
-                "sgpa": sem_sgpa,
-                "passed_count": sem_passed,
-                "backlog_count": sem_backlog,
-                "courses_count": len(sem_courses),
-                "courses": sem_courses
+            yr_gpa = round(yr_pts / yr_cred, 2) if yr_cred > 0 else 0.0
+            year_summaries[yr] = {
+                "year": yr,
+                "academic_year": yr,
+                "semester": yr,
+                "total_credits": yr_cred,
+                "weighted_points": round(yr_pts, 1),
+                "gpa": yr_gpa,
+                "sgpa": yr_gpa,
+                "passed_count": yr_passed,
+                "backlog_count": yr_backlog,
+                "courses_count": len(yr_courses),
+                "courses": yr_courses
             }
 
-            cum_credits += sem_cred
-            cum_weighted_points += sem_pts
-            cum_passed += sem_passed
-            cum_backlog += sem_backlog
+            cum_credits += yr_cred
+            cum_weighted_points += yr_pts
+            cum_passed += yr_passed
+            cum_backlog += yr_backlog
 
         cgpa = round(cum_weighted_points / cum_credits, 2) if cum_credits > 0 else 0.0
         cumulative_metrics = {
             "total_credits": cum_credits,
             "weighted_points": round(cum_weighted_points, 1),
             "cgpa": cgpa,
+            "gpa": cgpa,
             "sgpa": cgpa,  # for backwards compatibility
             "passed_count": cum_passed,
             "backlog_count": cum_backlog
         }
 
-        # 5. Evaluate requested semester vs available semesters
-        is_requested_semester_present = True
+        # 5. Evaluate requested year vs available years
+        is_requested_year_present = True
         notice_message = None
-        requested_semester_clean = "all"
 
-        if not semester or str(semester).strip().lower() in ["all", "", "none"]:
-            requested_semester_clean = "all"
-            active_semester = available_semesters[-1] if available_semesters else "Semester 1"
+        if not target_period or str(target_period).strip().lower() in ["all", "", "none"]:
+            requested_year_clean = "all"
+            active_year = available_years[-1] if available_years else "1st Year"
             active_data = records
             active_metrics = cumulative_metrics
-            is_requested_semester_present = len(records) > 0
+            is_requested_year_present = len(records) > 0
         else:
-            requested_semester_clean = normalize_semester(semester)
-            if requested_semester_clean in semester_summaries:
-                is_requested_semester_present = True
-                active_semester = requested_semester_clean
-                active_data = semesters_dict[requested_semester_clean]
-                active_metrics = semester_summaries[requested_semester_clean]
+            requested_year_clean = normalize_year(target_period)
+            if requested_year_clean in year_summaries:
+                is_requested_year_present = True
+                active_year = requested_year_clean
+                active_data = years_dict[requested_year_clean]
+                active_metrics = year_summaries[requested_year_clean]
             else:
-                is_requested_semester_present = False
-                active_semester = available_semesters[-1] if available_semesters else requested_semester_clean
+                is_requested_year_present = False
+                active_year = available_years[-1] if available_years else requested_year_clean
                 active_data = records
                 active_metrics = cumulative_metrics
                 notice_message = (
-                    f"{requested_semester_clean} results have not been uploaded yet. "
-                    f"Available semesters: {', '.join(available_semesters) if available_semesters else 'None'}."
+                    f"{requested_year_clean} results have not been uploaded yet. "
+                    f"Available academic years: {', '.join(available_years) if available_years else 'None'}."
                 )
 
         return {
             "found": len(records) > 0,
             "registration_number": clean_reg,
             "total_records": len(records),
-            "requested_semester": requested_semester_clean,
-            "is_requested_semester_present": is_requested_semester_present,
-            "active_semester": active_semester,
-            "available_semesters": available_semesters,
-            "semesters_breakdown": semester_summaries,
+            "requested_year": requested_year_clean,
+            "requested_semester": requested_year_clean,
+            "is_requested_year_present": is_requested_year_present,
+            "is_requested_semester_present": is_requested_year_present,
+            "active_year": active_year,
+            "active_semester": active_year,
+            "available_years": available_years,
+            "available_semesters": available_years,
+            "years_breakdown": year_summaries,
+            "semesters_breakdown": year_summaries,
             "cumulative_metrics": cumulative_metrics,
             "metrics": active_metrics,
             "data": active_data,
@@ -684,10 +767,15 @@ def get_student_records(registration_number: str, semester: Optional[str] = Quer
             "found": False,
             "registration_number": clean_reg,
             "total_records": 0,
-            "requested_semester": normalize_semester(semester) if semester else "all",
+            "requested_year": normalize_year(target_period) if target_period else "all",
+            "requested_semester": normalize_year(target_period) if target_period else "all",
+            "is_requested_year_present": False,
             "is_requested_semester_present": False,
-            "active_semester": "Semester 1",
+            "active_year": "1st Year",
+            "active_semester": "1st Year",
+            "available_years": [],
             "available_semesters": [],
+            "years_breakdown": {},
             "semesters_breakdown": {},
             "cumulative_metrics": {
                 "total_credits": 0.0,
@@ -700,6 +788,7 @@ def get_student_records(registration_number: str, semester: Optional[str] = Quer
             "metrics": {
                 "total_credits": 0.0,
                 "weighted_points": 0.0,
+                "gpa": 0.0,
                 "sgpa": 0.0,
                 "passed_count": 0,
                 "backlog_count": 0
@@ -715,14 +804,15 @@ def get_student_records(registration_number: str, semester: Optional[str] = Quer
 async def parse_transcript(
     files: List[UploadFile] = File(..., description="Select transcript files (.txt or .pdf)"),
     registration_number: Optional[str] = Form(None, description="Optional student registration number override"),
-    target_semester: Optional[str] = Form(None, description="Optional target semester for the upload")
+    target_year: Optional[str] = Form(None, description="Optional target year for the upload"),
+    target_semester: Optional[str] = Form(None, description="Optional target semester alias")
 ):
     """
     Class-Wide Document Pipeline:
-    - Parses all subjects, semesters, and student records from uploaded files
+    - Parses all subjects, academic years, and student records from uploaded files
     - Saves the raw file to Supabase Storage ('transcripts/shared/{filename}')
     - Records file metadata in 'uploaded_files'
-    - Upserts ALL extracted student grades into 'student_grades' with multi-semester support!
+    - Upserts ALL extracted student grades into 'student_grades' with multi-year support!
     """
     all_parsed_courses = []
     uploaded_files_summary = []
@@ -737,7 +827,7 @@ async def parse_transcript(
             continue
 
         file_bytes = await file.read()
-        file_courses = parse_document_bytes(file_bytes, filename, registration_number, target_semester)
+        file_courses = parse_document_bytes(file_bytes, filename, registration_number, target_year, target_semester)
         all_parsed_courses.extend(file_courses)
 
         # Storage paths
@@ -787,11 +877,12 @@ async def parse_transcript(
     if all_parsed_courses and supabase:
         save_courses_to_db(all_parsed_courses)
 
-    detected_semesters = sorted(list(set(c.get("semester") for c in all_parsed_courses if c.get("semester"))), key=semester_sort_key)
+    detected_years = sorted(list(set(c.get("academic_year") or c.get("semester") for c in all_parsed_courses if (c.get("academic_year") or c.get("semester")))), key=year_sort_key)
 
     return {
         "total_records_found": len(all_parsed_courses),
-        "detected_semesters": detected_semesters,
+        "detected_years": detected_years,
+        "detected_semesters": detected_years,
         "data": all_parsed_courses,
         "uploaded_files": uploaded_files_summary
     }

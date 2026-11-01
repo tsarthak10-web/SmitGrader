@@ -2,7 +2,7 @@
 <html class="dark" lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=5.0" name="viewport" />
   <meta content="web_standard" name="shell-type" />
   <title>Transcript Verification - GradeFlow</title>
 
@@ -18,9 +18,9 @@
       html, body {
         margin: 0;
         padding: 0;
-      }
-      body {
-        overscroll-behavior: none;
+        overflow-x: hidden;
+        touch-action: pan-y;
+        -webkit-font-smoothing: antialiased;
       }
       main > :first-child {
         margin-top: 0 !important;
@@ -30,7 +30,23 @@
       }
     }
     ::-webkit-scrollbar {
-      display: none;
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0b1326;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+    @media (max-width: 640px) {
+      input, select, textarea {
+        font-size: 16px !important;
+      }
     }
   </style>
 
@@ -137,18 +153,24 @@
   </script>
 </head>
 
-<body class="bg-surface font-body-md text-body-md text-on-surface antialiased">
+<body class="bg-surface font-body-md text-body-md text-on-surface antialiased selection:bg-primary/20 selection:text-primary">
   <!-- Top Navigation Header -->
   <header class="fixed top-0 left-0 right-0 z-50 bg-surface/80 backdrop-blur-xl border-b border-border-subtle shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
-    <div class="h-16 w-full px-margin-desktop flex items-center justify-between">
+    <div class="h-16 w-full px-4 sm:px-6 md:px-margin-desktop flex items-center justify-between">
       <div class="flex items-center gap-xl">
-        <a class="flex items-center gap-sm text-primary" href="index.html">
+        <a class="flex items-center gap-sm text-primary hover:opacity-90 transition-opacity" href="index.html">
           <span class="material-symbols-outlined text-[26px]">school</span>
           <span class="font-headline-md text-headline-md tracking-tight text-text-primary">GradeFlow</span>
         </a>
         <nav class="flex items-center">
-          <a aria-current="page" class="py-base transition-colors text-primary border-b-2 border-primary" href="index.html">Dashboard</a>
+          <a aria-current="page" class="py-base transition-colors text-primary border-b-2 border-primary font-medium" href="index.html">Dashboard</a>
         </nav>
+      </div>
+      <div class="flex items-center gap-2">
+        <a href="index.html" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-overlay text-text-secondary hover:text-text-primary text-xs font-semibold transition-all">
+          <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+          <span class="hidden sm:inline">Back to Search</span>
+        </a>
       </div>
     </div>
   </header>
@@ -158,10 +180,10 @@
     <div class="flex flex-col w-full relative">
 
       <!-- Background Dashboard Layer (Blurred / Simulated Behind Modal) -->
-      <div class="w-full px-margin-desktop py-lg opacity-30 pointer-events-none select-none filter blur-[1px] transition-all duration-300">
+      <div class="w-full px-4 sm:px-6 md:px-margin-desktop py-md md:py-lg opacity-30 pointer-events-none select-none filter blur-[1px] transition-all duration-300">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-md mb-xl">
           <div class="flex flex-col">
-            <span class="font-label-md text-label-md text-text-secondary uppercase tracking-wider">Academic Records • Term Query</span>
+            <span class="font-label-md text-label-md text-text-secondary uppercase tracking-wider">Academic Records • Year Query</span>
             <h1 class="font-headline-lg text-headline-lg text-text-primary tracking-tight">Transcript Verification</h1>
           </div>
           <div class="flex items-center gap-sm">
@@ -183,9 +205,9 @@
 
           <div class="grid grid-cols-1 md:grid-cols-3 gap-lg">
             <div class="bg-surface-container-lowest p-md rounded-lg">
-              <span class="font-label-md text-label-md text-text-secondary block mb-xs">ACADEMIC TERM</span>
+              <span class="font-label-md text-label-md text-text-secondary block mb-xs">ACADEMIC YEAR</span>
               <div class="flex items-center justify-between text-text-primary font-body-md text-body-md font-semibold">
-                <span id="preview-term">Auto-Detect</span>
+                <span id="preview-term">All Years (Cumulative)</span>
                 <span class="material-symbols-outlined text-text-secondary text-[20px]">calendar_month</span>
               </div>
             </div>
@@ -237,9 +259,9 @@
         </div>
       </div>
 
-      <!-- File Upload Modal Overlay (z-[100] places the upload window directly over the top navigation header) -->
-      <div class="fixed inset-0 z-[100] bg-surface-container-lowest/80 backdrop-blur-md flex items-center justify-center p-md md:p-xl transition-all duration-300" id="modal-container">
-        <div class="relative w-full max-w-[660px] bg-surface-card rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.6)] overflow-hidden flex flex-col max-h-[92vh] overflow-y-auto">
+      <!-- File Upload Modal Overlay (Mobile scroll-friendly with z-[100] above header) -->
+      <div class="fixed inset-0 z-[100] bg-surface-container-lowest/80 backdrop-blur-md overflow-y-auto p-2 sm:p-4 md:p-6 flex flex-col items-center justify-start sm:justify-center min-h-screen transition-all duration-300" id="modal-container">
+        <div class="relative w-full max-w-[660px] bg-surface-card rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.6)] my-2 sm:my-auto overflow-hidden flex flex-col max-h-[92vh]">
           <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400/80 via-primary-container to-amber-400/80"></div>
           
           <a href="./index.html">
@@ -248,7 +270,7 @@
             </button>
           </a>
 
-          <div class="p-xl flex flex-col gap-lg">
+          <div class="p-4 sm:p-6 md:p-xl flex flex-col gap-md md:gap-lg overflow-y-auto">
             <div class="flex items-start gap-md">
               <div class="w-12 h-12 rounded-xl bg-primary-container/20 flex items-center justify-center shrink-0">
                 <span class="material-symbols-outlined text-primary text-[28px]">upload_file</span>
@@ -264,7 +286,7 @@
             </p>
 
             <!-- Drop Zone -->
-            <div class="relative group cursor-pointer bg-surface-container-lowest hover:bg-surface-container-low border border-dashed border-border-subtle hover:border-primary transition-all duration-200 rounded-xl p-lg md:p-xl flex flex-col items-center justify-center text-center" id="drop-zone">
+            <div class="relative group cursor-pointer bg-surface-container-lowest hover:bg-surface-container-low border border-dashed border-border-subtle hover:border-primary transition-all duration-200 rounded-xl p-5 md:p-xl flex flex-col items-center justify-center text-center" id="drop-zone">
               <input accept=".pdf,.txt,.csv" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" id="transcript-file-input" type="file" />
               
               <div class="w-14 h-14 rounded-full bg-surface-container group-hover:scale-110 group-hover:bg-primary-container/20 transition-all duration-200 flex items-center justify-center mb-md shadow-sm">
@@ -272,8 +294,8 @@
               </div>
 
               <div class="flex flex-col gap-xs mb-sm">
-                <span class="font-headline-md text-headline-md text-text-primary text-[18px]">Drag &amp; drop transcript documents</span>
-                <span class="font-body-md text-body-md text-text-secondary">or <span class="text-primary-container underline underline-offset-4 group-hover:text-primary font-medium">browse files</span> from your computer</span>
+                <span class="font-headline-md text-headline-md text-text-primary text-[17px] sm:text-[18px]">Drag &amp; drop transcript documents</span>
+                <span class="font-body-md text-body-md text-text-secondary text-sm sm:text-base">or <span class="text-primary-container underline underline-offset-4 group-hover:text-primary font-medium">browse files</span> from your phone / computer</span>
               </div>
 
               <div class="flex flex-wrap items-center justify-center gap-xs">
@@ -354,7 +376,7 @@
 
       // Sync UI search preview from sessionStorage
       const targetReg = sessionStorage.getItem('target_reg_num') || '202400712';
-      const targetSem = sessionStorage.getItem('target_semester') || 'all';
+      const targetYear = sessionStorage.getItem('target_year') || sessionStorage.getItem('target_semester') || 'all';
 
       const previewReg = document.getElementById('preview-reg');
       const previewTerm = document.getElementById('preview-term');
@@ -363,7 +385,7 @@
       if (previewReg) previewReg.textContent = targetReg;
       if (dynamicRegSpan) dynamicRegSpan.textContent = targetReg;
       if (previewTerm) {
-        previewTerm.textContent = targetSem === 'all' ? 'All Semesters' : targetSem.replace('-', ' ').toUpperCase();
+        previewTerm.textContent = targetYear === 'all' ? 'All Years (Cumulative)' : targetYear;
       }
 
       function formatBytes(bytes, decimals = 1) {
@@ -512,9 +534,10 @@
           if (targetReg) {
             formData.append('registration_number', targetReg.trim());
           }
-          const targetSem = sessionStorage.getItem('target_semester');
-          if (targetSem && targetSem !== 'all') {
-            formData.append('target_semester', targetSem.trim());
+          const targetYear = sessionStorage.getItem('target_year') || sessionStorage.getItem('target_semester');
+          if (targetYear && targetYear !== 'all') {
+            formData.append('target_year', targetYear.trim());
+            formData.append('target_semester', targetYear.trim());
           }
 
           try {
@@ -558,7 +581,7 @@
 
   <!-- Footer -->
   <footer class="w-full bg-surface-container-lowest border-t border-border-subtle">
-    <div class="w-full px-margin-desktop py-lg flex flex-col md:flex-row items-center justify-between gap-md text-on-surface-variant font-label-md text-label-md">
+    <div class="w-full px-4 sm:px-6 md:px-margin-desktop py-lg flex flex-col md:flex-row items-center justify-between gap-md text-on-surface-variant font-label-md text-label-md">
       <div>© 2026 GradeFlow. All rights reserved.</div>
       <div class="flex items-center gap-lg">
         <a class="hover:text-on-surface transition-colors" href="#">Privacy Policy</a>
