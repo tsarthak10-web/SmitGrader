@@ -1,0 +1,154 @@
+
+/* =========================
+   GENERAL STYLING
+========================= */
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    color: #000;
+    background-color: #fff;
+}
+
+
+/* =========================
+   NAVBAR
+========================= */
+
+#header-nav {
+    background-color: #999999;
+    border: 2px solid #000;
+    border-radius: 0;
+    margin-bottom: 0;
+    min-height: 80px;
+}
+
+/* Company name */
+
+.navbar-brand {
+    font-size: 2em;
+    font-weight: bold;
+    color: #000 !important;
+    height: 76px;
+    line-height: 36px;
+    padding-left: 35px;
+}
+
+
+/* =========================
+   MOBILE HAMBURGER BUTTON
+========================= */
+
+.navbar-toggle {
+    border: 2px solid #000 !important;
+    margin-top: 18px;
+    margin-bottom: 18px;
+    padding: 10px;
+}
+
+.navbar-toggle .icon-bar {
+    background-color: #000 !important;
+    width: 30px;
+    height: 4px;
+}
+
+
+/* =========================
+   MOBILE DROPDOWN MENU
+========================= */
+
+#collapsable-nav {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+#collapsable-nav ul {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+#collapsable-nav ul li {
+    background-color: #fff;
+    text-align: center;
+    border-top: 1px solid #000;
+}
+
+#collapsable-nav ul li:last-child {
+    border-bottom: 1px solid #000;
+}
+
+#collapsable-nav ul li a {
+    color: #000;
+    font-size: 20px;
+    padding: 8px;
+}
+
+#collapsable-nav ul li a:hover {
+    background-color: #dddddd;
+}
+
+
+/* =========================
+   PAGE HEADING
+========================= */
+
+h1 {
+    font-size: 36px;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 45px;
+}
+
+
+/* =========================
+   CHICKEN MENU SECTION
+========================= */
+
+.menu-section {
+    background-color: #999999;
+    padding: 5px 20px 25px;
+    min-height: 1000px;
+    margin-bottom: 30px;
+}
+
+.menu-section h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 0;
+    margin-bottom: 12px;
+}
+
+.menu-section p {
+    font-size: 18px;
+    line-height: 1.35;
+    text-align: left;
+}
+
+
+/* =========================
+   MOBILE RESPONSIVE STYLING
+========================= */
+
+@media (max-width: 767px) {
+
+    .navbar-brand {
+        padding-left: 15px;
+        font-size: 1.8em;
+    }
+
+    h1 {
+        margin-top: 25px;
+        margin-bottom: 30px;
+        font-size: 34px;
+    }
+
+    .menu-section {
+        padding: 10px 25px 25px;
+        min-height: 1000px;
+    }
+
+    .menu-section p {
+        font-size: 18px;
+    }
+
+}

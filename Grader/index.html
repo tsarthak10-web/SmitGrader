@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>GradeFlow Dashboard</title>
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS & Configuration -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "background": "#0b1326",
+            "surface": "#0b1326",
+            "surface-dim": "#0b1326",
+            "surface-bright": "#31394d",
+            "surface-container-lowest": "#060e20",
+            "surface-container-low": "#131b2e",
+            "surface-container": "#171f33",
+            "surface-container-high": "#222a3d",
+            "surface-container-highest": "#2d3449",
+            "surface-card": "#1e293b",
+            "surface-overlay": "#334155",
+            "surface-variant": "#2d3449",
+            "on-surface": "#dae2fd",
+            "on-surface-variant": "#c6c5d5",
+            "inverse-surface": "#dae2fd",
+            "inverse-on-surface": "#283044",
+            "text-primary": "#f8fafc",
+            "text-secondary": "#94a3b8",
+            "border-subtle": "#1e293b",
+            "outline": "#908f9e",
+            "outline-variant": "#454653",
+            "primary": "#bdc2ff",
+            "primary-fixed": "#e0e0ff",
+            "primary-fixed-dim": "#bdc2ff",
+            "primary-container": "#818cf8",
+            "on-primary": "#131e8c",
+            "on-primary-fixed": "#000767",
+            "on-primary-fixed-variant": "#2f3aa3",
+            "on-primary-container": "#101b8a",
+            "inverse-primary": "#4953bc",
+            "surface-tint": "#bdc2ff",
+            "secondary": "#4edea3",
+            "secondary-fixed": "#6ffbbe",
+            "secondary-fixed-dim": "#4edea3",
+            "secondary-container": "#00a572",
+            "on-secondary": "#003824",
+            "on-secondary-fixed": "#002113",
+            "on-secondary-fixed-variant": "#005236",
+            "on-secondary-container": "#00311f",
+            "tertiary": "#c0c1ff",
+            "tertiary-fixed": "#e1e0ff",
+            "tertiary-fixed-dim": "#c0c1ff",
+            "tertiary-container": "#8689ff",
+            "on-tertiary": "#1000a9",
+            "on-tertiary-fixed": "#07006c",
+            "on-tertiary-fixed-variant": "#2f2ebe",
+            "on-tertiary-container": "#0f00a2",
+            "error": "#ffb4ab",
+            "error-container": "#93000a",
+            "on-error": "#690005",
+            "on-error-container": "#ffdad6"
+          },
+          borderRadius: {
+            DEFAULT: "0.125rem",
+            lg: "0.25rem",
+            xl: "0.5rem",
+            full: "0.75rem"
+          },
+          spacing: {
+            base: "4px",
+            xs: "4px",
+            sm: "8px",
+            md: "16px",
+            lg: "24px",
+            xl: "32px",
+            "2xl": "48px",
+            gutter: "24px",
+            "margin-mobile": "16px",
+            "margin-desktop": "32px",
+            "container-max": "1280px"
+          },
+          fontFamily: {
+            "body-md": ["Inter"],
+            "body-lg": ["Inter"],
+            "label-md": ["Inter"],
+            "headline-md": ["Manrope"],
+            "headline-lg": ["Manrope"],
+            "headline-lg-mobile": ["Manrope"],
+            "display-lg": ["Manrope"]
+          },
+          fontSize: {
+            "label-md": ["12px", { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "600" }],
+            "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+            "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+            "headline-md": ["24px", { lineHeight: "32px", fontWeight: "600" }],
+            "headline-lg": ["32px", { lineHeight: "40px", letterSpacing: "-0.02em", fontWeight: "700" }],
+            "headline-lg-mobile": ["28px", { lineHeight: "36px", letterSpacing: "-0.02em", fontWeight: "700" }],
+            "display-lg": ["48px", { lineHeight: "56px", letterSpacing: "-0.03em", fontWeight: "800" }]
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Global Custom Styles -->
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .filled-icon {
+      font-variation-settings: 'FILL' 1;
+    }
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+  </style>
+</head>
+
+<body class="bg-background text-text-primary min-h-screen flex flex-col font-body-md selection:bg-primary-container selection:text-on-primary-container">
+  <!-- Top Navigation Header -->
+  <header class="bg-surface/80 backdrop-blur-xl docked full-width top-0 sticky z-50 shadow-sm">
+    <div class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto h-16 border-b border-border-subtle">
+      <div class="flex items-center gap-sm">
+        <span class="material-symbols-outlined text-primary text-[28px] filled-icon">school</span>
+        <h1 class="font-headline-md text-headline-md font-bold text-primary tracking-tight">GradeFlow</h1>
+      </div>
+      <nav class="hidden md:flex items-center gap-xl h-full">
+        <a class="h-full flex items-center text-primary font-bold border-b-2 border-primary pb-1 transition-colors duration-200 ease-in-out" href="index.html">Dashboard</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-xl md:py-2xl flex flex-col gap-xl md:gap-2xl">
+    
+    <!-- Hero Header -->
+    <header class="flex flex-col gap-sm">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-md">
+        <div class="flex flex-col gap-sm">
+          <h2 class="font-display-lg text-display-lg font-extrabold text-text-primary tracking-tight md:text-[48px] text-[36px] leading-tight">Academic Dashboard</h2>
+          <p class="font-body-lg text-body-lg text-text-secondary max-w-2xl">Look up your official academic records by registration number or manually simulate your projected SGPA &amp; CGPA targets.</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content Columns -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+      
+      <!-- Left Column: Fetch Result -->
+      <div class="md:col-span-4 flex flex-col gap-gutter">
+        <section class="bg-surface-card rounded-xl border border-border-subtle p-lg flex flex-col gap-lg shadow-sm">
+          <div class="flex items-center gap-sm pb-sm border-b border-border-subtle">
+            <span class="material-symbols-outlined text-primary text-[24px]">badge</span>
+            <div>
+              <h3 class="font-headline-md text-headline-md text-text-primary leading-tight">Fetch Result</h3>
+              <p class="font-label-md text-label-md text-text-secondary mt-0.5">Quick search by student identifier</p>
+            </div>
+          </div>
+
+          <form id="fetch-form" class="flex flex-col gap-md">
+            <!-- Registration Number Input -->
+            <div class="flex flex-col gap-sm">
+              <label class="font-label-md text-label-md text-text-secondary uppercase tracking-wider" for="reg-input">Registration Number</label>
+              <div class="relative">
+                <span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-text-secondary pointer-events-none text-[20px]">tag</span>
+                <input id="reg-input" class="w-full bg-surface-container border border-border-subtle rounded-lg pl-10 pr-md py-sm text-text-primary font-body-md placeholder:text-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-transparent transition-all" placeholder="e.g. 202400712" type="text" value="202400712" required />
+              </div>
+            </div>
+
+            <!-- Target Semester Dropdown -->
+            <div class="flex flex-col gap-sm">
+              <div class="flex items-center justify-between">
+                <label class="font-label-md text-label-md text-text-secondary uppercase tracking-wider" for="sem-input">Target Semester</label>
+                <span class="text-[11px] text-primary/80">Auto-filters records</span>
+              </div>
+              <div class="relative">
+                <select id="sem-input" class="w-full bg-surface-container border border-border-subtle rounded-lg px-md py-sm text-text-primary font-body-md focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-transparent transition-all appearance-none cursor-pointer">
+                  <option value="all" selected>All Semesters / Auto-Detect from Transcript</option>
+                  <option value="fall-2024">Fall 2024 (Current / Term 5)</option>
+                  <option value="spring-2024">Spring 2024 (Term 4)</option>
+                  <option value="fall-2023">Fall 2023 (Term 3)</option>
+                  <option value="spring-2023">Spring 2023 (Term 2)</option>
+                  <option value="fall-2022">Fall 2022 (Term 1)</option>
+                </select>
+                <span class="material-symbols-outlined absolute right-md top-1/2 -translate-y-1/2 text-text-secondary pointer-events-none">expand_more</span>
+              </div>
+            </div>
+
+            <!-- Examination Type Toggle Buttons -->
+            <div class="flex flex-col gap-sm">
+              <label class="font-label-md text-label-md text-text-secondary uppercase tracking-wider">Examination Type</label>
+              <div class="grid grid-cols-2 gap-2" id="examTypeGroup">
+                <button id="exam-regular" class="exam-btn py-2 px-3 rounded-lg text-sm font-semibold bg-primary-container text-on-primary-container border border-primary-container transition-all text-center" type="button" data-val="Regular">Regular</button>
+                <button id="exam-supple" class="exam-btn py-2 px-3 rounded-lg text-sm font-semibold bg-surface-container text-text-secondary hover:text-text-primary border border-border-subtle transition-all text-center" type="button" data-val="Supplementary">Supplementary</button>
+              </div>
+            </div>
+
+            <!-- Submit Button (Triggers server database check first) -->
+            <div class="block w-full mt-sm">
+              <button id="analyze-btn" class="w-full bg-primary-container hover:bg-primary-container/90 text-on-primary-container font-headline-md text-[16px] py-md rounded-lg transition-all active:scale-[0.98] shadow-[0_0_20px_rgba(129,140,248,0.2)] flex items-center justify-center gap-2" type="submit">
+                <span class="material-symbols-outlined text-[20px]">search</span>
+                <span id="analyze-btn-text">Analyze Result</span>
+              </button>
+            </div>
+          </form>
+
+          <div class="p-3 rounded-lg bg-surface-container-low border border-border-subtle text-xs text-text-secondary flex items-start gap-2.5">
+            <span class="material-symbols-outlined text-primary text-[18px] shrink-0">info</span>
+            <span>GradeFlow first searches server records for your registration number. If no records exist, you'll be prompted to upload a transcript.</span>
+          </div>
+        </section>
+      </div>
+
+      <!-- Right Column: What-If CGPA Simulator -->
+      <div class="md:col-span-8 flex flex-col gap-gutter">
+        <section class="bg-surface-card rounded-xl border border-border-subtle p-lg flex flex-col gap-lg shadow-sm">
+          
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-sm border-b border-border-subtle gap-2">
+            <div class="flex items-center gap-sm">
+              <div class="w-9 h-9 rounded-lg bg-primary-container/20 flex items-center justify-center text-primary">
+                <span class="material-symbols-outlined text-[22px]">calculate</span>
+              </div>
+              <div>
+                <h3 class="font-headline-md text-headline-md text-text-primary leading-tight">What-If CGPA Simulator</h3>
+                <p class="font-label-md text-label-md text-text-secondary">Manually adjust grades and credits to project your SGPA &amp; CGPA</p>
+              </div>
+            </div>
+            
+            <div class="flex items-center flex-wrap gap-2 self-start sm:self-auto">
+              <div class="flex items-center gap-1.5 bg-surface-container border border-border-subtle rounded-lg px-2.5 py-1.5 text-xs">
+                <span class="material-symbols-outlined text-[16px] text-primary">tune</span>
+                <label class="text-text-secondary font-medium hidden sm:inline">Grading Scale:</label>
+                <div class="relative flex items-center">
+                  <span class="bg-transparent text-text-primary font-semibold text-xs py-0">10.0 Scale (SMU)</span>
+                </div>
+              </div>
+              <button id="addCourseSimulatorBtn" class="flex items-center gap-1.5 text-xs font-semibold text-primary hover:text-on-surface bg-surface-overlay/50 hover:bg-surface-overlay px-3 py-1.5 rounded-lg border border-border-subtle transition-all" type="button">
+                <span class="material-symbols-outlined text-[16px]">add</span>
+                <span>Add Course</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Simulator Table -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-left font-body-md border-collapse">
+              <thead>
+                <tr class="border-b border-border-subtle text-text-secondary font-label-md text-label-md uppercase tracking-wider">
+                  <th class="py-sm px-2 font-medium">Course</th>
+                  <th class="py-sm px-2 font-medium text-center w-28">Credits</th>
+                  <th class="py-sm px-2 font-medium text-center w-36">Simulated Grade</th>
+                  <th class="py-sm px-2 font-medium text-right w-24">Points</th>
+                  <th class="py-sm px-2 text-center w-12"></th>
+                </tr>
+              </thead>
+              <tbody id="simulatorTableBody" class="text-text-primary">
+                <tr class="border-b border-border-subtle hover:bg-surface-overlay/50 transition-colors" data-sim-row="">
+                  <td class="py-sm px-2">
+                    <input type="text" class="course-name-input bg-transparent font-semibold text-text-primary w-full focus:outline-none focus:border-b border-primary" value="MA206B1 — PROBABILITY, STATISTICS" />
+                    <div class="text-xs text-text-secondary">Core Mathematics</div>
+                  </td>
+                  <td class="py-sm px-2 text-center">
+                    <select class="sim-credit bg-surface-container text-text-primary text-sm font-semibold rounded px-2.5 py-1 border border-border-subtle focus:outline-none focus:ring-1 focus:ring-primary-container">
+                      <option selected="" value="4">4 hrs</option>
+                      <option value="3">3 hrs</option>
+                      <option value="2">2 hrs</option>
+                      <option value="1">1 hr</option>
+                    </select>
+                  </td>
+                  <td class="py-sm px-2 text-center">
+                    <select class="sim-grade bg-surface-container text-secondary-fixed-dim font-bold text-sm rounded px-3 py-1 border border-border-subtle focus:outline-none focus:ring-1 focus:ring-primary-container">
+                      <option selected="" value="10">S (10)</option>
+                      <option value="9">A (9)</option>
+                      <option value="8">B (8)</option>
+                      <option value="7">C (7)</option>
+                      <option value="6">D (6)</option>
+                      <option value="5">E (5)</option>
+                      <option value="0">F (0)</option>
+                    </select>
+                  </td>
+                  <td class="py-sm px-2 text-right font-mono text-sm font-semibold text-secondary-fixed-dim sim-points">40.0</td>
+                  <td class="py-sm px-2 text-center">
+                    <button class="sim-delete-btn text-text-secondary hover:text-error transition-colors p-1 rounded" title="Delete Course" type="button">
+                      <span class="material-symbols-outlined text-[18px]">delete</span>
+                    </button>
+                  </td>
+                </tr>
+
+                <tr class="border-b border-border-subtle hover:bg-surface-overlay/50 transition-colors" data-sim-row="">
+                  <td class="py-sm px-2">
+                    <input type="text" class="course-name-input bg-transparent font-semibold text-text-primary w-full focus:outline-none focus:border-b border-primary" value="CS302 — Computer Architecture" />
+                    <div class="text-xs text-text-secondary">Systems Engineering</div>
+                  </td>
+                  <td class="py-sm px-2 text-center">
+                    <select class="sim-credit bg-surface-container text-text-primary text-sm font-semibold rounded px-2.5 py-1 border border-border-subtle focus:outline-none focus:ring-1 focus:ring-primary-container">
+                      <option selected="" value="4">4 hrs</option>
+                      <option value="3">3 hrs</option>
+                      <option value="2">2 hrs</option>
+                      <option value="1">1 hr</option>
+                    </select>
+                  </td>
+                  <td class="py-sm px-2 text-center">
+                    <select class="sim-grade bg-surface-container text-primary font-bold text-sm rounded px-3 py-1 border border-border-subtle focus:outline-none focus:ring-1 focus:ring-primary-container">
+                      <option value="10">S (10)</option>
+                      <option selected="" value="9">A (9)</option>
+                      <option value="8">B (8)</option>
+                      <option value="7">C (7)</option>
+                      <option value="6">D (6)</option>
+                      <option value="5">E (5)</option>
+                      <option value="0">F (0)</option>
+                    </select>
+                  </td>
+                  <td class="py-sm px-2 text-right font-mono text-sm font-semibold text-primary sim-points">36.0</td>
+                  <td class="py-sm px-2 text-center">
+                    <button class="sim-delete-btn text-text-secondary hover:text-error transition-colors p-1 rounded" title="Delete Course" type="button">
+                      <span class="material-symbols-outlined text-[18px]">delete</span>
+                    </button>
+                  </td>
+                </tr>
+
+                <tr class="border-b border-border-subtle hover:bg-surface-overlay/50 transition-colors" data-sim-row="">
+                  <td class="py-sm px-2">
+                    <input type="text" class="course-name-input bg-transparent font-semibold text-text-primary w-full focus:outline-none focus:border-b border-primary" value="CS410 — Web Development" />
+                    <div class="text-xs text-text-secondary">Software Engineering</div>
+                  </td>
+                  <td class="py-sm px-2 text-center">
+                    <select class="sim-credit bg-surface-container text-text-primary text-sm font-semibold rounded px-2.5 py-1 border border-border-subtle focus:outline-none focus:ring-1 focus:ring-primary-container">
+                      <option value="4">4 hrs</option>
+                      <option selected="" value="3">3 hrs</option>
+                      <option value="2">2 hrs</option>
+                      <option value="1">1 hr</option>
+                    </select>
+                  </td>
+                  <td class="py-sm px-2 text-center">
+                    <select class="sim-grade bg-surface-container text-secondary-fixed-dim font-bold text-sm rounded px-3 py-1 border border-border-subtle focus:outline-none focus:ring-1 focus:ring-primary-container">
+                      <option value="10">S (10)</option>
+                      <option value="9">A (9)</option>
+                      <option selected="" value="8">B (8)</option>
+                      <option value="7">C (7)</option>
+                      <option value="6">D (6)</option>
+                      <option value="5">E (5)</option>
+                      <option value="0">F (0)</option>
+                    </select>
+                  </td>
+                  <td class="py-sm px-2 text-right font-mono text-sm font-semibold text-secondary-fixed-dim sim-points">24.0</td>
+                  <td class="py-sm px-2 text-center">
+                    <button class="sim-delete-btn text-text-secondary hover:text-error transition-colors p-1 rounded" title="Delete Course" type="button">
+                      <span class="material-symbols-outlined text-[18px]">delete</span>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Projection Cards -->
+          <div class="grid grid-cols-1 gap-md sm:grid-cols-2">
+            <div class="bg-surface-container rounded-lg p-md border border-border-subtle flex flex-col gap-1">
+              <div class="flex items-center justify-between">
+                <span class="font-label-md text-label-md text-text-secondary uppercase tracking-wider">Projected SGPA</span>
+                <span class="text-[10px] px-1.5 py-0.5 rounded bg-surface-overlay/50 text-text-secondary border border-border-subtle font-mono">10.0 Scale</span>
+              </div>
+              <div class="flex items-end gap-2">
+                <span id="projectedSgpaDisplay" class="font-headline-lg text-headline-lg text-primary leading-none">9.09</span>
+                <span class="font-body-md text-body-md text-text-secondary pb-1">/ 10.0</span>
+              </div>
+              <span id="projectedDiffBadge" class="text-[11px] text-secondary flex items-center gap-1 mt-0.5">
+                <span class="material-symbols-outlined text-[14px]">trending_up</span> +0.25 from current
+              </span>
+            </div>
+
+            <div class="bg-surface-container rounded-lg p-md border border-border-subtle flex flex-col gap-1">
+              <span class="font-label-md text-label-md text-text-secondary uppercase tracking-wider">Simulated Credits</span>
+              <div class="flex items-end gap-2">
+                <span id="simulatedCreditsDisplay" class="font-headline-lg text-headline-lg text-text-primary leading-none">11</span>
+                <span class="font-body-md text-body-md text-text-secondary pb-1">credits</span>
+              </div>
+              <span id="activeCoursesCount" class="text-[11px] text-text-secondary mt-0.5">3 active courses</span>
+            </div>
+          </div>
+
+          <!-- Bottom Action Bar -->
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-md pt-sm border-t border-border-subtle">
+            <div class="flex items-center gap-2 text-xs text-text-secondary">
+              <span class="material-symbols-outlined text-[16px] text-secondary">auto_fix_high</span>
+              <span>Values recalculate automatically on grade or credit changes</span>
+            </div>
+            <div class="flex items-center gap-sm w-full sm:w-auto">
+              <button id="resetSimulatorBtn" class="flex-1 sm:flex-none px-4 py-2 rounded-lg bg-surface-overlay text-text-secondary hover:text-text-primary text-xs font-semibold border border-border-subtle transition-all" type="button">Reset Defaults</button>
+              <button id="saveSimulationBtn" class="flex-1 sm:flex-none px-4 py-2 rounded-lg bg-primary-container hover:bg-primary-container/90 text-on-primary-container text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-1" type="button">
+                <span>Save Simulation</span>
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-surface-container-low w-full mt-auto border-t border-border-subtle">
+    <div class="flex flex-col md:flex-row justify-between items-center py-lg px-margin-mobile md:px-margin-desktop w-full max-w-container-max mx-auto gap-md">
+      <span class="font-label-md text-label-md text-on-surface-variant">© 2026 GradeFlow Academic Systems</span>
+      <div class="flex gap-md font-label-md text-label-md">
+        <a class="text-on-surface-variant hover:text-on-surface hover:underline transition-all duration-200" href="#">Privacy Policy</a>
+        <a class="text-on-surface-variant hover:text-on-surface hover:underline transition-all duration-200" href="#">Terms of Service</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Interactive Logic Script -->
+  <script>
+    (function initDashboard() {
+      // 1. Pre-warm Backend Server
+      const backendUrl = "http://127.0.0.1:8000/wakeup"; 
+      fetch(backendUrl, { method: 'GET', mode: 'cors' }).catch(() => {});
+
+      // 2. Examination Type Toggle Logic
+      let currentExamType = 'Regular';
+      const examRegularBtn = document.getElementById('exam-regular');
+      const examSuppleBtn = document.getElementById('exam-supple');
+
+      function setExamType(type) {
+        currentExamType = type;
+        sessionStorage.setItem('exam_type', type);
+        if (type === 'Regular') {
+          examRegularBtn.className = 'exam-btn py-2 px-3 rounded-lg text-sm font-semibold bg-primary-container text-on-primary-container border border-primary-container transition-all text-center';
+          examSuppleBtn.className = 'exam-btn py-2 px-3 rounded-lg text-sm font-semibold bg-surface-container text-text-secondary hover:text-text-primary border border-border-subtle transition-all text-center';
+        } else {
+          examSuppleBtn.className = 'exam-btn py-2 px-3 rounded-lg text-sm font-semibold bg-primary-container text-on-primary-container border border-primary-container transition-all text-center';
+          examRegularBtn.className = 'exam-btn py-2 px-3 rounded-lg text-sm font-semibold bg-surface-container text-text-secondary hover:text-text-primary border border-border-subtle transition-all text-center';
+        }
+      }
+      examRegularBtn.addEventListener('click', () => setExamType('Regular'));
+      examSuppleBtn.addEventListener('click', () => setExamType('Supplementary'));
+
+      // 3. Search / Analyze Result: First checks server database
+      const fetchForm = document.getElementById('fetch-form');
+      const analyzeBtn = document.getElementById('analyze-btn');
+
+      fetchForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const regInput = document.getElementById('reg-input');
+        const semInput = document.getElementById('sem-input');
+        const regNum = regInput.value.trim();
+        const targetSemester = semInput.value;
+
+        if (!regNum) {
+          alert('Please enter a student registration number.');
+          return;
+        }
+
+        // Store identifiers
+        sessionStorage.setItem('target_reg_num', regNum);
+        sessionStorage.setItem('target_semester', targetSemester);
+        sessionStorage.setItem('exam_type', currentExamType);
+
+        // Update button UI to loading state
+        analyzeBtn.disabled = true;
+        analyzeBtn.innerHTML = `
+          <span class="material-symbols-outlined animate-spin text-[20px]">progress_activity</span>
+          <span>Checking Server Records...</span>
+        `;
+
+        try {
+          // Query backend to check if records already exist
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 3500);
+
+          const res = await fetch(`http://127.0.0.1:8000/api/student/${encodeURIComponent(regNum)}`, {
+            signal: controller.signal
+          });
+          clearTimeout(timeoutId);
+
+          if (res.ok) {
+            const result = await res.json();
+            if (result.found && result.data && result.data.length > 0) {
+              // Existing records found in Supabase!
+              analyzeBtn.innerHTML = `
+                <span class="material-symbols-outlined text-[20px]">check_circle</span>
+                <span>Records Found! Loading...</span>
+              `;
+              sessionStorage.setItem('parsed_transcript', JSON.stringify(result));
+              setTimeout(() => {
+                window.location.href = 'verify.html';
+              }, 500);
+              return;
+            }
+          }
+        } catch (err) {
+          console.warn('Server lookup error or timeout, proceeding to upload step:', err);
+        }
+
+        // If no records found on server, prompt user for transcript ingestion
+        analyzeBtn.innerHTML = `
+          <span class="material-symbols-outlined text-[20px]">upload_file</span>
+          <span>No Records. Opening Upload...</span>
+        `;
+        setTimeout(() => {
+          window.location.href = 'upload.html';
+        }, 500);
+      });
+
+      // 4. What-If CGPA Simulator Logic
+      const tableBody = document.getElementById('simulatorTableBody');
+      const addCourseBtn = document.getElementById('addCourseSimulatorBtn');
+      const projectedSgpaDisplay = document.getElementById('projectedSgpaDisplay');
+      const simulatedCreditsDisplay = document.getElementById('simulatedCreditsDisplay');
+      const activeCoursesCount = document.getElementById('activeCoursesCount');
+      const resetBtn = document.getElementById('resetSimulatorBtn');
+      const saveBtn = document.getElementById('saveSimulationBtn');
+
+      function calculateSimulation() {
+        const rows = tableBody.querySelectorAll('tr[data-sim-row]');
+        let totalCredits = 0;
+        let totalPoints = 0;
+
+        rows.forEach(row => {
+          const creditSelect = row.querySelector('.sim-credit');
+          const gradeSelect = row.querySelector('.sim-grade');
+          const pointsCell = row.querySelector('.sim-points');
+
+          const credits = parseFloat(creditSelect?.value) || 0;
+          const gradeVal = parseFloat(gradeSelect?.value) || 0;
+          const rowPoints = credits * gradeVal;
+
+          if (pointsCell) {
+            pointsCell.textContent = rowPoints.toFixed(1);
+          }
+
+          totalCredits += credits;
+          totalPoints += rowPoints;
+        });
+
+        simulatedCreditsDisplay.textContent = totalCredits;
+        activeCoursesCount.textContent = `${rows.length} active course${rows.length === 1 ? '' : 's'}`;
+
+        if (totalCredits > 0) {
+          const sgpa = (totalPoints / totalCredits).toFixed(2);
+          projectedSgpaDisplay.textContent = sgpa;
+        } else {
+          projectedSgpaDisplay.textContent = '0.00';
+        }
+      }
+
+      function attachSimRowListeners(row) {
+        const deleteBtn = row.querySelector('.sim-delete-btn');
+        const creditSelect = row.querySelector('.sim-credit');
+        const gradeSelect = row.querySelector('.sim-grade');
+
+        if (deleteBtn) {
+          deleteBtn.addEventListener('click', () => {
+            const allRows = tableBody.querySelectorAll('tr[data-sim-row]');
+            if (allRows.length > 1) {
+              row.remove();
+              calculateSimulation();
+            } else {
+              alert('At least one course is required for the simulator.');
+            }
+          });
+        }
+
+        if (creditSelect) creditSelect.addEventListener('change', calculateSimulation);
+        if (gradeSelect) gradeSelect.addEventListener('change', calculateSimulation);
+      }
+
+      // Initial listeners on default rows
+      tableBody.querySelectorAll('tr[data-sim-row]').forEach(attachSimRowListeners);
+      calculateSimulation();
+
+      // Add New Course Row
+      addCourseBtn.addEventListener('click', () => {
+        const newRow = document.createElement('tr');
+        newRow.setAttribute('data-sim-row', '');
+        newRow.className = 'border-b border-border-subtle hover:bg-surface-overlay/50 transition-colors';
+        newRow.innerHTML = `
+          <td class="py-sm px-2">
+            <input type="text" class="course-name-input bg-transparent font-semibold text-text-primary w-full focus:outline-none focus:border-b border-primary" placeholder="Course Code & Title" value="CS499 — Project Elective" />
+            <div class="text-xs text-text-secondary">Simulated Module</div>
+          </td>
+          <td class="py-sm px-2 text-center">
+            <select class="sim-credit bg-surface-container text-text-primary text-sm font-semibold rounded px-2.5 py-1 border border-border-subtle focus:outline-none focus:ring-1 focus:ring-primary-container">
+              <option selected="" value="4">4 hrs</option>
+              <option value="3">3 hrs</option>
+              <option value="2">2 hrs</option>
+              <option value="1">1 hr</option>
+            </select>
+          </td>
+          <td class="py-sm px-2 text-center">
+            <select class="sim-grade bg-surface-container text-primary font-bold text-sm rounded px-3 py-1 border border-border-subtle focus:outline-none focus:ring-1 focus:ring-primary-container">
+              <option selected="" value="10">S (10)</option>
+              <option value="9">A (9)</option>
+              <option value="8">B (8)</option>
+              <option value="7">C (7)</option>
+              <option value="6">D (6)</option>
+              <option value="5">E (5)</option>
+              <option value="0">F (0)</option>
+            </select>
+          </td>
+          <td class="py-sm px-2 text-right font-mono text-sm font-semibold text-primary sim-points">40.0</td>
+          <td class="py-sm px-2 text-center">
+            <button class="sim-delete-btn text-text-secondary hover:text-error transition-colors p-1 rounded" title="Delete Course" type="button">
+              <span class="material-symbols-outlined text-[18px]">delete</span>
+            </button>
+          </td>
+        `;
+        tableBody.appendChild(newRow);
+        attachSimRowListeners(newRow);
+        calculateSimulation();
+      });
+
+      // Reset Defaults
+      const defaultRowsHTML = tableBody.innerHTML;
+      resetBtn.addEventListener('click', () => {
+        tableBody.innerHTML = defaultRowsHTML;
+        tableBody.querySelectorAll('tr[data-sim-row]').forEach(attachSimRowListeners);
+        calculateSimulation();
+      });
+
+      // Save Simulation
+      saveBtn.addEventListener('click', () => {
+        const simulatedData = [];
+        tableBody.querySelectorAll('tr[data-sim-row]').forEach(row => {
+          simulatedData.push({
+            name: row.querySelector('.course-name-input')?.value || 'Course',
+            credits: row.querySelector('.sim-credit')?.value,
+            grade: row.querySelector('.sim-grade')?.value
+          });
+        });
+        localStorage.setItem('gradeflow_saved_simulation', JSON.stringify(simulatedData));
+
+        const originalText = saveBtn.innerHTML;
+        saveBtn.innerHTML = `
+          <span class="material-symbols-outlined text-[16px]">check</span>
+          <span>Saved!</span>
+        `;
+        saveBtn.classList.add('bg-secondary-container', 'text-text-primary');
+        setTimeout(() => {
+          saveBtn.innerHTML = originalText;
+          saveBtn.classList.remove('bg-secondary-container', 'text-text-primary');
+        }, 1500);
+      });
+    })();
+  </script>
+</body>
+</html>
